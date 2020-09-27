@@ -122,9 +122,8 @@ a.desc:after {
 
 .nav li {
     padding-right:0px;
-    font-size: 1.4em;
+    font-size: 1.8em;
 }
-
 
 ul.nav a:hover {
     color:#a94442;
@@ -134,4 +133,8 @@ ul.nav a:hover {
 h1 {
     color:#424ca9;
     font-style: italic;
+}
+
+.dropdown-item {
+    font-size: 1.6em;
 }

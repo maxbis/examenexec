@@ -25,3 +25,8 @@ function dd($var)
     d($var,$caller);
     die();
 }
+
+function HTMLInclude($file)
+{
+    return \Yii::$app->view->renderFile('@app/views/layouts/'.$file.'.php');
+}

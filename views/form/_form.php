@@ -1,20 +1,18 @@
 <?php
 
+use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Rolspeler */
+/* @var $model app\models\Form */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="rolspeler-form">
+<div class="form-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'naam')->textInput(['maxlength' => true]) ?>
-
-    <?php $model->actief=1 ?>
-    <?= $form->field($model, 'actief')->checkbox() ?>
+    <?= $form->field($model, 'omschrijving')->textInput(['maxlength' => true]) ?>
 
     <?= HTMLInclude('formSave') ?>
 
