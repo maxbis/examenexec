@@ -24,11 +24,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'omschrijving',
-
+            [
+                'attribute'=>'omschrijving',
+                'format' => 'raw',
+                'value' => function ($data) {
+                  return Html::a($data->omschrijving, ['/vraag/form?id='.$data->id],['title' => 'Edit',]);
+                },  
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

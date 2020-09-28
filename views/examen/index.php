@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'attribute'=>'naam',
-                'contentOptions' => ['style' => 'width:400px; white-space: normal;'],
+                'contentOptions' => ['style' => 'width:250px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
                   return Html::a($data->naam, ['update?id='.$data->id],['title' => 'Edit',]);
@@ -35,8 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'contentOptions' => ['style' => 'width:20px;'],
-                'template' => '{delete}',
+                'contentOptions' => ['style' => 'width:30px;'],
+                //'template' => '{delete}',
             ],
         ],
     ]); ?>

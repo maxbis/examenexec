@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'form',
             ],
             [   'attribute' => 'volgnr',
-                'contentOptions' => ['style' => 'width:100px;'],
+                'contentOptions' => ['style' => 'width:40px;'],
             ],
             [
                 'attribute' => 'vraag',
@@ -37,10 +37,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($data) {
                     return Html::a($data->vraag, ['update?id='.$data->id],['title' => 'Edit',]);
                 },
-            ],  
-            'ja',
-            'soms',
-            'nee',
+            ],
+            [   'attribute' => 'ja',
+            'contentOptions' => ['style' => 'width:80px;'],
+            ],
+            [   'attribute' => 'soms',
+                'contentOptions' => ['style' => 'width:80px;'],
+            ],
+            [   'attribute' => 'nee',
+            'contentOptions' => ['style' => 'width:80px;'],
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

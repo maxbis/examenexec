@@ -59,6 +59,30 @@ class VraagController extends Controller
         ]);
     }
 
+    public function actionForm($id)
+    {
+        $query = vraag::find()
+        ->where(['formid' => $id])
+        ->orderBy( ['volgnr' => SORT_ASC, ] );
+
+        $vragen = $query->all();
+
+        return $this->render('vraagform', [
+            'vragen' => $vragen,
+        ]);
+    }
+
+    public function actionFormpost($totaalString, $statusString, $formId) {
+        // $totaalString contains the values of the answers 1-3-2 (1 point, 3 points, 2 points for question 1,2,and 3)
+        // $statusString contains the answers 1-3-2 (Yes, No, Sometimes, for question 1,2,and 3)
+        echo $totaalString, "<br>", $statusString;
+        echo "<br>";
+        echo array_sum(explode("-",$totaalString));
+        echo "<br>";
+        echo $formId;
+        //ToDo store reuslts in DB (studentid needs to be passed)
+    }
+
     /**
      * Creates a new vraag model.
      * If creation is successful, the browser will be redirected to the 'view' page.

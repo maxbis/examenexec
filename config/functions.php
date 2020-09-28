@@ -4,7 +4,7 @@
  * Debug function
  * d($var);
  */
-function d($var,$caller=null)
+function _d($var,$caller=null)
 {
     if(!isset($caller)){
         $caller = array_shift(debug_backtrace(1));
@@ -19,10 +19,18 @@ function d($var,$caller=null)
  * Debug function with die() after
  * dd($var);
  */
-function dd($var)
+function _dd($var)
 {
     $caller = array_shift(debug_backtrace(1));
     d($var,$caller);
+    die();
+}
+
+function dd($var)
+{
+    echo '<pre>';
+    yii\helpers\VarDumper::dump($var, 10, true);
+    echo '</pre>';
     die();
 }
 

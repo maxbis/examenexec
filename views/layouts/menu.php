@@ -27,7 +27,7 @@ echo Nav::widget([
                  ['label' => 'Examens', 'url' => ['/examen/index'] ],
                  ['label' => 'Gesprekssoort', 'url' => ['/gesprek-soort']],
                  ['label' => 'Form', 'url' => ['/form']],
-                 ['label' => 'Vraag', 'url' => ['/vraag']],
+                 ['label' => 'Vragen', 'url' => ['/vraag']],
                  ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
                  ['label' => 'Gesprekken', 'url' => ['/gesprek']],
                  ['label' => 'Planner', 'url' => ['/gesprek/overzicht']],

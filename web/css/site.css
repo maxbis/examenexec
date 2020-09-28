@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    font-size: 0.9em; 
 }
 
 .wrap {
@@ -117,12 +118,12 @@ a.desc:after {
 // Added by MB
 
 .nav {
-    font-size: 2.4em;
+    font-size: 1.4em;
 }
 
 .nav li {
     padding-right:0px;
-    font-size: 1.8em;
+    font-size: 1.4em;
 }
 
 ul.nav a:hover {
@@ -135,6 +136,4 @@ h1 {
     font-style: italic;
 }
 
-.dropdown-item {
-    font-size: 1.6em;
-}
+
