@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int $nummer
  * @property string $naam
+ * @property string $klas
  *
  * @property Gesprek[] $gespreks
  */
@@ -29,9 +30,10 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nummer', 'naam'], 'required'],
+            [['nummer', 'naam', 'klas'], 'required'],
             [['nummer'], 'integer'],
-            [['naam'], 'string', 'max' => 20],
+            [['naam'], 'string', 'max' => 30],
+            [['klas'], 'string', 'max' => 2],
         ];
     }
 
@@ -44,6 +46,7 @@ class Student extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nummer' => 'Nummer',
             'naam' => 'Naam',
+            'klas' => 'Klas',
         ];
     }
 

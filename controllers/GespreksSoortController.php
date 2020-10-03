@@ -3,16 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Form;
-use app\models\FormSearch;
+use app\models\GespreksSoort;
+use app\models\GespreksSoortSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use app\models\Examen;
+
 /**
- * FormController implements the CRUD actions for Form model.
+ * GespreksSoortController implements the CRUD actions for GespreksSoort model.
  */
-class FormController extends Controller
+class GespreksSoortController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +32,12 @@ class FormController extends Controller
     }
 
     /**
-     * Lists all Form models.
+     * Lists all GespreksSoort models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new FormSearch();
+        $searchModel = new GespreksSoortSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +47,7 @@ class FormController extends Controller
     }
 
     /**
-     * Displays a single Form model.
+     * Displays a single GespreksSoort model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,25 +60,28 @@ class FormController extends Controller
     }
 
     /**
-     * Creates a new Form model.
+     * Creates a new GespreksSoort model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Form();
+        $model = new GespreksSoort();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $examenModel = Examen::find()->all();
+
         return $this->render('create', [
             'model' => $model,
+            'examenModel' => $examenModel,
         ]);
     }
 
     /**
-     * Updates an existing Form model.
+     * Updates an existing GespreksSoort model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,16 +92,19 @@ class FormController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        $examenModel = Examen::find()->all();
 
         return $this->render('update', [
             'model' => $model,
+            'examenModel' => $examenModel,
         ]);
     }
 
     /**
-     * Deletes an existing Form model.
+     * Deletes an existing GespreksSoort model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,15 +118,15 @@ class FormController extends Controller
     }
 
     /**
-     * Finds the Form model based on its primary key value.
+     * Finds the GespreksSoort model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Form the loaded model
+     * @return GespreksSoort the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Form::findOne($id)) !== null) {
+        if (($model = GespreksSoort::findOne($id)) !== null) {
             return $model;
         }
 

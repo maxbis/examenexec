@@ -33,7 +33,8 @@ class Gesprekssoort extends \yii\db\ActiveRecord
     {
         return [
             [['examenid', 'volgnummer', 'naam'], 'required'],
-            [['examenid', 'volgnummer', 'naam'], 'integer'],
+            [['examenid', 'volgnummer'], 'integer'],
+            [['naam'], 'string', 'max' => 40],
             [['examenid'], 'exist', 'skipOnError' => true, 'targetClass' => Examen::className(), 'targetAttribute' => ['examenid' => 'id']],
         ];
     }

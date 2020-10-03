@@ -25,6 +25,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             [
+                'attribute'=>'nr',
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+            ],
+            [
                 'attribute'=>'omschrijving',
                 'format' => 'raw',
                 'value' => function ($data) {

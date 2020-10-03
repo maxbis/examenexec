@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Form;
-use app\models\FormSearch;
+use app\models\Student;
+use app\models\StudentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * FormController implements the CRUD actions for Form model.
+ * StudentController implements the CRUD actions for Student model.
  */
-class FormController extends Controller
+class StudentController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,12 @@ class FormController extends Controller
     }
 
     /**
-     * Lists all Form models.
+     * Lists all Student models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new FormSearch();
+        $searchModel = new StudentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class FormController extends Controller
     }
 
     /**
-     * Displays a single Form model.
+     * Displays a single Student model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,13 +58,13 @@ class FormController extends Controller
     }
 
     /**
-     * Creates a new Form model.
+     * Creates a new Student model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Form();
+        $model = new Student();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +76,7 @@ class FormController extends Controller
     }
 
     /**
-     * Updates an existing Form model.
+     * Updates an existing Student model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,7 +87,7 @@ class FormController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -96,7 +96,7 @@ class FormController extends Controller
     }
 
     /**
-     * Deletes an existing Form model.
+     * Deletes an existing Student model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,15 +110,15 @@ class FormController extends Controller
     }
 
     /**
-     * Finds the Form model based on its primary key value.
+     * Finds the Student model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Form the loaded model
+     * @return Student the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Form::findOne($id)) !== null) {
+        if (($model = Student::findOne($id)) !== null) {
             return $model;
         }
 

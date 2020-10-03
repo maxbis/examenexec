@@ -3,18 +3,16 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\vraag */
+/* @var $model app\models\Gesprek */
 
-$this->title = 'Create Vraag';
-$this->params['breadcrumbs'][] = ['label' => 'Vraags', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="vraag-create">
+<div class="gesprek-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    
+
     <?= $this->render('_form', [
         'model' => $model,
+        'student' => $student,
         'formModel' => $formModel,
     ]) ?>
 

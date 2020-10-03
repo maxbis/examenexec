@@ -25,10 +25,11 @@ echo Nav::widget([
             'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'items' => [
                  ['label' => 'Examens', 'url' => ['/examen/index'] ],
-                 ['label' => 'Gesprekssoort', 'url' => ['/gesprek-soort']],
+                 ['label' => 'Gesprekssoort', 'url' => ['/gespreks-soort']],
                  ['label' => 'Form', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
                  ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
+                 ['label' => 'Studenten', 'url' => ['/student']],
                  ['label' => 'Gesprekken', 'url' => ['/gesprek']],
                  ['label' => 'Planner', 'url' => ['/gesprek/overzicht']],
                  ['label' => 'Help', 'url' => ['/examen/help']],
@@ -38,7 +39,7 @@ echo Nav::widget([
         [
             'label' => 'Student',
             'items' => [
-                 ['label' => 'Aanvraag', 'url' => ['/gesprek/create']],
+                 ['label' => 'Log in', 'url' => ['/gesprek/login']],
             ],
         ],
         // ['label' => 'Home', 'url' => ['/site/index'], 'options' => ['class' => 'nav-item'] ],

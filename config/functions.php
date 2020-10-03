@@ -26,11 +26,16 @@ function _dd($var)
     die();
 }
 
-function dd($var)
+function d($var)
 {
     echo '<pre>';
     yii\helpers\VarDumper::dump($var, 10, true);
     echo '</pre>';
+}
+
+function dd($var)
+{
+    d($var);
     die();
 }
 

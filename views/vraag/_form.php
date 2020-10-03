@@ -14,8 +14,8 @@ use yii\helpers\ArrayHelper;
     <?php $form = ActiveForm::begin(); ?>
 
     <?php
-    $itemList=ArrayHelper::map($formModel,'id','omschrijving');
-    echo $form->field($model, 'formid')->dropDownList($itemList,['prompt'=>'Please select']);
+        $itemList=ArrayHelper::map($formModel,'id','omschrijving');
+        echo $form->field($model, 'formid')->dropDownList($itemList,['prompt'=>'Please select']);
     ?>
 
     <?= $form->field($model, 'volgnr')->textInput() ?>

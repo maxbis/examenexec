@@ -3,16 +3,20 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Form;
-use app\models\FormSearch;
+use app\models\Gesprek;
+use app\models\GesprekSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use app\models\Student;
+use app\models\Form;
+use app\models\Rolspeler;
+
 /**
- * FormController implements the CRUD actions for Form model.
+ * GesprekController implements the CRUD actions for Gesprek model.
  */
-class FormController extends Controller
+class GesprekController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,22 +34,25 @@ class FormController extends Controller
     }
 
     /**
-     * Lists all Form models.
+     * Lists all Gesprek models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new FormSearch();
+        $searchModel = new GesprekSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $rolspeler = Rolspeler::find()->where(['actief' => '1'])->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'rolspeler' => $rolspeler,
         ]);
     }
 
     /**
-     * Displays a single Form model.
+     * Displays a single Gesprek model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,13 +65,13 @@ class FormController extends Controller
     }
 
     /**
-     * Creates a new Form model.
+     * Creates a new Gesprek model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Form();
+        $model = new Gesprek();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +83,7 @@ class FormController extends Controller
     }
 
     /**
-     * Updates an existing Form model.
+     * Updates an existing Gesprek model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,16 +94,27 @@ class FormController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        $formModel = Form::find()->all();
 
         return $this->render('update', [
             'model' => $model,
+            'formModel' => $formModel,
         ]);
     }
 
+    public function actionUpdateStatus($id, $status, $rolspelerid) {
+        $model = $this->findModel($id);
+        $model->status=$status;
+        $model->rolspelerid=$rolspelerid;
+        $model->save();
+    }
+
+
     /**
-     * Deletes an existing Form model.
+     * Deletes an existing Gesprek model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,18 +128,45 @@ class FormController extends Controller
     }
 
     /**
-     * Finds the Form model based on its primary key value.
+     * Finds the Gesprek model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Form the loaded model
+     * @return Gesprek the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Form::findOne($id)) !== null) {
+        if (($model = Gesprek::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionLogin()
+    {
+        if (isset($_GET['nummer']) && $_GET['nummer']!=0 ) {
+            $nummer = $_GET['nummer'];
+            $student = Student::find()->where(['nummer' => $nummer])->one();
+            if (!empty($student)) {
+
+                $model = new Gesprek();
+                $formModel = Form::find()->all();
+
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+        
+                return $this->render('create', [
+                    'model' => $model,
+                    'student' => $student,
+                    'formModel' => $formModel,
+                ]);
+
+                // echo $student->id;
+            }
+        }
+
+        return $this->render('login');
     }
 }
