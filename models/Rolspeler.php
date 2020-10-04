@@ -30,7 +30,7 @@ class Rolspeler extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['naam'], 'required'],
+            [['naam', 'token'], 'required'],
             [['actief', 'beschikbaar'], 'integer'],
             [['naam'], 'string', 'min' => 5, 'max' => 20],
         ];
@@ -46,6 +46,7 @@ class Rolspeler extends \yii\db\ActiveRecord
             'naam' => 'Naam',
             'actief' => 'Actief',
             'beschikbaar' => 'Beschikbaar',
+            'token' => 'Token',
         ];
     }
 

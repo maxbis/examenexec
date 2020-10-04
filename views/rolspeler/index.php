@@ -34,6 +34,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 },  
             ],
             [
+                'attribute'=>'token',
+                'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
+            ],
+            [
                 'attribute'=>'actief',
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
                 'format' => 'raw',

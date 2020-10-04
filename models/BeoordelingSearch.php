@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Gesprek;
+use app\models\Beoordeling;
 
 /**
- * GesprekSearch represents the model behind the search form of `app\models\Gesprek`.
+ * BeoordelingSearch represents the model behind the search form of `app\models\Beoordeling`.
  */
-class GesprekSearch extends Gesprek
+class BeoordelingSearch extends Beoordeling
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class GesprekSearch extends Gesprek
     public function rules()
     {
         return [
-            [['id', 'formid', 'rolspelerid', 'studentid', 'status'], 'integer'],
-            [['opmerking'], 'safe'],
+            [['id', 'formid', 'studentid', 'rolspelerid'], 'integer'],
+            [['resultaat', 'opmerking', 'timestamp'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class GesprekSearch extends Gesprek
      */
     public function search($params)
     {
-        $query = Gesprek::find();
+        $query = Beoordeling::find();
 
         // add conditions that should always apply here
 
@@ -60,12 +60,13 @@ class GesprekSearch extends Gesprek
         $query->andFilterWhere([
             'id' => $this->id,
             'formid' => $this->formid,
-            'rolspelerid' => $this->rolspelerid,
             'studentid' => $this->studentid,
-            'status' => $this->status,
+            'rolspelerid' => $this->rolspelerid,
+            'timestamp' => $this->timestamp,
         ]);
 
-        $query->andFilterWhere(['like', 'opmerking', $this->opmerking]);
+        $query->andFilterWhere(['like', 'resultaat', $this->resultaat])
+            ->andFilterWhere(['like', 'opmerking', $this->opmerking]);
 
         return $dataProvider;
     }

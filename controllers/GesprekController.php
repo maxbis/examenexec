@@ -74,7 +74,7 @@ class GesprekController extends Controller
         $model = new Gesprek();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -148,13 +148,19 @@ class GesprekController extends Controller
         if (isset($_GET['nummer']) && $_GET['nummer']!=0 ) {
             $nummer = $_GET['nummer'];
             $student = Student::find()->where(['nummer' => $nummer])->one();
+
             if (!empty($student)) {
+
+                //$gesprek = Gesprek::find()->where(['studentid'=>$student->id])->all();
+                // if (count($gesprek) > 0) {
+                //   return $this->redirect(['/gesprek/student', 'id' => $student->id, 'nummer' => $student->nummer]);
+                //};
 
                 $model = new Gesprek();
                 $formModel = Form::find()->all();
 
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    return $this->redirect(['student', 'id' => $student->id]);
                 }
         
                 return $this->render('create', [
@@ -168,5 +174,27 @@ class GesprekController extends Controller
         }
 
         return $this->render('login');
+    }
+
+    public function actionStudent($id) {
+        $gesprekken = Gesprek::find()->where(['studentid' => $id])->all();
+        return $this->render('student',['gesprekken' => $gesprekken]);
+    }
+
+    public function actionRolspeler()
+    {
+        if (isset($_GET['token']) ) {
+            $token = $_GET['token'];
+            $rolspeler = Rolspeler::find()->where(['token' => $token])->one();
+            if (!empty($rolspeler)) {
+                $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderby(['status' => 'ASC', 'id' => 'DESC'])->all();
+                return $this->render('overzicht',[
+                    'gesprekken' => $gesprekken,
+                    'rolspeler' => $rolspeler,
+                ]);
+            }
+        }
+
+        return $this->render('rolspeler');
     }
 }

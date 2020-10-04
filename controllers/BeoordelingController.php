@@ -3,19 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\vraag;
-use app\models\VraagSearch;
+use app\models\Beoordeling;
+use app\models\BeoordelingSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use app\models\form;
-use app\models\student;
 
+use app\models\Rolspeler;
 /**
- * VraagController implements the CRUD actions for vraag model.
+ * BeoordelingController implements the CRUD actions for Beoordeling model.
  */
-class VraagController extends Controller
+class BeoordelingController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -33,12 +32,12 @@ class VraagController extends Controller
     }
 
     /**
-     * Lists all vraag models.
+     * Lists all Beoordeling models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new VraagSearch();
+        $searchModel = new BeoordelingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +47,7 @@ class VraagController extends Controller
     }
 
     /**
-     * Displays a single vraag model.
+     * Displays a single Beoordeling model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -60,44 +59,26 @@ class VraagController extends Controller
         ]);
     }
 
-    public function actionForm($formid, $studentid, $rolspelerid, $gesprekid)
-    {
-        $vragen = vraag::find()->where(['formid' => $formid])->orderBy( ['volgnr' => SORT_ASC, ] )->all();
-        $student = student::find()->where(['id' => $studentid])->one();
-        $form = form::find($formid)->one();
-
-        return $this->render('vraagform', [
-            'vragen' => $vragen,
-            'student' => $student,
-            'form' => $form,
-            'rolspelerid' => $rolspelerid,
-            'gesprekid' => $gesprekid,
-        ]);
-    }
-
     /**
-     * Creates a new vraag model.
+     * Creates a new Beoordeling model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new vraag();
+        $model = new Beoordeling();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect('index');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-        
-        $formModel = form::find()->all();
 
         return $this->render('create', [
             'model' => $model,
-            'formModel' => $formModel,
         ]);
     }
 
     /**
-     * Updates an existing vraag model.
+     * Updates an existing Beoordeling model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -108,19 +89,16 @@ class VraagController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect('index');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-
-        $formModel = form::find()->all();
 
         return $this->render('update', [
             'model' => $model,
-            'formModel' => $formModel,
         ]);
     }
 
     /**
-     * Deletes an existing vraag model.
+     * Deletes an existing Beoordeling model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -133,16 +111,48 @@ class VraagController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionFormpost($totaalString, $statusString, $formId, $studentid, $rolspelerid) {
+        // $totaalString contains the values of the answers 1-3-2 (1 point, 3 points, 2 points for question 1,2,and 3)
+        // $statusString contains the answers 1-3-2 (Yes, No, Sometimes, for question 1,2,and 3)
+        $result = [ 'studentid' => $studentid,
+                    'formid' => $formId, 'rolspelerid' => $rolspelerid,
+                    'answers' => explode("-",$statusString), 'points' => explode("-",$totaalString),
+                    'totaalscore' => array_sum(explode("-",$totaalString))];
+        // d($result);
+        $model = new Beoordeling();
+        $model->studentid = $studentid;
+        $model->formid = $formId;
+        $model->rolspelerid = $rolspelerid;
+        $model->resultaat = json_encode($result);
+
+        if ($model->save()) {
+            $sql="update gesprek set status=2 where studentid=:studentid and formid=:formid and rolspelerid=:rolspelerid";
+            $params = [ ':studentid'=> $studentid, ':formid' => $formId, ':rolspelerid' => $rolspelerid];
+            $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+            $token = Rolspeler::find()->where(['id' => $rolspelerid])->one();
+            return $this->redirect(['/gesprek/rolspeler', 'token' => $token->token]);
+        } else {
+            // somehow the results are not stored in the db
+            echo "Error, resutls are not saved, save this page!";
+            dd($result);
+            exit;
+        };
+
+       
+        //ToDo store reuslts in DB (studentid needs to be passed)
+    }
+    
     /**
-     * Finds the vraag model based on its primary key value.
+     * Finds the Beoordeling model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return vraag the loaded model
+     * @return Beoordeling the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = vraag::findOne($id)) !== null) {
+        if (($model = Beoordeling::findOne($id)) !== null) {
             return $model;
         }
 

@@ -31,12 +31,19 @@ function result(){
 </script>
 
 <div class="Beoordelingsformulier">
-    <h1>Beoordelingsformulier</h1>
+    <h1>
+    Beoordelingsformulier
+    <?= $student->naam ?>
+    </h1>
+    <i>Gesprek: <?= $form->nr ?> - <?= $form->omschrijving ?></i>
+    <br><br>
 
-    <form action="formpost" onsubmit="return result()" method="get" id="myForm">
+    <form action="/beoordeling/formpost" onsubmit="return result()" method="get" id="myForm">
 
         <input type="hidden" id="totaalString" name="totaalString" value="-">
         <input type="hidden" id="statusString" name="statusString" value="-">
+        <input type="hidden" id="studentid" name="studentid" value=<?= $student->id ?> >
+        <input type="hidden" id="rolspelerid" name="rolspelerid" value=<?= $rolspelerid ?> >
         <input type="hidden" id="formId" name="formId" value="<?= $vragen[0]->formid ?>">
 
         <table class="table" style="width: 100rem;">
@@ -63,9 +70,16 @@ function result(){
                     <td><input type="radio" id="3" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
                 </tr>
             <?php endforeach; ?>
-
+            
 
         </table>
+
+        <b>Opmerkingen</b><br>
+
+        <textarea rows="4" cols="100" name="comment" form="myForm"></textarea>
+
+        <br>
+
         <?= HTMLInclude('formSave') ?>
     </form>
 

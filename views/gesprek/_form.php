@@ -40,8 +40,15 @@ use yii\helpers\ArrayHelper;
     <?= $form->field($model, 'opmerking')->textArea() ?>
 
 
-    <?= HTMLInclude('formSave') ?>
+    <div class="form-group">
+      <?= Html::a('Cancel', ['/gesprek/student', 'id' => $studentId, 'nummer' => $student->nummer], [ 'class'=>'btn btn-primary']) ?>
+      &nbsp;&nbsp;&nbsp;
+      <?= Html::submitButton('New', ['class' => 'btn btn-success']) ?>
+    </div>
 
     <?php ActiveForm::end(); ?>
+    <hr>
+    Je kunt hier een nieuw gesprek aanvragen, kies het juiste gesprek en druk op de knop new.<br>
+    Als je op de knop cancel drukt dan krijg je een <a href="/gesprek/student/?id=<?= $studentId ?>">overzicht</a> van al jouw gesprekken.<br>
 
 </div>

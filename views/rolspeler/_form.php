@@ -12,6 +12,8 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'naam')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'token')->textInput(['maxlength' => true]) ?>
+
 
     <?php $model->actief=1 ?>
     <?= $form->field($model, 'actief')->checkbox() ?>

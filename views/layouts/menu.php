@@ -37,15 +37,32 @@ echo Nav::widget([
             'options' => ['class' => 'nav-item']
         ],
         [
+            'label' => 'Gesprek',
+            'items' => [
+                 ['label' => 'Alle', 'url' => ['/gesprek']],
+                 ['label' => 'Wachten', 'url' => ['/gesprek?GesprekSearch[status]=0']],
+                 ['label' => 'Loopt', 'url' => ['/gesprek?GesprekSearch[status]=1']],
+                 ['label' => 'Klaar', 'url' => ['/gesprek?GesprekSearch[status]=2']],
+            ],
+        ],
+        [
             'label' => 'Student',
             'items' => [
                  ['label' => 'Log in', 'url' => ['/gesprek/login']],
+            ],
+        ],
+
+        [
+            'label' => 'Rolspeler',
+            'items' => [
+                 ['label' => 'Log in', 'url' => ['/gesprek/rolspeler']],
             ],
         ],
         // ['label' => 'Home', 'url' => ['/site/index'], 'options' => ['class' => 'nav-item'] ],
         // ['label' => 'About', 'url' => ['/site/about'], 'options' => ['class' => 'nav-item'] ],
         // ['label' => 'Contact', 'url' => ['/site/contact'], 'options' => ['class' => 'nav-item'] ],
     ],
+    
 ]);
 
 echo Nav::widget([

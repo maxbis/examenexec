@@ -31,53 +31,67 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Gesprek', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <script> document.write(new Date().toLocaleTimeString('en-GB')); </script>
+
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php $rolspelerList = ArrayHelper::map($rolspeler,'id','naam'); ?>
+    <?php $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
+        $statusIcon = ['&#9749;', '&#128490;', '&#128505;'];
+    ?>
 
-<hr>
+<hr
+<!-- &#9749;&#128490;&#128505; -->
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             'form.nr',
+            
             'form.omschrijving',
+
             'student.naam',
+
             [
-                'attribute' => 'Rolspeler',
+                'attribute' => 'rolspelerid',
+                'filter' => $rolspelerList,
+                'filterInputOptions' => [
+                    'class' => 'form-control',
+                    'prompt' => 'Select'
+                    ],
+                'format' => 'raw',
+                'value' => function ($model) use ($rolspelerList) {
+                    if ($model->status==0) {
+                        return Html::dropDownList('status', $model->rolspelerid, $rolspelerList,
+                        ['onchange' => "changeStatus('$model->id', '$model->status', $(this).val())"]);
+                    } else {
+                        return $model->rolspeler->naam;
+                    }
+                }
+            ],
+
+            'opmerking',
+
+            [
+                'attribute' => 'status',
                 'filter' => ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
                 'filterInputOptions' => [
                     'class' => 'form-control',
                     'prompt' => 'Select'
-                ],
+                    ],
                 'format' => 'raw',
-                'value' => function ($model) use ($rolspelerList) {
-                    return Html::dropDownList('status', $model->rolspelerid, $rolspelerList,
-                    ['onchange' => "changeStatus('$model->id', '$model->status', $(this).val())"]);
-                }],
-            'opmerking',
-            [
-            'attribute' => 'status',
-            'filter' => ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
-            'filterInputOptions' => [
-                'class' => 'form-control',
-                'prompt' => 'Select'
+                'value' => function ($model) {
+                    //$test = Html::dropDownList('status', 3, $rolspelerList);
+                    return Html::dropDownList('status', $model->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
+                    ['onchange' => "changeStatus('$model->id', $(this).val(), '$model->rolspelerid')"])."&nbsp;&nbsp;&nbsp;(".$model->status.")";
+                     }
             ],
-            'format' => 'raw',
-            'value' => function ($model) {
-                //$test = Html::dropDownList('status', 3, $rolspelerList);
-                return Html::dropDownList('status', $model->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
-                ['onchange' => "changeStatus('$model->id', $(this).val(), '$model->rolspelerid')"]);
-            }],
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{delete}',],
+            ],
+        ]);
+    ?>
 
 
 </div>
