@@ -18,10 +18,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'klas')->textInput(['maxlength' => true]) ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
+    <?= HTMLInclude('formSave') ?>
+    
     <?php ActiveForm::end(); ?>
 
 </div>

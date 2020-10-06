@@ -17,7 +17,7 @@ $this->title = 'Log in';
         <h1><?= Html::encode($this->title) ?></h1>
         <hr>
 
-        <form>
+        <form action="/gesprek/student">
             <label for="exampleFormControlSelect1">Studentennummer:</label>
             <input class="form-control form-control-lg" type="text" id="nummer" name="nummer" placeholder="">
             <div class="form-group">

@@ -74,7 +74,7 @@ class GesprekController extends Controller
         $model = new Gesprek();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['student', 'nummer' => $model->student->nummer]);
         }
 
         return $this->render('create', [
@@ -176,23 +176,51 @@ class GesprekController extends Controller
         return $this->render('login');
     }
 
-    public function actionStudent($id) {
+    public function actionStudent($id=0, $nummer=0) {
+        if (! $id) {
+            $student = Student::find()->where(['nummer' => $nummer])->one();
+            if (empty($student)) {
+                sleep(2);
+                return $this->render('login');
+            }
+            $id=$student->id;
+        }
+
+        $newGesprek = new Gesprek(); 
+        $formModel = Form::find()->where(['actief'=>1])->all();       
         $gesprekken = Gesprek::find()->where(['studentid' => $id])->all();
-        return $this->render('student',['gesprekken' => $gesprekken]);
+
+        return $this->render('student',[
+            'gesprekken' => $gesprekken,
+            'newGesprek' => $newGesprek,
+            'student' => $student,
+            'formModel' => $formModel,
+        ]);
     }
 
-    public function actionRolspeler()
+    public function actionRolspeler($id=0,$token=0,$gesprekid=0)
     {
-        if (isset($_GET['token']) ) {
-            $token = $_GET['token'];
-            $rolspeler = Rolspeler::find()->where(['token' => $token])->one();
-            if (!empty($rolspeler)) {
-                $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderby(['status' => 'ASC', 'id' => 'DESC'])->all();
-                return $this->render('overzicht',[
-                    'gesprekken' => $gesprekken,
-                    'rolspeler' => $rolspeler,
-                ]);
-            }
+        if ($id) {
+            $rolspeler = Rolspeler::find()->where(['id' => $id])->andWhere(['not', ['token' => null]])->one();
+        } elseif($token) {
+            $rolspeler = Rolspeler::find()->where(['token' => $token])->andWhere(['not', ['token' => null]])->one();
+        } else {
+            return $this->render('rolspeler');
+        }
+
+        if ($gesprekid) { // we came here via a cancelled gesprek
+            // set status terug naar 0
+            $sql="update gesprek set status=0 where id = :id";
+            $params = array(':id'=> $gesprekid);
+            Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+        }
+       
+        if (!empty($rolspeler)) {
+            $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderby(['status' => 'ASC', 'id' => 'DESC'])->all();
+            return $this->render('overzicht',[
+                'gesprekken' => $gesprekken,
+                'rolspeler' => $rolspeler,
+            ]);
         }
 
         return $this->render('rolspeler');

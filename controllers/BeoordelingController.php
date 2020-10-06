@@ -111,7 +111,7 @@ class BeoordelingController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionFormpost($totaalString, $statusString, $formId, $studentid, $rolspelerid) {
+    public function actionFormpost($totaalString, $statusString, $gesprekid, $formId, $studentid, $rolspelerid, $opmerking) {
         // $totaalString contains the values of the answers 1-3-2 (1 point, 3 points, 2 points for question 1,2,and 3)
         // $statusString contains the answers 1-3-2 (Yes, No, Sometimes, for question 1,2,and 3)
         $result = [ 'studentid' => $studentid,
@@ -120,14 +120,16 @@ class BeoordelingController extends Controller
                     'totaalscore' => array_sum(explode("-",$totaalString))];
         // d($result);
         $model = new Beoordeling();
+        $model->gesprekid = $gesprekid;
         $model->studentid = $studentid;
         $model->formid = $formId;
+        $model->opmerking = $opmerking;
         $model->rolspelerid = $rolspelerid;
         $model->resultaat = json_encode($result);
 
         if ($model->save()) {
-            $sql="update gesprek set status=2 where studentid=:studentid and formid=:formid and rolspelerid=:rolspelerid";
-            $params = [ ':studentid'=> $studentid, ':formid' => $formId, ':rolspelerid' => $rolspelerid];
+            $sql="update gesprek set status=2 where id=:gesprekid";
+            $params = [ ':gesprekid'=> $gesprekid, ];
             $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
 
             $token = Rolspeler::find()->where(['id' => $rolspelerid])->one();

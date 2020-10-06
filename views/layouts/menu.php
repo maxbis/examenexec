@@ -19,32 +19,29 @@ echo Nav::widget([
     'options' => ['class' => 'navbar-nav mr-auto'],
     'encodeLabels' => false,
     'items' => [
-        [   'label' => 'Docent',
+        [   'label' => 'Set-up',
             //'class'=>'bootstrap.widgets.BootMenu',
             //'htmlOptions'=>array('style'=>'font-size: 2.5em'),
             'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'items' => [
                  ['label' => 'Examens', 'url' => ['/examen/index'] ],
-                 ['label' => 'Gesprekssoort', 'url' => ['/gespreks-soort']],
-                 ['label' => 'Form', 'url' => ['/form']],
+                 ['label' => 'Formulieren', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
-                 ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
-                 ['label' => 'Studenten', 'url' => ['/student']],
-                 ['label' => 'Gesprekken', 'url' => ['/gesprek']],
-                 ['label' => 'Planner', 'url' => ['/gesprek/overzicht']],
-                 ['label' => 'Help', 'url' => ['/examen/help']],
             ],
             'options' => ['class' => 'nav-item']
         ],
-        [
-            'label' => 'Gesprek',
-            'items' => [
-                 ['label' => 'Alle', 'url' => ['/gesprek']],
-                 ['label' => 'Wachten', 'url' => ['/gesprek?GesprekSearch[status]=0']],
-                 ['label' => 'Loopt', 'url' => ['/gesprek?GesprekSearch[status]=1']],
-                 ['label' => 'Klaar', 'url' => ['/gesprek?GesprekSearch[status]=2']],
-            ],
+        [   'label' => 'Status',
+        //'class'=>'bootstrap.widgets.BootMenu',
+        //'htmlOptions'=>array('style'=>'font-size: 2.5em'),
+        'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
+        'items' => [
+            ['label' => 'Studenten', 'url' => ['/student']],
+            ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
+            ['label' => 'Gesprekken', 'url' => ['/gesprek']],
         ],
+        'options' => ['class' => 'nav-item']
+    ],
+
         [
             'label' => 'Student',
             'items' => [

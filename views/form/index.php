@@ -7,16 +7,13 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\FormSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Forms';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Formulieren';
+
 ?>
 <div class="form-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Form', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -29,10 +26,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
             ],
             [
+                'attribute'=>'actief',
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                'format' => 'raw',
+                'filter' => [''=> 'alles', '0'=>'Inactief','1'=>'Actief'],
+                'value' => function ($data) {
+                  $status = $data->actief ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-minus"></span>';
+                  return Html::a($status, ['toggle-actief?id='.$data->id], ['title' => 'Actief <-> Inactief',]);
+                }
+            ],
+            [
                 'attribute'=>'omschrijving',
                 'format' => 'raw',
                 'value' => function ($data) {
-                  return Html::a($data->omschrijving, ['/vraag/form?id='.$data->id],['title' => 'Edit',]);
+                  return Html::a($data->omschrijving, ['/vraag/form?formid='.$data->id],['title' => 'Edit',]);
                 },  
             ],
             ['class' => 'yii\grid\ActionColumn'],
@@ -41,3 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 </div>
+
+<p>
+    <?= Html::a('New Form', ['create'], ['class' => 'btn btn-success']) ?>
+</p>

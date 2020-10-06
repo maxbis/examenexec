@@ -18,7 +18,7 @@ class RolspelerSearch extends Rolspeler
     {
         return [
             [['id', 'actief', 'beschikbaar'], 'integer'],
-            [['naam'], 'safe'],
+            [['naam', 'token'], 'safe'],
         ];
     }
 
@@ -63,7 +63,8 @@ class RolspelerSearch extends Rolspeler
             'beschikbaar' => $this->beschikbaar,
         ]);
 
-        $query->andFilterWhere(['like', 'naam', $this->naam]);
+        $query->andFilterWhere(['like', 'naam', $this->naam])
+            ->andFilterWhere(['like', 'token', $this->token]);
 
         return $dataProvider;
     }

@@ -22,11 +22,11 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'vraag')->textInput() ?>
 
-    <?= $form->field($model, 'ja')->textInput() ?>
+    <?= $form->field($model, 'ja')->textInput()->label('Ja-punten') ?>
 
-    <?= $form->field($model, 'soms')->textInput() ?>
+    <?= $form->field($model, 'soms')->textInput()->label('Soms-punten') ?>
 
-    <?= $form->field($model, 'nee')->textInput() ?>
+    <?= $form->field($model, 'nee')->textInput()->label('Nee-punten') ?>
 
     <?= HTMLInclude('formSave') ?>
 

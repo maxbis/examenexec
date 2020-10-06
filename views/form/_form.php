@@ -16,6 +16,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'omschrijving')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'instructie')->textInput(['maxlength' => true])->textArea( ['style'=>'width:600px'] ) ?>
+
+
     <?= HTMLInclude('formSave') ?>
 
     <?php ActiveForm::end(); ?>

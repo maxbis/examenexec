@@ -55,8 +55,14 @@ class Student extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getGespreks()
+    public function getGesprekken()
     {
         return $this->hasMany(Gesprek::className(), ['studentid' => 'id']);
     }
+
+    public function getAantalGesprekken()
+    {
+        return $this->hasMany(Gesprek::className(), ['studentid' => 'id'])->count();
+    }
+
 }

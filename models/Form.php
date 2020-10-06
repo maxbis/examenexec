@@ -29,7 +29,8 @@ class Form extends \yii\db\ActiveRecord
     {
         return [
             [['nr'], 'required'],
-            [['nr', 'examenid'], 'integer'],
+            [['nr', 'examenid', 'actief'], 'integer'],
+            [['instructie'], 'string'],
             [['omschrijving'], 'string', 'max' => 350],
         ];
     }
@@ -44,6 +45,7 @@ class Form extends \yii\db\ActiveRecord
             'omschrijving' => 'Omschrijving',
             'nr' => 'Nr',
             'examenid' => 'Examenid',
+            'instructie' => 'Instructie',
         ];
     }
 }

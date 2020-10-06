@@ -24,11 +24,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'id',
-            'nummer',
-            'naam',
-            'klas',
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn', 'contentOptions' => ['style' => 'width:60px; white-space: normal;'],],
+            [   'attribute'=>'nummer',
+                'contentOptions' => ['style' => 'width:60px;'],
+            ],
+            [   'attribute'=>'klas',
+            'contentOptions' => ['style' => 'width:60px;'],
+            ],
+            [
+                'attribute'=>'naam',
+                'contentOptions' => ['style' => 'width:600px; white-space: normal;'],
+                'format' => 'raw',
+                'value' => function ($data) {
+                    return Html::a($data->naam, ['/gesprek/student?nummer='.$data->nummer],['title'=> 'Edit',]);
+                    },
+            ],
         ],
     ]); ?>
 

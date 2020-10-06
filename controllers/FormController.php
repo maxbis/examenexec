@@ -109,6 +109,14 @@ class FormController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionToggleActief($id) {
+        // function toggles boolean actief
+        $sql="update form set actief=!actief where id = :id";
+        $params = array(':id'=> $id);
+        Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+        return $this->redirect(['index']);
+    }
+
     /**
      * Finds the Form model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

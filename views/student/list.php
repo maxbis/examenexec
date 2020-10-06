@@ -1,5 +1,7 @@
 <?php
 
+dd('/view/student/list - weg??');
+
 use yii\helpers\Html;
 use yii\widgets\ListView;
 

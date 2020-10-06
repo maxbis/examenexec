@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
         $statusIcon = ['&#9749;', '&#128490;', '&#128505;'];
+        $rolspelerList[0]="Select...";
     ?>
 
 <hr

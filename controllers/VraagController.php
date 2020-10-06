@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 
 use app\models\form;
 use app\models\student;
+use app\models\beoordeling;
+use app\models\rolspeler;
 
 /**
  * VraagController implements the CRUD actions for vraag model.
@@ -40,10 +42,12 @@ class VraagController extends Controller
     {
         $searchModel = new VraagSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $formModel = Form::find()->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'formModel' => $formModel,
         ]);
     }
 
@@ -60,11 +64,33 @@ class VraagController extends Controller
         ]);
     }
 
-    public function actionForm($formid, $studentid, $rolspelerid, $gesprekid)
+    public function actionForm($formid, $studentid=0, $rolspelerid=0, $gesprekid=0, $compleet=0)
     {
         $vragen = vraag::find()->where(['formid' => $formid])->orderBy( ['volgnr' => SORT_ASC, ] )->all();
         $student = student::find()->where(['id' => $studentid])->one();
-        $form = form::find($formid)->one();
+        $form = form::find()->where(['id'=>$formid])->one();
+        $rolspeler = Rolspeler::find()->where(['id' => $rolspelerid])->one();
+
+        // update gesprek(gesprekid) status=1
+        $sql="update gesprek set status=1 where id = :id";
+        $params = array(':id'=> $gesprekid);
+        Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+        if ($compleet) {
+            $beoordeling = beoordeling::find()->where(['gesprekid' => $gesprekid])->one();
+            $resultaat = json_decode($beoordeling->resultaat, true);
+            return $this->render('antwoordform', [
+                'vragen' => $vragen,
+                'student' => $student,
+                'form' => $form,
+                'rolspeler' => $rolspeler,
+                'gesprekid' => $gesprekid,
+                'resultaat' => $resultaat,
+                'tijd' => $beoordeling->timestamp,
+                'opmerking' => $beoordeling->opmerking,
+            ]);
+
+        }
 
         return $this->render('vraagform', [
             'vragen' => $vragen,

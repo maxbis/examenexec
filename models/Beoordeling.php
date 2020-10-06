@@ -36,8 +36,8 @@ class Beoordeling extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['formid', 'studentid', 'rolspelerid', 'resultaat'], 'required'],
-            [['formid', 'studentid', 'rolspelerid'], 'integer'],
+            [['gesprekid', 'formid', 'studentid', 'rolspelerid', 'resultaat'], 'required'],
+            [['gesprekid', 'formid', 'studentid', 'rolspelerid'], 'integer'],
             [['resultaat', 'opmerking'], 'string'],
             [['timestamp'], 'safe'],
             [['formid'], 'exist', 'skipOnError' => true, 'targetClass' => Form::className(), 'targetAttribute' => ['formid' => 'id']],

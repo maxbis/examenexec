@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\VraagSearch */
@@ -14,19 +15,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Vraag', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php // echo $this->render('_search', ['model' => $searchModel]);
+        $formList =  ArrayHelper::map($formModel,'id','omschrijving');
+    //d($formList);
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            [   'attribute' => 'form.omschrijving',
-                'label' => 'form',
+            [
+                'attribute' => 'formid',
+                'filter' => $formList,
+                'label' => 'Formulier',
+                'filterInputOptions' => [
+                    'class' => 'form-control',
+                    'prompt' => 'Select'
+                    ],
+                'format' => 'raw',
+                'value' => function ($model) use ($formList) {
+                    return $formList[$model->formid];
+                }
             ],
             [   'attribute' => 'volgnr',
                 'contentOptions' => ['style' => 'width:40px;'],
@@ -54,3 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 </div>
+
+<p>
+    <?= Html::a('Create Vraag', ['create'], ['class' => 'btn btn-success']) ?>
+</p>

@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width:400px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
-                  return Html::a($data->naam, ['/rolspeler/update?id='.$data->id],['title' => 'Edit',]);
+                  return Html::a($data->naam, ['/gesprek/rolspeler?token='.$data->token],['title' => 'Edit',]);
                 },  
             ],
             [
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width:20px;'],
-                'template' => '{delete}',
+                'template' => '{delete} {update}',
             ],
         ],
     ]); ?>

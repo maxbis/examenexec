@@ -36,7 +36,7 @@ AppAsset::register($this);
         ]) ?>
     <?= Alert::widget() ?>
     -->
-    <hr>
+
     <?= $content ?>
 </div>
 

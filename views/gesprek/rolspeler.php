@@ -12,7 +12,7 @@ $this->title = 'Rolspeler Log in';
 
 <div class="gesprek-form">
 
-    <div class="col-sm-4">
+    <div class="col-sm-6">
 
         <h1><?= Html::encode($this->title) ?></h1>
         <hr>
