@@ -13,6 +13,9 @@ use app\models\form;
 use app\models\student;
 use app\models\beoordeling;
 use app\models\rolspeler;
+use app\models\gesprek;
+
+use kartik\mpdf\Pdf;
 
 /**
  * VraagController implements the CRUD actions for vraag model.
@@ -64,41 +67,45 @@ class VraagController extends Controller
         ]);
     }
 
-    public function actionForm($formid, $studentid=0, $rolspelerid=0, $gesprekid=0, $compleet=0)
+    public function actionForm($gesprekid, $compleet=0)
     {
-        $vragen = vraag::find()->where(['formid' => $formid])->orderBy( ['volgnr' => SORT_ASC, ] )->all();
-        $student = student::find()->where(['id' => $studentid])->one();
-        $form = form::find()->where(['id'=>$formid])->one();
-        $rolspeler = Rolspeler::find()->where(['id' => $rolspelerid])->one();
+        $gesprek = gesprek::find()->where(['id'=>$gesprekid])->one();
+
+        $vragen = vraag::find()->where(['formid' => $gesprek->formid])->orderBy( ['volgnr' => SORT_ASC, ] )->all();
+        $student = student::find()->where(['id' => $gesprek->studentid])->one();
+        $form = form::find()->where(['id'=>$gesprek->formid])->one();
+        $rolspeler = Rolspeler::find()->where(['id' => $gesprek->rolspelerid])->one();
 
         // update gesprek(gesprekid) status=1
-        $sql="update gesprek set status=1 where id = :id";
+        $sql="update gesprek set status=1 where id = :id and status=0";
         $params = array(':id'=> $gesprekid);
         Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
 
-        if ($compleet) {
+        if ($compleet) { // antwoordform
+
             $beoordeling = beoordeling::find()->where(['gesprekid' => $gesprekid])->one();
             $resultaat = json_decode($beoordeling->resultaat, true);
+
             return $this->render('antwoordform', [
                 'vragen' => $vragen,
                 'student' => $student,
                 'form' => $form,
                 'rolspeler' => $rolspeler,
-                'gesprekid' => $gesprekid,
                 'resultaat' => $resultaat,
-                'tijd' => $beoordeling->timestamp,
-                'opmerking' => $beoordeling->opmerking,
+                'beoordeling' => $beoordeling,
+            ]);
+
+        } else { // vraag form
+
+            return $this->render('vraagform', [
+                'vragen' => $vragen,
+                'student' => $student,
+                'form' => $form,
+                'rolspeler' => $rolspeler,
+                'gesprek' => $gesprek,
             ]);
 
         }
-
-        return $this->render('vraagform', [
-            'vragen' => $vragen,
-            'student' => $student,
-            'form' => $form,
-            'rolspelerid' => $rolspelerid,
-            'gesprekid' => $gesprekid,
-        ]);
     }
 
     /**

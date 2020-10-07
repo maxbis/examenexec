@@ -23,7 +23,7 @@ function result(){
     }
     totaalString = totaalString.slice(0,-1);
     statusString = statusString.slice(0,-1);
-    alert(statusString);
+
     document.getElementById("totaalString").value = totaalString;
     document.getElementById("statusString").value = statusString;
     return true; // don't submit the form
@@ -36,7 +36,7 @@ function result(){
         $studentId = $student->id;
         $dummy = false;
     } else {
-        $studentNaam = "";
+        $studentNaam = "DEBUG!";
         $studentId = "";
         $dummy = true;
     }
@@ -59,8 +59,8 @@ function result(){
         <input type="hidden" id="totaalString" name="totaalString" value="-">
         <input type="hidden" id="statusString" name="statusString" value="-">
         <input type="hidden" id="studentid" name="studentid" value=<?= $studentId ?> >
-        <input type="hidden" id="rolspelerid" name="rolspelerid" value=<?= $rolspelerid ?> >
-        <input type="hidden" id="gesprekid" name="gesprekid" value="<?= $gesprekid ?>">
+        <input type="hidden" id="rolspelerid" name="rolspelerid" value=<?= $rolspeler->id ?> >
+        <input type="hidden" id="gesprekid" name="gesprekid" value="<?= $gesprek->id ?>">
         <input type="hidden" id="formId" name="formId" value="<?= $form->id ?>">
 
 
@@ -105,7 +105,7 @@ function result(){
                 echo Html::a('Cancel', ['/form'], ['class'=>'btn btn-primary']);
             } else {
                
-                echo Html::a('Cancel', ['/gesprek/rolspeler', 'id'=>$rolspelerid, 'gesprekid'=>$gesprekid], ['class'=>'btn btn-primary']);
+                echo Html::a('Cancel', ['/gesprek/rolspeler', 'id'=>$rolspeler->id, 'gesprekid'=>$gesprek->id], ['class'=>'btn btn-primary']);
                 echo " &nbsp;&nbsp;&nbsp;";
                 echo Html::submitButton('Save', ['class' => 'btn btn-success']);
                

@@ -73,7 +73,7 @@ $status = ['wachten', 'loopt', 'klaar']
     <?= $form->field($newGesprek, 'opmerking')->textArea( ['style'=>'width:400px'] ) ?>
 
     <div class="form-group">
-      <?= Html::a('Cancel', ['/gesprek/student', 'id' => $studentId, 'nummer' => $student->nummer], [ 'class'=>'btn btn-primary']) ?>
+      <?= Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>
       &nbsp;&nbsp;&nbsp;
       <?= Html::submitButton('New', ['class' => 'btn btn-success']) ?>
     </div>

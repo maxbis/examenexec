@@ -36,7 +36,7 @@ function result(){
         $studentId = $student->id;
         $dummy = false;
     } else {
-        $studentNaam = "";
+        $studentNaam = "DEBUG!";
         $studentId = "";
         $dummy = true;
     }
@@ -120,14 +120,14 @@ function result(){
     <div class="card" style="width: 40rem;">
         <div class="card-body">
             <h5 class="card-title">Opmerking</h5>
-            <?= $opmerking ?>
+            <?= $beoordeling->opmerking ?>
         </div>
     </div>
 
     <br>
     Gesprek op
     <?php
-    $date = new DateTime($tijd);
+    $date = new DateTime($beoordeling->timestamp);
     echo $date->format('d-m-y - H:i').' uur, door '.$rolspeler->naam;
     ?>
  

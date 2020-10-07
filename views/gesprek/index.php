@@ -37,8 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?php $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
-        $statusIcon = ['&#9749;', '&#128490;', '&#128505;'];
-        $rolspelerList[0]="Select...";
+        $statusIcon = ['&#128347;', '&#128490;', '&#128504;'];
+        $rolspelerList = [ ''=> '...'] + $rolspelerList;
+        $formlist =  ArrayHelper::map($form,'id','omschrijving');
+        // dd($rolspelerList);
     ?>
 
 <hr
@@ -48,18 +50,49 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
+            [   'attribute'=>'created',
+            'format' => 'raw',
+                'value' => function ($model) use ($statusIcon) {
+                    $date = new DateTime($model->created);
+                    $text = $date->format('H:i')."&nbsp;&nbsp;&nbsp;".$statusIcon[$model->status];
+                    if ( $model->status == 2 ) {
+                        return Html::a($text, ['/vraag/form', 'gesprekid'=>$model->id,'compleet'=>'1']);
+                    } else {
+                        return $text;
+                    }
+                   
+                }
+            ],
             'form.nr',
             
-            'form.omschrijving',
+            [
+                'attribute' => 'formid',
+                'filter' => $formlist,
+                'filterInputOptions' => [
+                    'class' => 'form-control',
+                    'prompt' => '...'
+                ],
+                'format' => 'raw',
+                'value' => function ($model)  {
+                    return $model->form->omschrijving;
+                }
+            ],
 
-            'student.naam',
+            [
+                'attribute' => 'formid',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    //return $model->student->naam;
+                    return Html::a($model->student->naam, ['/gesprek/student', 'id'=>$model->studentid]);
+                }
+            ],
 
             [
                 'attribute' => 'rolspelerid',
                 'filter' => $rolspelerList,
                 'filterInputOptions' => [
                     'class' => 'form-control',
-                    'prompt' => 'Select'
+                    'prompt' => '  '
                     ],
                 'format' => 'raw',
                 'value' => function ($model) use ($rolspelerList) {
@@ -72,7 +105,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
 
-            'opmerking',
+            [   'attribute' => 'opmerking',
+                'contentOptions' => ['style' => 'width:80px;'],
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return substr($model->opmerking, 0, 10);
+                }
+            ],
+
 
             [
                 'attribute' => 'status',
@@ -85,11 +125,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     //$test = Html::dropDownList('status', 3, $rolspelerList);
                     return Html::dropDownList('status', $model->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
-                    ['onchange' => "changeStatus('$model->id', $(this).val(), '$model->rolspelerid')"])."&nbsp;&nbsp;&nbsp;(".$model->status.")";
+                    ['onchange' => "changeStatus('$model->id', $(this).val(), '$model->rolspelerid')"]);
                      }
             ],
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{delete}',],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}',],
             ],
         ]);
     ?>

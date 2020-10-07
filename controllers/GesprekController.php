@@ -43,11 +43,13 @@ class GesprekController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $rolspeler = Rolspeler::find()->where(['actief' => '1'])->all();
+        $form = Form::find()->where(['actief' => '1'])->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'rolspeler' => $rolspeler,
+            'form' => $form,
         ]);
     }
 
@@ -184,6 +186,8 @@ class GesprekController extends Controller
                 return $this->render('login');
             }
             $id=$student->id;
+        } else {
+            $student = Student::find()->where(['id' => $id])->one();
         }
 
         $newGesprek = new Gesprek(); 
