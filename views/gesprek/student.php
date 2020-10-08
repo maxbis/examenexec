@@ -51,7 +51,7 @@ $status = ['wachten', 'loopt', 'klaar']
 <hr>
 <br>
 
-<h1>Nieuw Gesprek aanvragem
+<h1>Nieuw Gesprek aanvragen
 </h1>
 
 <?php

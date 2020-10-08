@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use app\models\vraag;
+
 /**
  * FormController implements the CRUD actions for Form model.
  */
@@ -107,6 +109,22 @@ class FormController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionForm($id)
+    {
+        $query = vraag::find()
+        ->where(['formid' => $id])
+        ->orderBy( ['volgnr' => SORT_ASC, ] );
+
+        $vragen = $query->all();
+
+        $form = form::find()->where(['id' => $id])->one();
+
+        return $this->render('form', [
+            'form' => $form,
+            'vragen' => $vragen,
+        ]);
     }
 
     public function actionToggleActief($id) {

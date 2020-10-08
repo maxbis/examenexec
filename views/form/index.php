@@ -39,7 +39,7 @@ $this->title = 'Formulieren';
                 'attribute'=>'omschrijving',
                 'format' => 'raw',
                 'value' => function ($data) {
-                  return Html::a($data->omschrijving, ['/vraag/form?formid='.$data->id],['title' => 'Edit',]);
+                  return Html::a($data->omschrijving, ['/form/form?id='.$data->id],['title' => 'Edit',]);
                 },  
             ],
             ['class' => 'yii\grid\ActionColumn'],
