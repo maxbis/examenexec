@@ -5,24 +5,83 @@ use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 
-$status = ['wachten', 'loopt', 'klaar']
+$status = ['wachten', 'loopt', 'klaar'];
+
+// counts[0] heeft aantal wachtende, counts[1] in gesprek, counts[2] klaar 
+$counts = array_count_values(array_column($alleGesprekken, 'status'));
+$queue = $counts[0]+$counts[1];
+$barlen1 = max(1,$counts[0]*2);
+$barlen2 = max(1,$counts[1]*2);
 ?>
 
 <meta http-equiv="refresh" content="60">
-<div class="text-right">
-  <script> document.write(new Date().toLocaleTimeString('en-GB')); </script>
+
+<div class="container">
+
+  <div class="row">
+
+    <div class="col-8">
+
+      <h1>Gespreksoverzicht
+      <?= $student->naam ?>
+      </h1>
+      <?php if(count($gesprekken)==0): ?>
+        <br>
+        Je hebt nog geen gesprekken aangevraagd
+        <br>
+      <?php endif; ?>
+
+    </div>
+
+    <div class="col bg-light">
+      <font size="2" >
+          <table border=0 width="100%" class="table-sm">
+            <tr>
+
+              <td>&nbsp;</td>
+              <td>Drukte</td>
+              <td><script> document.write(new Date().toLocaleTimeString('en-GB')); </script></td>
+            </tr>
+
+            <tr>
+              <td style="width: 100px;">
+                Wachtende:
+              </td>
+
+              <td style="width: 600px;">
+                  <div class="progress-bar bg-info" style="width:<?= $barlen1 ?>%">
+                  <font size="1" ><?= $counts[0] ?></font>
+                  </div>
+              </td>
+              <td>&nbsp;</td>
+
+            </tr>
+
+            <tr>
+              <td style="width: 100px;">
+                  loopt:
+                </td>
+
+                <td style="width: 600px;">
+                    <div class="progress-bar bg-success" style="width:<?= $barlen2 ?>%">
+                      <?= $counts[1] ?>
+                    </div>
+                </td>
+                <td>&nbsp;</td>
+
+            </tr>
+          </table>
+        </font>
+    </div>
+
+  </div>
 </div>
 
 
-<h1>Gespreksoverzicht
-    <?= $student->naam ?>
-</h1>
 
-<?php if(count($gesprekken)==0): ?>
+<?php if(count($gesprekken)!=0): ?>
+
   <br>
-  Je hebt nog geen gesprekken aangevraagd
-  <br>
-<?php else: ?>
 
   <div class="gesprek-overzicht">
 

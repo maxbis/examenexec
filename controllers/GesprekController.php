@@ -50,6 +50,7 @@ class GesprekController extends Controller
             'dataProvider' => $dataProvider,
             'rolspeler' => $rolspeler,
             'form' => $form,
+            'alleGesprekken' => Gesprek::find()->all(),
         ]);
     }
 
@@ -193,9 +194,11 @@ class GesprekController extends Controller
         $newGesprek = new Gesprek(); 
         $formModel = Form::find()->where(['actief'=>1])->all();       
         $gesprekken = Gesprek::find()->where(['studentid' => $id])->all();
+        $alleGesprekken = Gesprek::find()->all();
 
         return $this->render('student',[
             'gesprekken' => $gesprekken,
+            'alleGesprekken' => $alleGesprekken,
             'newGesprek' => $newGesprek,
             'student' => $student,
             'formModel' => $formModel,
@@ -221,7 +224,9 @@ class GesprekController extends Controller
        
         if (!empty($rolspeler)) {
             $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderby(['status' => 'ASC', 'id' => 'DESC'])->all();
+            $alleGesprekken = Gesprek::find()->all();
             return $this->render('overzicht',[
+                'alleGesprekken' => $alleGesprekken,
                 'gesprekken' => $gesprekken,
                 'rolspeler' => $rolspeler,
             ]);

@@ -12,6 +12,12 @@ use yii\helpers\Url;
 
 $this->title = 'Gesprekken';
 $this->params['breadcrumbs'][] = $this->title;
+
+$counts = array_count_values(array_column($alleGesprekken, 'status'));
+$queue = $counts[0]+$counts[1];
+$barlen1 = max(1,$counts[0]*2);
+$barlen2 = max(1,$counts[1]*2);
+
 ?>
 	
 <script>
@@ -29,9 +35,54 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="gesprek-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row">
 
-    <script> document.write(new Date().toLocaleTimeString('en-GB')); </script>
+        <div class="col-8">
+            <h1>Gespreksoverzicht</h1>
+        </div>
+
+        <div class="col bg-light">
+            <font size="2" >
+                <table border=0 width="100%" class="table-sm">
+                    <tr>
+
+                    <td>&nbsp;</td>
+                    <td>Drukte</td>
+                    <td><script> document.write(new Date().toLocaleTimeString('en-GB')); </script></td>
+                    </tr>
+
+                    <tr>
+                    <td style="width: 100px;">
+                        Wachtende:
+                    </td>
+
+                    <td style="width: 600px;">
+                        <div class="progress-bar bg-info" style="width:<?= $barlen1 ?>%">
+                        <font size="1" ><?= $counts[0] ?></font>
+                        </div>
+                    </td>
+                    <td>&nbsp;</td>
+
+                    </tr>
+
+                    <tr>
+                    <td style="width: 100px;">
+                        loopt:
+                        </td>
+
+                        <td style="width: 600px;">
+                            <div class="progress-bar bg-success" style="width:<?= $barlen2 ?>%">
+                            <?= $counts[1] ?>
+                            </div>
+                        </td>
+                        <td>&nbsp;</td>
+
+                    </tr>
+                </table>
+            </font>
+        </div>
+    </div>
+
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -43,8 +94,6 @@ $this->params['breadcrumbs'][] = $this->title;
         // dd($rolspelerList);
     ?>
 
-<hr
-<!-- &#9749;&#128490;&#128505; -->
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
