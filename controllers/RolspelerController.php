@@ -9,14 +9,15 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use app\models\Gesprek;
+
+use yii\filters\AccessControl;
 /**
  * RolspelerController implements the CRUD actions for Rolspeler model.
  */
 class RolspelerController extends Controller
+
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -24,6 +25,26 @@ class RolspelerController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // when logged in, any user
+                    [ 'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'admin' );
+                        }
+                    ],
+                    [ 'actions' => [ 'login' ],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'rolspeler');
+                        }
+                    ],
                 ],
             ],
         ];
@@ -115,6 +136,25 @@ class RolspelerController extends Controller
         $params = array(':id'=> $id);
         Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
         return $this->redirect(['/rolspeler/index']);
+    }
+
+    public function actionLogin($id=0,$token=0,$gesprekid=0)
+    {
+        if ( isset($_POST['rolspeler']) ) $id=$_POST['rolspeler'];
+        if ($id) {
+            $rolspeler = Rolspeler::find()->where(['id' => $id])->andWhere(['not', ['token' => null]])->one();
+        } elseif($token) {
+            $rolspeler = Rolspeler::find()->where(['token' => $token])->andWhere(['not', ['token' => null]])->one();
+        } else {
+            return $this->render('login');
+        }
+       
+        if (!empty($rolspeler)) {
+            setcookie("rolspeler", $rolspeler->id, time()+7200, "/");
+            return $this->redirect(['/gesprek/rolspeler']);
+        }
+
+        return $this->render('login');
     }
 
     /**

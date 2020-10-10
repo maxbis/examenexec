@@ -61,8 +61,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        
+/* @var $this yii\web\View */
+
+        if ( ! isset(Yii::$app->user->identity->role) ) {
+            return $this->redirect(['student/login']);
+        } elseif ( Yii::$app->user->identity->role == 'admin')  {
+            return $this->redirect(['/gesprek/index']);
+        } elseif ( Yii::$app->user->identity->role == 'rolspeler')  {
+            return $this->redirect(['/rolspeler/login']);
+        }
     }
+
 
     /**
      * Login action.
@@ -93,6 +103,9 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
+        setcookie("student", "0", time()-7200, "/");
+        setcookie("rolspeler", "0", time()-7200, "/");
+
         Yii::$app->user->logout();
 
         return $this->goHome();

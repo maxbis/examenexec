@@ -17,9 +17,8 @@ use app\models\gesprek;
 
 use kartik\mpdf\Pdf;
 
-/**
- * VraagController implements the CRUD actions for vraag model.
- */
+use yii\filters\AccessControl;
+
 class VraagController extends Controller
 {
     /**
@@ -34,6 +33,28 @@ class VraagController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // when logged in, any user
+                    [ 'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'admin');
+                        }
+                    ],
+ 
+                    [ 'actions' => [ 'form' ],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return ( Yii::$app->user->identity->role == 'rolspeler' );
+                        }
+                    ],
+                ],
+            ],
+           
         ];
     }
 

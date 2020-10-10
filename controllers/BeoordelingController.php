@@ -111,7 +111,8 @@ class BeoordelingController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionFormpost($totaalString, $statusString, $gesprekid, $formId, $studentid, $rolspelerid, $opmerking) {
+    public function actionFormpost($totaalString, $statusString, $gesprekid, $formId, $studentid, $rolspelerid, $opmerking)
+    {
         // $totaalString contains the values of the answers 1-3-2 (1 point, 3 points, 2 points for question 1,2,and 3)
         // $statusString contains the answers 1-3-2 (Yes, No, Sometimes, for question 1,2,and 3)
         $result = [ 'studentid' => $studentid,
@@ -126,6 +127,15 @@ class BeoordelingController extends Controller
         $model->opmerking = $opmerking;
         $model->rolspelerid = $rolspelerid;
         $model->resultaat = json_encode($result);
+
+        // delete old gesprekken
+        // als status van een gesprek is terugegeset wordt een nieuwe beoordeling gesaved en worden
+        // oude met zelfde gesprekid verwijderd.
+        $sql="delete from beoordeling where gesprekid=:gesprekid";
+        $params = [ ':gesprekid'=> $gesprekid, ];
+        $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+        writeLog("Beoordeling $studentid $gesprekid $formId $model->resultaat");
 
         if ($model->save()) {
             $sql="update gesprek set status=2 where id=:gesprekid";

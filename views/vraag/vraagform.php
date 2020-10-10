@@ -3,7 +3,29 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 ?>
-<!-- script deleted, was from input form -->
+<script>
+    function result(){
+    var val;
+        // get list of radio buttons with specified name
+        var radios = document.getElementById("myForm");
+        var totaalString = "";
+        var statusString = "";
+
+        // loop through list of radio buttons
+        for (var i=0; i < radios.length; i++) {
+            if ( radios[i].checked ) { // radio checked?
+                totaalString += radios[i].value + "-";
+                statusString += radios[i].id + "-";
+            }
+        }
+        totaalString = totaalString.slice(0,-1);
+        statusString = statusString.slice(0,-1);
+        alert(statusString);
+        document.getElementById("totaalString").value = totaalString;
+        document.getElementById("statusString").value = statusString;
+        return true; // don't submit the form
+    }
+</script>
 
 <?php
     if ($student) {

@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width:600px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
-                    return Html::a($data->naam, ['/gesprek/student?nummer='.$data->nummer],['title'=> 'Edit',]);
+                    return Html::a($data->naam, ['/gesprek/student?id='.$data->id],['title'=> 'Edit',]);
                     },
             ],
         ],

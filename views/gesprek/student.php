@@ -9,9 +9,12 @@ $status = ['wachten', 'loopt', 'klaar'];
 
 // counts[0] heeft aantal wachtende, counts[1] in gesprek, counts[2] klaar 
 $counts = array_count_values(array_column($alleGesprekken, 'status'));
-$queue = $counts[0]+$counts[1];
-$barlen1 = max(1,$counts[0]*2);
-$barlen2 = max(1,$counts[1]*2);
+
+if ( !isset($counts[0]) ) $counts[0]=0;
+if ( !isset($counts[1]) ) $counts[1]=0;
+
+$barlen1 = max(5,$counts[0]*2);
+$barlen2 = max(5,$counts[1]*2);
 ?>
 
 <meta http-equiv="refresh" content="60">

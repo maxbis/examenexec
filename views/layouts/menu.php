@@ -43,16 +43,18 @@ echo Nav::widget([
     ],
 
         [
+            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'label' => 'Student',
             'items' => [
-                 ['label' => 'Log in', 'url' => ['/gesprek/login']],
+                 ['label' => 'Log in', 'url' => ['/student/login']],
             ],
         ],
 
         [
+            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'label' => 'Rolspeler',
             'items' => [
-                 ['label' => 'Log in', 'url' => ['/gesprek/rolspeler']],
+                 ['label' => 'Log in', 'url' => ['/rolspeler/login']],
             ],
         ],
         // ['label' => 'Home', 'url' => ['/site/index'], 'options' => ['class' => 'nav-item'] ],

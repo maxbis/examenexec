@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Debug function
  * d($var);
@@ -42,4 +41,15 @@ function dd($var)
 function HTMLInclude($file)
 {
     return \Yii::$app->view->renderFile('@app/views/layouts/'.$file.'.php');
+}
+
+function writeLog($msg="")
+{
+    $log  = date("j-m-Y, H:i")." "
+            .$_SERVER['REMOTE_ADDR']." "
+            .Yii::$app->controller->id."Controller "
+            ."action".Yii::$app->controller->action->id." "
+            .$msg;
+    $result = file_put_contents('./log_'.date("j-m-Y").'.log', $log.PHP_EOL, FILE_APPEND);
+    //d("writeLog: ".$log);
 }

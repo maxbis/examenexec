@@ -13,6 +13,8 @@ use app\models\Student;
 use app\models\Form;
 use app\models\Rolspeler;
 
+use yii\filters\AccessControl;
+
 /**
  * GesprekController implements the CRUD actions for Gesprek model.
  */
@@ -30,6 +32,30 @@ class GesprekController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // when logged in, any user
+                    [ 'actions' => ['student','create'],
+                        'allow' => true,
+                    ],
+                    [ 'actions' => [ 'rolspeler', 'update' ],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'rolspeler');
+                        }
+                     ],
+                    [ 'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'admin');
+                        }
+                    ],
+                ],
+            ],
+           
         ];
     }
 
@@ -44,7 +70,7 @@ class GesprekController extends Controller
 
         $rolspeler = Rolspeler::find()->where(['actief' => '1'])->all();
         $form = Form::find()->where(['actief' => '1'])->all();
-
+     
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -146,49 +172,30 @@ class GesprekController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionLogin()
-    {
-        if (isset($_GET['nummer']) && $_GET['nummer']!=0 ) {
-            $nummer = $_GET['nummer'];
-            $student = Student::find()->where(['nummer' => $nummer])->one();
-
-            if (!empty($student)) {
-
-                //$gesprek = Gesprek::find()->where(['studentid'=>$student->id])->all();
-                // if (count($gesprek) > 0) {
-                //   return $this->redirect(['/gesprek/student', 'id' => $student->id, 'nummer' => $student->nummer]);
-                //};
-
-                $model = new Gesprek();
-                $formModel = Form::find()->all();
-
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['student', 'id' => $student->id]);
-                }
-        
-                return $this->render('create', [
-                    'model' => $model,
-                    'student' => $student,
-                    'formModel' => $formModel,
-                ]);
-
-                // echo $student->id;
-            }
-        }
-
-        return $this->render('login');
-    }
-
+    // Show student screen (after login)
     public function actionStudent($id=0, $nummer=0) {
-        if (! $id) {
+
+        if ( $id==0 && $nummer==0 && isset($_COOKIE['student']) ) {
+            $id=$_COOKIE['student'];
+       }
+        if ($id) {
+            $student = Student::find()->where(['id' => $id])->one();
+            if (empty($student)) {
+                sleep(2);
+                return $this->render('/student/login');
+            }
+        } elseif ($nummer) { 
             $student = Student::find()->where(['nummer' => $nummer])->one();
             if (empty($student)) {
                 sleep(2);
-                return $this->render('login');
+                return $this->render('/student/login');
             }
             $id=$student->id;
+        } 
+        if (! $id) {
+            return $this->render('/student/login');
         } else {
-            $student = Student::find()->where(['id' => $id])->one();
+            setcookie("student", $id, time()+7200, "/");
         }
 
         $newGesprek = new Gesprek(); 
@@ -207,6 +214,8 @@ class GesprekController extends Controller
 
     public function actionRolspeler($id=0,$token=0,$gesprekid=0)
     {
+        if ( isset($_COOKIE['rolspeler']) ) $id = $_COOKIE['rolspeler'];
+
         if ($id) {
             $rolspeler = Rolspeler::find()->where(['id' => $id])->andWhere(['not', ['token' => null]])->one();
         } elseif($token) {
@@ -225,7 +234,8 @@ class GesprekController extends Controller
         if (!empty($rolspeler)) {
             $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderby(['status' => 'ASC', 'id' => 'DESC'])->all();
             $alleGesprekken = Gesprek::find()->all();
-            return $this->render('overzicht',[
+            setcookie("rolspeler", $rolspeler->id, time()+7200, "/");
+            return $this->render('/gesprek/rolspeler', [
                 'alleGesprekken' => $alleGesprekken,
                 'gesprekken' => $gesprekken,
                 'rolspeler' => $rolspeler,

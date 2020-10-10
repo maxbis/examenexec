@@ -13,10 +13,14 @@ use yii\helpers\Url;
 $this->title = 'Gesprekken';
 $this->params['breadcrumbs'][] = $this->title;
 
+// counts[0] heeft aantal wachtende, counts[1] in gesprek, counts[2] klaar 
 $counts = array_count_values(array_column($alleGesprekken, 'status'));
-$queue = $counts[0]+$counts[1];
-$barlen1 = max(1,$counts[0]*2);
-$barlen2 = max(1,$counts[1]*2);
+
+if ( !isset($counts[0]) ) $counts[0]=0;
+if ( !isset($counts[1]) ) $counts[1]=0;
+
+$barlen1 = max(5,$counts[0]*2);
+$barlen2 = max(5,$counts[1]*2);
 
 ?>
 	
@@ -24,7 +28,7 @@ $barlen2 = max(1,$counts[1]*2);
     function changeStatus(id, status, rolspelerid) {
         // console.log(val, id);
         $.ajax({
-        url: "<?= Url::to(['update-status']) ?>",
+        url: "<?= Url::to(['/gesprek/update-status']) ?>",
             data: {id: id, 'status': status, 'rolspelerid': rolspelerid },
             cache: false
         }).done(function (html) {
@@ -88,7 +92,7 @@ $barlen2 = max(1,$counts[1]*2);
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?php $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
-        $statusIcon = ['&#128347;', '&#128490;', '&#128504;'];
+        $statusIcon = ['&#128347;', ' 	&#128172;', '&#128504;'];
         $rolspelerList = [ ''=> '...'] + $rolspelerList;
         $formlist =  ArrayHelper::map($form,'id','omschrijving');
         // dd($rolspelerList);
@@ -116,6 +120,7 @@ $barlen2 = max(1,$counts[1]*2);
             
             [
                 'attribute' => 'formid',
+                'label' => 'Gespreksnaam',
                 'filter' => $formlist,
                 'filterInputOptions' => [
                     'class' => 'form-control',
@@ -128,7 +133,7 @@ $barlen2 = max(1,$counts[1]*2);
             ],
 
             [
-                'attribute' => 'formid',
+                'attribute' => 'student.naam',
                 'format' => 'raw',
                 'value' => function ($model) {
                     //return $model->student->naam;
@@ -150,6 +155,7 @@ $barlen2 = max(1,$counts[1]*2);
                         ['onchange' => "changeStatus('$model->id', '$model->status', $(this).val())"]);
                     } else {
                         return $model->rolspeler->naam;
+                        // return("???");
                     }
                 }
             ],

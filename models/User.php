@@ -22,11 +22,11 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         ],
         '101' => [
             'id' => '101',
-            'username' => 'user',
-            'password' => 'demo',
+            'username' => 'rolspeler',
+            'password' => 'rolspeler',
             'authKey' => 'test101key',
             'accessToken' => '101-token',
-            'role'=> 'user',
+            'role'=> 'rolspeler',
         ],
     ];
 

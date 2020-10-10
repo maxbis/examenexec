@@ -10,10 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use app\models\vraag;
+use yii\filters\AccessControl;
 
-/**
- * FormController implements the CRUD actions for Form model.
- */
 class FormController extends Controller
 {
     /**
@@ -28,6 +26,20 @@ class FormController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // when logged in, any user
+                    [ 'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'admin');
+                        }
+                    ],
+                ],
+            ],
+           
         ];
     }
 

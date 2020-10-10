@@ -9,9 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * ExamenController implements the CRUD actions for Examen model.
- */
+use yii\filters\AccessControl;
+
 class ExamenController extends Controller
 {
     /**
@@ -26,9 +25,22 @@ class ExamenController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // when logged in, any user
+                    [ 'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'admin');
+                        }
+                    ],
+                ],
+            ],
+           
         ];
     }
-
     /**
      * Lists all Examen models.
      * @return mixed

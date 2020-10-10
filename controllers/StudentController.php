@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\filters\AccessControl;
+
 /**
  * StudentController implements the CRUD actions for Student model.
  */
@@ -26,6 +28,23 @@ class StudentController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // when logged in, any user
+                    [ 'actions' => ['login'],
+                        'allow' => true,
+                    ],
+                    [ 'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'admin');
+                        }
+                    ],
+                ],
+            ],
+           
         ];
     }
 
@@ -107,6 +126,48 @@ class StudentController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionLogin($nummer=0)
+    {
+        if (isset($_COOKIE['student'])) {
+            $id = $_COOKIE['student'];
+        } else {
+            $id = "";
+        }
+        writeLog(" Nummer:".$nummer." "."cookie:".$id);
+
+        if ( isset($_COOKIE['student']) ) {
+            return $this->redirect(['/gesprek/student']);
+        }
+
+        if (! $nummer) {
+            $student = Student::find()->where(['nummer' => $nummer])->one();
+
+            if (!empty($student)) {
+
+                //$gesprek = Gesprek::find()->where(['studentid'=>$student->id])->all();
+                // if (count($gesprek) > 0) {
+                //   return $this->redirect(['/gesprek/student', 'id' => $student->id, 'nummer' => $student->nummer]);
+                //};
+
+                $model = new Gesprek();
+                $formModel = Form::find()->all();
+
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['student', 'id' => $student->id]);
+                }
+        
+                writeLog("Code error, we should not be here!");
+                return $this->render('xlogin', [
+                    'model' => $model,
+                    'student' => $student,
+                    'formModel' => $formModel,
+                ]);
+
+            }
+        }   
+        return $this->render('login');
     }
 
     /**
