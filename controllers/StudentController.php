@@ -141,32 +141,7 @@ class StudentController extends Controller
             return $this->redirect(['/gesprek/student']);
         }
 
-        if (! $nummer) {
-            $student = Student::find()->where(['nummer' => $nummer])->one();
-
-            if (!empty($student)) {
-
-                //$gesprek = Gesprek::find()->where(['studentid'=>$student->id])->all();
-                // if (count($gesprek) > 0) {
-                //   return $this->redirect(['/gesprek/student', 'id' => $student->id, 'nummer' => $student->nummer]);
-                //};
-
-                $model = new Gesprek();
-                $formModel = Form::find()->all();
-
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['student', 'id' => $student->id]);
-                }
-        
-                writeLog("Code error, we should not be here!");
-                return $this->render('xlogin', [
-                    'model' => $model,
-                    'student' => $student,
-                    'formModel' => $formModel,
-                ]);
-
-            }
-        }   
+  
         return $this->render('login');
     }
 

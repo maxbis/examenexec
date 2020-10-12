@@ -141,6 +141,7 @@ class RolspelerController extends Controller
     public function actionLogin($id=0,$token=0,$gesprekid=0)
     {
         if ( isset($_POST['rolspeler']) ) $id=$_POST['rolspeler'];
+        
         if ($id) {
             $rolspeler = Rolspeler::find()->where(['id' => $id])->andWhere(['not', ['token' => null]])->one();
         } elseif($token) {

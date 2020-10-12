@@ -20,7 +20,7 @@ use yii\widgets\LinkPager;
         }
         totaalString = totaalString.slice(0,-1);
         statusString = statusString.slice(0,-1);
-        alert(statusString);
+        //alert(statusString);
         document.getElementById("totaalString").value = totaalString;
         document.getElementById("statusString").value = statusString;
         return true; // don't submit the form

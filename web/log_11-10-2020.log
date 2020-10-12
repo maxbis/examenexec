@@ -1,0 +1,10 @@
+11-10-2020, 10:18 ::1 studentController actionlogin  Nummer:0 cookie:
+11-10-2020, 10:19 ::1 siteController actionclear clear
+11-10-2020, 10:19 ::1 siteController actionclear clear
+11-10-2020, 10:20 ::1 studentController actionlogin  Nummer:0 cookie:
+11-10-2020, 10:28 127.0.0.1 siteController actionclear Permission denied for 127.0.0.1
+11-10-2020, 18:03 127.0.0.1 siteController actionclear Permission denied for 127.0.0.1
+11-10-2020, 18:03 127.0.0.1 siteController actionclear Permission denied for 127.0.0.1
+11-10-2020, 18:13 127.0.0.1 siteController actionlogin Permission denied for 127.0.0.1
+11-10-2020, 18:13 ::1 studentController actionlogin  Nummer:0 cookie:
+11-10-2020, 18:13 ::1 siteController actionlogin Permission denied for ::1

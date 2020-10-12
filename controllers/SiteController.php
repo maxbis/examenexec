@@ -27,6 +27,12 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                        'ips' => ['111.111.111.*', '222.222.222.222'],
+                        'roles' => ['?'],
+                    ],
                 ],
             ],
             //'verbs' => [
@@ -54,18 +60,12 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
+
     public function actionIndex()
     {
-        
-/* @var $this yii\web\View */
-
+        // where do we start depends on the role...
         if ( ! isset(Yii::$app->user->identity->role) ) {
-            return $this->redirect(['student/login']);
+            return $this->redirect(['/student/login']);
         } elseif ( Yii::$app->user->identity->role == 'admin')  {
             return $this->redirect(['/gesprek/index']);
         } elseif ( Yii::$app->user->identity->role == 'rolspeler')  {
@@ -81,6 +81,9 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+
+        areWeOK();
+        
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -108,7 +111,17 @@ class SiteController extends Controller
 
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect(['/student/login']);
+    }
+
+    public function actionClear()
+    {
+        setcookie("student", "0", time(), "/");
+        setcookie("rolspeler", "0", time(), "/");
+
+        areWeOK("clear");
+
+        return $this->render('/student/login');
     }
 
     /**

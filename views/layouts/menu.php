@@ -27,6 +27,7 @@ echo Nav::widget([
                  //['label' => 'Examens (unused)', 'url' => ['/examen/index'] ],
                  ['label' => 'Formulieren', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
+
             ],
             'options' => ['class' => 'nav-item']
         ],
@@ -55,6 +56,22 @@ echo Nav::widget([
             'label' => 'Rolspeler',
             'items' => [
                  ['label' => 'Log in', 'url' => ['/rolspeler/login']],
+            ],
+        ],
+
+        [
+            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
+            'label' => 'Rolspeler',
+            'items' => [
+                 ['label' => 'Log in', 'url' => ['/rolspeler/login']],
+            ],
+        ],
+
+        [
+            'label' => 'Debug',
+            'items' => [
+                 ['label' => 'Log out', 'url' => ['/site/logout']],
+                 ['label' => 'Clear', 'url' => ['/site/clear']],
             ],
         ],
         // ['label' => 'Home', 'url' => ['/site/index'], 'options' => ['class' => 'nav-item'] ],
