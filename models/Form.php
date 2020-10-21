@@ -19,7 +19,7 @@ class Form extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'Form';
+        return 'form';
     }
 
     /**

@@ -21,7 +21,7 @@ class Gesprek extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'Gesprek';
+        return 'gesprek';
     }
 
     /**

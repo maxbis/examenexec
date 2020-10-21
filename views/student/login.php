@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -8,6 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 
 $this->title = 'Student Log in';
+$action = Url::toRoute(['gesprek/student']);
 ?>
 
 <div class="gesprek-form">
@@ -17,7 +19,7 @@ $this->title = 'Student Log in';
         <h1><?= Html::encode($this->title) ?></h1>
         <hr>
 
-        <form action="/gesprek/student" method="get">
+        <form action=<?= $action ?> method="get">
             <label for="exampleFormControlSelect1">Studentennummer:</label>
             <input class="form-control form-control-lg" type="text" id="nummer" name="nummer">
             <div class="form-group">

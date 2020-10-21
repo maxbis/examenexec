@@ -2,7 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
+$action = Url::toRoute(['rolspeler/login']);
 ?>
 
 <div class="gesprek-form">
@@ -12,7 +14,7 @@ use yii\widgets\ActiveForm;
         <h1><?= Html::encode($this->title) ?></h1>
         <hr>
 
-        <form action="/rolspeler/login" method="get">
+        <form action=<?= $action ?> method="get">
             <label for="exampleFormControlSelect1">RolspelerID:</label>
             <input class="form-control form-control-lg" type="text" id="token" name="token" placeholder="">
             <div class="form-group">
