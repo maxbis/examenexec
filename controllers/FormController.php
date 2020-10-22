@@ -9,7 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use app\models\vraag;
+use app\models\Vraag;
 use yii\filters\AccessControl;
 
 class FormController extends Controller

@@ -9,11 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use app\models\form;
-use app\models\student;
-use app\models\beoordeling;
-use app\models\rolspeler;
-use app\models\gesprek;
+use app\models\Form;
+use app\models\Student;
+use app\models\Beoordeling;
+use app\models\Rolspeler;
+use app\models\Gesprek;
 
 use kartik\mpdf\Pdf;
 
