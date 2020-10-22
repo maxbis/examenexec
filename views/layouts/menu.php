@@ -19,7 +19,7 @@ echo Nav::widget([
     'options' => ['class' => 'navbar-nav mr-auto'],
     'encodeLabels' => false,
     'items' => [
-        [   'label' => 'Set-up',
+        [   'label' => 'Admin',
             //'class'=>'bootstrap.widgets.BootMenu',
             //'htmlOptions'=>array('style'=>'font-size: 2.5em'),
             'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
@@ -27,6 +27,7 @@ echo Nav::widget([
                  //['label' => 'Examens (unused)', 'url' => ['/examen/index'] ],
                  ['label' => 'Formulieren', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
+                 ['label' => 'Student Logout', 'url' => ['/site/clear']],
 
             ],
             'options' => ['class' => 'nav-item']
@@ -59,21 +60,6 @@ echo Nav::widget([
             ],
         ],
 
-        [
-            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
-            'label' => 'Rolspeler',
-            'items' => [
-                 ['label' => 'Log in', 'url' => ['/rolspeler/login']],
-            ],
-        ],
-
-        [
-            'label' => 'Debug',
-            'items' => [
-                 ['label' => 'Log out', 'url' => ['/site/logout']],
-                 ['label' => 'Clear', 'url' => ['/site/clear']],
-            ],
-        ],
         // ['label' => 'Home', 'url' => ['/site/index'], 'options' => ['class' => 'nav-item'] ],
         // ['label' => 'About', 'url' => ['/site/about'], 'options' => ['class' => 'nav-item'] ],
         // ['label' => 'Contact', 'url' => ['/site/contact'], 'options' => ['class' => 'nav-item'] ],
