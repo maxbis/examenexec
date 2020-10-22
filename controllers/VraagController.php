@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\vraag;
+use app\models\Vraag;
 use app\models\VraagSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -196,7 +196,7 @@ class VraagController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = vraag::findOne($id)) !== null) {
+        if (($model = Vraag::findOne($id)) !== null) {
             return $model;
         }
 
