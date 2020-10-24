@@ -39,7 +39,8 @@ echo Nav::widget([
         'items' => [
             ['label' => 'Studenten', 'url' => ['/student']],
             ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
-            ['label' => 'Gesprekken', 'url' => ['/gesprek']],
+            ['label' => 'Alle Gesprekken', 'url' => ['/gesprek']],
+            ['label' => 'Overzicht Gesprekken', 'url' => ['/student/status']],
         ],
         'options' => ['class' => 'nav-item']
     ],

@@ -145,6 +145,24 @@ class StudentController extends Controller
         return $this->render('login');
     }
 
+    public function actionStatus()
+    {
+        $sql="
+            SELECT s.naam, s.id, s.nummer, count(*) cnt FROM student s
+            INNER JOIN gesprek g
+            ON g.studentid=s.id
+            WHERE g.status=2
+            GROUP BY s.naam, s.id, s.nummer
+            ORDER BY cnt, s.naam
+        ";
+
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+
+        return $this->render('status', [
+            'result' => $result,
+        ]);
+    }
+
     /**
      * Finds the Student model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
