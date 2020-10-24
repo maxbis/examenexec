@@ -37,6 +37,7 @@ use yii\widgets\LinkPager;
         $studentId = "";
         $dummy = true;
     }
+    $action = Url::toRoute(['beoordeling/formpost']);
 ?>
 
 <div class="Beoordelingsformulier">
@@ -51,7 +52,7 @@ use yii\widgets\LinkPager;
     </div>
     <br><br>
 
-    <form action="/beoordeling/formpost" onsubmit="return result()" method="get" id="myForm">
+    <form action=<?= $action ?> onsubmit="return result()" method="get" id="myForm">
 
         <input type="hidden" id="totaalString" name="totaalString" value="-">
         <input type="hidden" id="statusString" name="statusString" value="-">
@@ -99,10 +100,11 @@ use yii\widgets\LinkPager;
         <br>
         <?php
             if ($dummy) {
-                echo Html::a('Cancel', ['/form'], ['class'=>'btn btn-primary']);
-            } else {
-               
-                echo Html::a('Cancel', ['/gesprek/rolspeler', 'id'=>$rolspeler->id, 'gesprekid'=>$gesprek->id], ['class'=>'btn btn-primary']);
+                $action = Url::toRoute(['/form']);
+                echo Html::a('Cancel', [$action], ['class'=>'btn btn-primary']);
+            } else {    
+                $action = Url::toRoute(['gesprek/rolspeler']);
+                echo Html::a('Cancel', [$action, 'id'=>$rolspeler->id, 'gesprekid'=>$gesprek->id], ['class'=>'btn btn-primary']);
                 echo " &nbsp;&nbsp;&nbsp;";
                 echo Html::submitButton('Save', ['class' => 'btn btn-success']);
                

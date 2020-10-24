@@ -103,9 +103,11 @@ use yii\widgets\LinkPager;
     <?php
     $date = new DateTime($beoordeling->timestamp);
     echo $date->format('d-m-y - H:i').' uur, door '.$rolspeler->naam."<br><hr>";
-    
+
+    xxx
     if ( isset($_COOKIE['rolspeler']) ) {
-        echo Html::a('Cancel', ['/gesprek/rolspeler', 'id'=>$rolspeler->id], ['class'=>'btn btn-primary']);
+        $action = Url::toRoute(['gesprek/rolspeler']);
+        echo Html::a('Cancel', [$action, 'id'=>$rolspeler->id], ['class'=>'btn btn-primary']);
     }
     
     

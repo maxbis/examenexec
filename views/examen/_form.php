@@ -91,7 +91,7 @@ use nex\datepicker\DatePicker;
 
     <br>
     <div class="form-group">
-      <?= Html::a('Cancel', ['/examen/index'], ['class'=>'btn btn-primary']) ?>
+      <?= Html::a('Cancel', [Url::toRoute(['examen/index'])], ['class'=>'btn btn-primary']) ?>
       &nbsp;&nbsp;&nbsp;
       <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
