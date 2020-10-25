@@ -175,6 +175,11 @@ class GesprekController extends Controller
     // Show student screen (after login)
     public function actionStudent($id=0, $nummer=0) {
 
+        if ( Yii::$app->request->post() ) {
+            $nummer=Yii::$app->request->post();
+            isset($nummer['nummer']) ? $nummer=$nummer['nummer'] : $nummer=0;
+        }
+
         if ( $id==0 && $nummer==0 && isset($_COOKIE['student']) ) {
             $id=$_COOKIE['student'];
        }

@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\BeoordelingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Beoordelings';
+$this->title = 'Beoordelingen';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="beoordeling-index">

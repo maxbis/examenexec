@@ -179,8 +179,13 @@ $barlen2 = max(5,$counts[1]*2);
                 'format' => 'raw',
                 'value' => function ($model) {
                     //$test = Html::dropDownList('status', 3, $rolspelerList);
-                    return Html::dropDownList('status', $model->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
-                    ['onchange' => "changeStatus('$model->id', $(this).val(), '$model->rolspelerid')"]);
+                    if ( $model->status != 9 ){ // replace != 9 into ==2 in order to enabel  edit only for status 2
+                        return Html::dropDownList('status', $model->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
+                        ['onchange' => "changeStatus('$model->id', $(this).val(), '$model->rolspelerid')"]);
+                    } else {
+                        return  ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'][$model->status];
+                    }
+                    
                      }
             ],
 

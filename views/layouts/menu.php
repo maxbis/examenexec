@@ -27,7 +27,6 @@ echo Nav::widget([
                  //['label' => 'Examens (unused)', 'url' => ['/examen/index'] ],
                  ['label' => 'Formulieren', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
-                 ['label' => 'Student Logout', 'url' => ['/site/clear']],
 
             ],
             'options' => ['class' => 'nav-item']
@@ -50,6 +49,7 @@ echo Nav::widget([
             'label' => 'Student',
             'items' => [
                  ['label' => 'Log in', 'url' => ['/student/login']],
+                 ['label' => 'Logout', 'url' => ['/site/clear']],
             ],
         ],
 
