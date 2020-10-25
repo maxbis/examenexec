@@ -10,6 +10,7 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Student Log in';
 $action = Url::toRoute(['gesprek/student']);
+areWeOK();
 ?>
 
 <div class="gesprek-form">
