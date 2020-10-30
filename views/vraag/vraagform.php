@@ -62,7 +62,7 @@ use yii\widgets\LinkPager;
         <input type="hidden" id="formId" name="formId" value="<?= $form->id ?>">
 
 
-        <table class="table" style="width: 100rem;">
+        <table class="table">
 
         <tr>
             <th scope="col" style="width: 3rem;">Nr.</th>

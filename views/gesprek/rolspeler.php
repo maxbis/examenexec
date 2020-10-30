@@ -29,7 +29,7 @@ $this->title="Gesprekken ".$rolspeler->naam;
 
         <div class="col bg-light">
             <font size="2" >
-                <table border=0 width="100%" class="table-sm">
+                <table class="table-sm">
                     <tr>
                         <td>&nbsp;</td>
                         <td>Drukte</td>
@@ -72,7 +72,7 @@ $this->title="Gesprekken ".$rolspeler->naam;
 
     <br>
 
-    <table class="table" style="width: 100rem;">
+    <table class="table">
 
     <tr>
       <th scope="col" style="width: 15rem;">Student</th>

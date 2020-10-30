@@ -28,7 +28,7 @@ use yii\widgets\LinkPager;
     </div>
     <br><br>
 
-    <table class="table" style="width: 100rem;">
+    <table class="table">
 
     <tr>
         <th scope="col" style="width: 3rem;">Nr.</th>
