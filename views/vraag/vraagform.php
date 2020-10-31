@@ -100,11 +100,9 @@ use yii\widgets\LinkPager;
         <br>
         <?php
             if ($dummy) {
-                $action = Url::toRoute(['/form']);
-                echo Html::a('Cancel', [$action], ['class'=>'btn btn-primary']);
+                echo Html::a('Cancel', ['form'], ['class'=>'btn btn-primary']);
             } else {    
-                $action = Url::toRoute(['/gesprek/rolspeler']);
-                echo Html::a('Cancel', [$action, 'id'=>$rolspeler->id, 'gesprekid'=>$gesprek->id], ['class'=>'btn btn-primary']);
+                echo Html::a('Cancel', ['gesprek/rolspeler' , 'id'=>$rolspeler->id, 'gesprekid'=>$gesprek->id], ['class'=>'btn btn-primary']);
                 echo " &nbsp;&nbsp;&nbsp;";
                 echo Html::submitButton('Save', ['class' => 'btn btn-success']);
                

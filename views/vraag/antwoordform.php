@@ -107,8 +107,7 @@ use yii\widgets\LinkPager;
     echo $date->format('d-m-y - H:i').' uur, door '.$rolspeler->naam."<br><hr>";
 
     if ( isset($_COOKIE['rolspeler']) ) {
-        $action = Url::toRoute(['/gesprek/rolspeler']);
-        echo Html::a('Cancel', [$action, 'id'=>$rolspeler->id], ['class'=>'btn btn-primary']);
+	echo Html::a('Cancel', ['gesprek/rolspeler',  'id'=>$rolspeler->id], ['class'=>'btn btn-primary']);
     }
     
     
