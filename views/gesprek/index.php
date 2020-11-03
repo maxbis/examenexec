@@ -91,10 +91,12 @@ $barlen2 = max(5,$counts[1]*2);
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
-        $statusIcon = ['&#128347;', ' 	&#128172;', '&#128504;'];
-        $rolspelerList = [ ''=> '...'] + $rolspelerList;
-        $formlist =  ArrayHelper::map($form,'id','omschrijving');
+    <?php
+
+        $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
+        $statusIcon = ['&#128347;', '&#128172;', '&#128504;'];
+        // $rolspelerList = [ ''=> '...'] + $rolspelerList;
+        $formlist =  ArrayHelper::map($form,'id','omschrijving');  // gespreksnaam
         // dd($rolspelerList);
     ?>
 
@@ -146,7 +148,7 @@ $barlen2 = max(5,$counts[1]*2);
                 'filter' => $rolspelerList,
                 'filterInputOptions' => [
                     'class' => 'form-control',
-                    'prompt' => '  '
+                    'prompt' => '...'
                     ],
                 'format' => 'raw',
                 'value' => function ($model) use ($rolspelerList) {
@@ -174,7 +176,7 @@ $barlen2 = max(5,$counts[1]*2);
                 'filter' => ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
                 'filterInputOptions' => [
                     'class' => 'form-control',
-                    'prompt' => 'Select'
+                    'prompt' => '...'
                     ],
                 'format' => 'raw',
                 'value' => function ($model) {
