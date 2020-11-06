@@ -130,6 +130,8 @@ class StudentController extends Controller
 
     public function actionLogin($nummer=0)
     {
+        MyHelpers::CheckIP();
+        
         if (isset($_COOKIE['student'])) {
             $id = $_COOKIE['student'];
         } else {
