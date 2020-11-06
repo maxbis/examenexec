@@ -132,7 +132,7 @@ class RolspelerController extends Controller
 
     public function actionToggleActief($id) {
         // function toggles boolean actief
-        $sql="update rolspeler set actief=!actief where id = :id";
+        $sql="update rolspeler set actief=(!actief) where id = :id";
         $params = array(':id'=> $id);
         Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
         return $this->redirect(['/rolspeler/index']);

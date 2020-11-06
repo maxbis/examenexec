@@ -3,12 +3,13 @@
  * Debug function
  * d($var);
  */
-function _d($var,$caller=null)
+function d($var,$caller=null)
 {
     if(!isset($caller)){
-        $caller = array_shift(debug_backtrace(1));
+        $caller = debug_backtrace(1)[0];
     }
-    echo '<code>File: '.$caller['file'].' / Line: '.$caller['line'].'</code>';
+    echo '<code>Line: '.$caller['line'].'<br>';
+    echo 'File: '.$caller['file'].'</code>';
     echo '<pre>';
     yii\helpers\VarDumper::dump($var, 10, true);
     echo '</pre>';
@@ -18,25 +19,13 @@ function _d($var,$caller=null)
  * Debug function with die() after
  * dd($var);
  */
-function _dd($var)
+function dd($var)
 {
-    $caller = array_shift(debug_backtrace(1));
+    $caller = debug_backtrace(1)[0];
     d($var,$caller);
     die();
 }
 
-function d($var)
-{
-    echo '<pre>';
-    yii\helpers\VarDumper::dump($var, 10, true);
-    echo '</pre>';
-}
-
-function dd($var)
-{
-    d($var);
-    die();
-}
 
 function HTMLInclude($file)
 {
@@ -50,47 +39,5 @@ function writeLog($msg="")
             .Yii::$app->controller->id."Controller "
             ."action".Yii::$app->controller->action->id." "
             .$msg;
-    $result = file_put_contents('./log_'.date("j-m-Y").'.log', $log.PHP_EOL, FILE_APPEND);
-    //d("writeLog: ".$log);
+    $result = file_put_contents('../log/log_'.date("j-m-Y").'.log', $log.PHP_EOL, FILE_APPEND);
 }
-
-function ipRange($cidr)
-{
-    $range = array();
-    $cidr = explode('/', $cidr);
-    $range[0] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int)$cidr[1]))));
-    $range[1] = long2ip((ip2long($range[0])) + pow(2, (32 - (int)$cidr[1])) - 1);
-    return $range;
-}
-
-function areWeOK()
-{
-    if ( $_SERVER['REMOTE_ADDR'] == '::1' ) return; // php yii server
-    
-    $file = "../config/ipAllowed.txt";
-    try {
-        $ipAllowed = file($file);
-     } catch (Exception $e) {
-        $string = "Cannot acces IP Allowed file ($file) in config";
-        writeLog($string);
-        echo $string;
-        exit;
-     }
-
-    $weAreOK=false;
-    foreach ($ipAllowed as $item) {
-        $ipRange = ipRange($item);
-        if ( (int)$_SERVER['REMOTE_ADDR'] >= (int)$ipRange[0] && (int)$_SERVER['REMOTE_ADDR'] <= (int)$ipRange[1] ) {
-                $weAreOK=true;
-        }
-    }
-    if ( $weAreOK == false ) {
-        $string = "Permission denied for ". $_SERVER['REMOTE_ADDR'];
-        writeLog($string);
-        echo $string;
-        exit;
-    }
-}
-
-
-
