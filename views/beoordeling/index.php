@@ -28,8 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'formid',
+            'form.omschrijving',
             'studentid',
+            'student.naam',
             'rolspelerid',
+            'rolspeler.naam',
             'resultaat',
             //'opmerking:ntext',
             //'timestamp',

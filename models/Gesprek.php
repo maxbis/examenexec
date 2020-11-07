@@ -70,4 +70,9 @@ class Gesprek extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Rolspeler::className(), ['id' => 'rolspelerid']);
     }
+
+    public function getBeoordeling()
+    {
+        return $this->hasOne(Beoordeling::className(), ['gesprekid' => 'id']);
+    }
 }

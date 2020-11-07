@@ -20,8 +20,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'formid',
+            'form.omschrijving',
             'rolspelerid',
+            'rolspeler.naam',
             'studentid',
+            'student.naam',
             'opmerking',
         ],
     ]) ?>
@@ -30,11 +33,38 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <br>
 
+<?php if ( isset($beoordeling) ): ?>
+
+<div class="beoordeling-view">
+
+    <h1>Beoordeling</h1>
+
+    <?= DetailView::widget([
+        'model' => $beoordeling,
+        'attributes' => [
+            'id',
+            'gesprekid',
+            'formid',
+            'studentid',
+            'student.naam',
+            'rolspelerid',
+            'rolspeler.naam',
+            'resultaat',
+            'opmerking:ntext',
+            'timestamp',
+        ],
+    ]) ?>
+
+</div>
+<br>
+
+    <?php endif; ?>
+
 <?php
     echo Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Verwijder alles wat er op deze pagina staat?',
                 'method' => 'post',
             ],
     ]);
@@ -42,6 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
     echo " &nbsp;&nbsp;&nbsp;";
 
     echo Html::a('Cancel', ['/gesprek'], ['class'=>'btn btn-primary']);
-    
-
+ 
 ?>
+
+<br><br><i>(delete verwijdert <b>Gesprek</b> en indien er  aanwezig de <b>Beoordeling</b>)</i>

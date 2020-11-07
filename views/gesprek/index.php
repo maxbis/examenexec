@@ -106,7 +106,7 @@ $barlen2 = max(5,$counts[1]*2);
         'filterModel' => $searchModel,
         'columns' => [
             [   'attribute'=>'created',
-            'format' => 'raw',
+                'format' => 'raw',
                 'value' => function ($model) use ($statusIcon) {
                     $date = new DateTime($model->created);
                     $text = $date->format('H:i')."&nbsp;&nbsp;&nbsp;".$statusIcon[$model->status];
@@ -119,6 +119,13 @@ $barlen2 = max(5,$counts[1]*2);
                 }
             ],
             'form.nr',
+            'beoordeling.id',
+            [
+                'label' => 'cnt',
+                'value' => function($model) {
+                    return $model->getBeoordeling()->count();
+                }
+            ],
             
             [
                 'attribute' => 'formid',
@@ -191,10 +198,18 @@ $barlen2 = max(5,$counts[1]*2);
                      }
             ],
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}',],
+            [   'class' => 'yii\grid\ActionColumn', 'template' => '{view} {delete}',
+            'visibleButtons'=>[
+                'delete'=> function($model){
+                      return 0;
+                 },
+            ]
             ],
-        ]);
-    ?>
+
+
+        ],
+    ]);
+?>
 
 
 </div>

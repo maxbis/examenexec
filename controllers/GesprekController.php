@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 use app\models\Student;
 use app\models\Form;
 use app\models\Rolspeler;
+use app\models\Beoordeling;
 
 use yii\filters\AccessControl;
 
@@ -88,7 +89,10 @@ class GesprekController extends Controller
      */
     public function actionView($id)
     {
+        $beoordeling = Beoordeling::find()->where(['gesprekid' => $id])->one();
+ 
         return $this->render('view', [
+            'beoordeling' => $beoordeling,
             'model' => $this->findModel($id),
         ]);
     }
@@ -152,6 +156,9 @@ class GesprekController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        // delete all beoordelingen belonging to this gesprek
+        Yii::$app->db->createCommand()->delete('beoordeling', 'gesprekid = '.$id)->execute();
 
         return $this->redirect(['index']);
     }
