@@ -111,11 +111,12 @@ class BeoordelingController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionFormpost($totaalString, $statusString, $gesprekid, $formId, $studentid, $rolspelerid, $opmerking)
+    public function actionFormpost($totaalString, $statusString, $gesprekid, $formId, $studentid, $studentnr, $rolspelerid, $opmerking)
     {
         // $totaalString contains the values of the answers 1-3-2 (1 point, 3 points, 2 points for question 1,2,and 3)
         // $statusString contains the answers 1-3-2 (Yes, No, Sometimes, for question 1,2,and 3)
         $result = [ 'studentid' => $studentid,
+                    'studentnr' => $studentnr,
                     'formid' => $formId, 'rolspelerid' => $rolspelerid,
                     'answers' => explode("-",$statusString), 'points' => explode("-",$totaalString),
                     'totaalscore' => array_sum(explode("-",$totaalString))];
@@ -169,5 +170,73 @@ class BeoordelingController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionExport()
+    {
+        $beoordeling = Beoordeling::find()->all();
+        $output = [];
+        foreach($beoordeling as $item) {
+            $output[] = json_decode( $item['resultaat'], true);
+        }
+        header("Content-type: text/plain");
+        header("Content-Disposition: attachment; filename=gespreksbeoordelingen.txt");
+        echo json_encode($output);
+    }
+
+    public function actionExport2()
+    {
+        // temp function, in teh future this needs to be integrated with the Kerntaakbeoordelingen App
+        // for now the interface is manual -> output queries and manual exucutes them
+        // 1-0 means form 1 question 0 maps to cirteriumID (in other app) 36
+        $formMapping = [    '1-0' => 36,
+                            '1-1' => 37, '1-2' => 37, '1-3' => 37, '1-4' => 37, '1-5' => 37,  '1-6' => 37,
+                            '1-7' => 38, '1-8' => 38,
+                            '2-0' => 42, '2-1' => 42,
+                            '3-0' => 46, '3-1' => 46,
+                            '4-0' => 50, '4-1' => 50, '4-2' => 50,
+                            '5-0' => 53, '5-1' => 53,
+                        ];  
+        $examenID = 12; // examenID in foreign app.
+
+        // find all beoordlingen
+        $beoordeling = Beoordeling::find()->all();
+        $output = [];
+        foreach($beoordeling as $item) {
+            $output[] = json_decode( $item['resultaat'], true);
+        }
+        // all beoordelingen are now put in array of assiociotive arrays
+
+        echo "<pre>";
+        foreach($output as $item) { // take one beoordeling at a time
+            echo '<br>'.'# Student: '.$item['studentnr'].'<br>';
+            $result = [];
+
+            for($i=0; $i<count($item['points']); $i++) {    // $item['points'] is an array with the points to the questions
+                $index= $item['formid'].'-'.$i;             // create index x-y where x is form and y is question number
+                if(array_key_exists($index, $formMapping)) {
+                    if (! array_key_exists($formMapping[$index], $result)) {
+                        $result[ $formMapping[$index] ] = 0;
+                    }
+                    $result[ $formMapping[$index] ] += $item['points'][$i]; // translate index x-y into nummber with $formmappings
+                } else {                                                    // the number is the id in the foreign database
+                    echo "No mapping for form ".$item['formid']." question ".$i; // this questin has nog mapping in teh table $formMappings
+                }
+            }
+
+            foreach ($result as $key => $value) { // the result needs to betranslated into queries
+                $score = intval( ($value+5)/10 );
+                echo "Original score: $value <br>";
+                echo "delete from scorestudent where examenid=12 and studentnummer=".$item['studentnr']." and criteriumId=$key ;";
+                echo "<br>";
+                echo "insert into scorestudent (studentnummer, criteriumId, score, examenid) values(".$item['studentnr'].",". $key.",". $score.", 12 );";
+                echo "<br>";
+            }
+   
+        }
+
+        echo "<pre>";
+        exit;
+
     }
 }

@@ -31,6 +31,7 @@ use yii\widgets\LinkPager;
     if ($student) {
         $studentNaam = $student->naam;
         $studentId = $student->id;
+        $studentNr = $student->nummer;
         $dummy = false;
     } else {
         $studentNaam = "DEBUG!";
@@ -57,6 +58,7 @@ use yii\widgets\LinkPager;
         <input type="hidden" id="totaalString" name="totaalString" value="-">
         <input type="hidden" id="statusString" name="statusString" value="-">
         <input type="hidden" id="studentid" name="studentid" value=<?= $studentId ?> >
+        <input type="hidden" id="studentnr" name="studentnr" value=<?= $studentNr ?> >
         <input type="hidden" id="rolspelerid" name="rolspelerid" value=<?= $rolspeler->id ?> >
         <input type="hidden" id="gesprekid" name="gesprekid" value="<?= $gesprek->id ?>">
         <input type="hidden" id="formId" name="formId" value="<?= $form->id ?>">

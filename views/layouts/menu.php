@@ -27,6 +27,7 @@ echo Nav::widget([
                  //['label' => 'Examens (unused)', 'url' => ['/examen/index'] ],
                  ['label' => 'Formulieren', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
+                 ['label' => 'Export Resultaten ', 'url' => ['/beoordeling/export']],
 
             ],
             'options' => ['class' => 'nav-item']

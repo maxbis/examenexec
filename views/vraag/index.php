@@ -38,7 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [   'attribute' => 'volgnr',
-                'contentOptions' => ['style' => 'width:40px;'],
+                'label' => '#',
+                'contentOptions' => ['style' => 'width:20px;'],
+                'value' => function ($model) use ($formList) {
+                    return $model->formid.'-'.$model->volgnr;
+                }
             ],
             [
                 'attribute' => 'vraag',
@@ -57,7 +61,9 @@ $this->params['breadcrumbs'][] = $this->title;
                  'contentOptions' => ['style' => 'width:80px;'],
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [   'class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width:80px;'],
+            ],
         ],
     ]); ?>
 

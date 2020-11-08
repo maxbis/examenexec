@@ -118,14 +118,15 @@ $barlen2 = max(5,$counts[1]*2);
                    
                 }
             ],
-            'form.nr',
-            'beoordeling.id',
-            [
-                'label' => 'cnt',
-                'value' => function($model) {
-                    return $model->getBeoordeling()->count();
-                }
-            ],
+            
+            //'form.nr',
+            //'beoordeling.id',
+            //[
+            //    'label' => 'cnt',
+            //    'value' => function($model) {
+            //        return $model->getBeoordeling()->count();
+            //    }
+            //],
             
             [
                 'attribute' => 'formid',
