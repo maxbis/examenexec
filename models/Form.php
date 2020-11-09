@@ -31,7 +31,7 @@ class Form extends \yii\db\ActiveRecord
             [['nr'], 'required'],
             [['nr', 'examenid', 'actief'], 'integer'],
             [['instructie'], 'string'],
-            [['omschrijving'], 'string', 'max' => 350],
+            [['omschrijving'], 'string', 'max' => 600],
         ];
     }
 

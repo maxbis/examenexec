@@ -224,9 +224,12 @@ class GesprekController extends Controller
         ]);
     }
 
-    public function actionRolspeler($id=0,$token=0,$gesprekid=0)
+    public function actionRolspeler($id=0,$token="",$gesprekid=0)
     {
-        if ( isset($_COOKIE['rolspeler']) ) $id = $_COOKIE['rolspeler'];
+        // only if not admin, becasue admin needs easy access via GET token=ABC
+        if ( Yii::$app->user->identity->role == 'rolspeler') {
+            if ( isset($_COOKIE['rolspeler']) ) $id = $_COOKIE['rolspeler'];
+        }   
 
         if ($id) {
             $rolspeler = Rolspeler::find()->where(['id' => $id])->andWhere(['not', ['token' => null]])->one();
