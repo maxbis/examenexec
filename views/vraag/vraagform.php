@@ -62,7 +62,7 @@ use yii\widgets\LinkPager;
     Beoordelingsformulier
     <?= $studentNaam ?>
     </h1>
-    <i>GGesprek: <?= $form->nr ?> - <?= $form->omschrijving ?></i>
+    <i>Gesprek: <?= $form->nr ?> - <?= $form->omschrijving ?></i>
     <br><br>
     <div style="width: 800px;">
         <?= $form->instructie ?>
