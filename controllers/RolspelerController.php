@@ -138,8 +138,14 @@ class RolspelerController extends Controller
         return $this->redirect(['/rolspeler/index']);
     }
 
-    public function actionLogin($id=0,$token=0,$gesprekid=0)
+    public function actionLogin($id=0,$token="",$gesprekid=0)
     {
+
+        if ( $token != "" ) {
+            writeLog($msg="Trying to get acces with token ".$token);
+        }
+       
+
         if ( isset($_POST['rolspeler']) ) $id=$_POST['rolspeler'];
         
         if ($id) {

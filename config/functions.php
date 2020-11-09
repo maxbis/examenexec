@@ -34,7 +34,7 @@ function HTMLInclude($file)
 
 function writeLog($msg="")
 {
-    $log  = date("j-m-Y, H:i")." "
+    $log  = date("j-m-Y,H:i")." "
             .$_SERVER['REMOTE_ADDR']." "
             .Yii::$app->controller->id."Controller "
             ."action".Yii::$app->controller->action->id." "

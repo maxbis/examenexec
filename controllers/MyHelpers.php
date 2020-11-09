@@ -8,7 +8,11 @@ namespace app\controllers;
 class MyHelpers
 {
     public function checkIP() {
-        if ( $_SERVER['REMOTE_ADDR'] == '::1' ) return; // php yii server
+        if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
+            $remoteIP='178.84.73.55';
+        } else {
+            $remoteIP=$_SERVER['REMOTE_ADDR'];
+        }
     
         $file = "../config/ipAllowed.txt";
     
@@ -33,16 +37,18 @@ class MyHelpers
          //   $a =  self::ipRange($ipAllowed[$i]);
          //   d($a);
          //}
-    
+
         $weAreOK=false;
         foreach ($ipAllowed as $item) {
             $ipRange = self::ipRange($item);
-            if ( (int)$_SERVER['REMOTE_ADDR'] >= (int)$ipRange[0] && (int)$_SERVER['REMOTE_ADDR'] <= (int)$ipRange[1] ) {
+            if ( ip2long($remoteIP) >= ip2long($ipRange[0]) && ip2long($remoteIP) <= ip2long($ipRange[1]) ) {
+                $string = $remoteIP.' - '.$ipRange[0].' - '.$ipRange[1];
+                writeLog($string);
                 $weAreOK=true;
             }
         }
         if ( $weAreOK == false ) {
-            $string = "Permission denied for ". $_SERVER['REMOTE_ADDR'];
+            $string = "Permission denied for ". $remoteIP;
             writeLog($string);
             echo $string;
             exit;
