@@ -137,7 +137,7 @@ $barlen2 = max(5,$counts[1]*2);
     <div class="form-group">
       <?= Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>
       &nbsp;&nbsp;&nbsp;
-      <?= Html::submitButton('New', ['class' => 'btn btn-success']) ?>
+      <?= Html::submitButton('Vraag aan', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

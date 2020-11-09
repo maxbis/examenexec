@@ -95,7 +95,7 @@ $barlen2 = max(5,$counts[1]*2);
 
         $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
         $statusIcon = ['&#128347;', '&#128172;', '&#128504;'];
-        // $rolspelerList = [ ''=> '...'] + $rolspelerList;
+        $rolspelerList = [ ''=> '...'] + $rolspelerList;
         $formlist =  ArrayHelper::map($form,'id','omschrijving');  // gespreksnaam
         // dd($rolspelerList);
     ?>
