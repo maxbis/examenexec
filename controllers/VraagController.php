@@ -139,7 +139,7 @@ class VraagController extends Controller
         $model = new vraag();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect('index');
+            return $this->redirect('index?VraagSearch[formid]='.$model->formid );
         }
         
         $formModel = form::find()->all();
@@ -162,7 +162,7 @@ class VraagController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect('index');
+            return $this->redirect('index?VraagSearch[formid]='.$model->formid );
         }
 
         $formModel = form::find()->all();
