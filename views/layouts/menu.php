@@ -28,6 +28,8 @@ echo Nav::widget([
                  ['label' => 'Formulieren', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
                  ['label' => '-----------------------------------'],
+                 ['label' => 'Nieuwe Beoordeling', 'url' => ['/gesprek/create-and-go']],
+                 ['label' => '-----------------------------------'],
                  ['label' => 'Export Resultaten to File', 'url' => ['/beoordeling/export']],
                  ['label' => 'Export Resultaten to Query', 'url' => ['/beoordeling/export2']],
 

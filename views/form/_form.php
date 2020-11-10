@@ -17,7 +17,7 @@ use yii\helpers\ArrayHelper;
     
     <?php
         $itemList=ArrayHelper::map($examenModel,'id','naam');
-        echo $form->field($model, 'examenid')->dropDownList($itemList,['prompt'=>'Please select']);
+        echo $form->field($model, 'examenid')->dropDownList($itemList,['prompt'=>'Please select'])->label('examen');
     ?>
 
     <?= $form->field($model, 'omschrijving')->textInput(['maxlength' => true]) ?>

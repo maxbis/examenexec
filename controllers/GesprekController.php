@@ -105,13 +105,35 @@ class GesprekController extends Controller
     public function actionCreate()
     {
         $model = new Gesprek();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['student', 'nummer' => $model->student->nummer]);
+            return $this->redirect(['vraag/form', 'gesprekid' => $model->id], );
+        }
+        // this code is never executed, create is only called wwith a filled in model.
+        writeLog("ERROR: We should never be here in the code, please check!");
+        return $this->redirect(['gesprek/student']);
+    }
+
+    public function actionCreateAndGo()
+    {
+        $newGesprek = new Gesprek();
+        if ($newGesprek->load(Yii::$app->request->post()) && $newGesprek->save()) {
+            return $this->redirect(['student', 'nummer' => $newGesprek->student->nummer]);
         }
 
-        return $this->render('create', [
-            'model' => $model,
+        $forms = Form::find()->select(['form.id id','omschrijving','nr','examenid','form.actief actief', 'instructie'])
+                        ->joinWith('examen',true,'INNER JOIN')
+                        ->where(['form.actief'=>1])
+                        ->andWhere(['examen.actief'=>1])->all();
+
+        $studenten = Student::find()->all();
+
+        $rolspelers = Rolspeler::find()->all();
+
+        return $this->render('createAndGo',[
+            'gesprek' => $newGesprek,
+            'studenten' => $studenten,
+            'forms' => $forms,
+            'rolspelers' => $rolspelers,
         ]);
     }
 
@@ -193,7 +215,7 @@ class GesprekController extends Controller
         if ($id) {
             $student = Student::find()->where(['id' => $id])->one();
             if (empty($student)) {
-                sleep(2);
+                sleep(2); // help to prevent brute force attack
                 return $this->render('/student/login');
             }
         } elseif ($nummer) { 
