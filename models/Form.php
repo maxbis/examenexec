@@ -48,4 +48,8 @@ class Form extends \yii\db\ActiveRecord
             'instructie' => 'Instructie',
         ];
     }
+    public function getExamen()
+    {
+        return $this->hasOne(Examen::className(), ['id' => 'examenid']);
+    }
 }

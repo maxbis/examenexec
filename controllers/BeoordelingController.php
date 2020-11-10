@@ -174,19 +174,27 @@ class BeoordelingController extends Controller
 
     public function actionExport()
     {
-        $beoordeling = Beoordeling::find()->all();
+        //$beoordeling = Beoordeling::find()->all();
+        $sql = "select * FROM beoordeling
+                INNER JOIN form ON beoordeling.formid=form.id
+                INNER JOIN examen ON form.examenid=examen.id
+                WHERE examen.actief=1";
+        $beoordeling = Beoordeling::findBySql($sql)->all();
+        $fileNaam=str_replace(' ', '_', $beoordeling[0]->form->examen->naam);
+        $fileNaam.='_JSON_'.date("j_m_Y").'.txt';
+
         $output = [];
         foreach($beoordeling as $item) {
             $output[] = json_decode( $item['resultaat'], true);
         }
         header("Content-type: text/plain");
-        header("Content-Disposition: attachment; filename=gespreksbeoordelingen.txt");
+        header("Content-Disposition: attachment; filename=$fileNaam");
         echo json_encode($output);
     }
 
     public function actionExport2()
     {
-        // temp function, in teh future this needs to be integrated with the Kerntaakbeoordelingen App
+        // temp function, in the future this needs to be integrated with the Kerntaakbeoordelingen App
         // for now the interface is manual -> output queries and manual exucutes them
         // 1-0 means form 1 question 0 maps to cirteriumID (in other app) 36
         $formMapping = [    '1-0' => 36,
@@ -200,7 +208,13 @@ class BeoordelingController extends Controller
         $examenID = 12; // examenID in foreign app.
 
         // find all beoordlingen
-        $beoordeling = Beoordeling::find()->all();
+        // $beoordeling = Beoordeling::find()->all();
+        $sql = "select * FROM beoordeling
+                INNER JOIN form ON beoordeling.formid=form.id
+                INNER JOIN examen ON form.examenid=examen.id
+                WHERE examen.actief=1";
+        $beoordeling = Beoordeling::findBySql($sql)->all();
+
         $output = [];
         foreach($beoordeling as $item) {
             $output[] = json_decode( $item['resultaat'], true);

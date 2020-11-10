@@ -42,6 +42,10 @@ $this->title = 'Formulieren';
                   return Html::a($data->omschrijving, ['/form/form?id='.$data->id],['title' => 'Edit',]);
                 },  
             ],
+            [
+                'attribute'=>'examen.naam',
+
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

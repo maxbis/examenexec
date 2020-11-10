@@ -211,8 +211,19 @@ class GesprekController extends Controller
         }
 
         $newGesprek = new Gesprek(); 
-        $formModel = Form::find()->where(['actief'=>1])->all();       
-        $gesprekken = Gesprek::find()->where(['studentid' => $id])->all();
+        $formModel = Form::find()->select(['form.id id','omschrijving','nr','examenid','form.actief actief', 'instructie'])
+                        ->joinWith('examen',true,'INNER JOIN')
+                        ->where(['form.actief'=>1])
+                        ->andWhere(['examen.actief'=>1])->all();
+        // ToDo show only gesprekken van current examen!
+        // $gesprekken = Gesprek::find()->where(['studentid' => $id])->all(); // this is code before examen
+        $sql = "select * FROM gesprek
+                INNER JOIN form ON gesprek.formid=form.id
+                INNER JOIN examen ON form.examenid=examen.id
+                WHERE gesprek.studentid=:id
+                AND examen.actief=1";
+        $gesprekken = Gesprek::findBySql($sql, [':id' => $id])->all();
+
         $alleGesprekken = Gesprek::find()->all();
 
         return $this->render('student',[

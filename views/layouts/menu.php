@@ -24,10 +24,12 @@ echo Nav::widget([
             //'htmlOptions'=>array('style'=>'font-size: 2.5em'),
             'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'items' => [
-                 //['label' => 'Examens (unused)', 'url' => ['/examen/index'] ],
+                 ['label' => 'Examens', 'url' => ['/examen/index'] ],
                  ['label' => 'Formulieren', 'url' => ['/form']],
                  ['label' => 'Vragen', 'url' => ['/vraag']],
-                 ['label' => 'Export Resultaten ', 'url' => ['/beoordeling/export']],
+                 ['label' => '-----------------------------------'],
+                 ['label' => 'Export Resultaten to File', 'url' => ['/beoordeling/export']],
+                 ['label' => 'Export Resultaten to Query', 'url' => ['/beoordeling/export2']],
 
             ],
             'options' => ['class' => 'nav-item']

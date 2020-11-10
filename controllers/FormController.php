@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use app\models\Vraag;
+use app\models\Examen;
 use yii\filters\AccessControl;
 
 class FormController extends Controller
@@ -79,13 +80,15 @@ class FormController extends Controller
     public function actionCreate()
     {
         $model = new Form();
+        $examenModel = examen::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'examenModel' => $examenModel,
         ]);
     }
 
@@ -99,13 +102,15 @@ class FormController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $examenModel = examen::find()->all();
+ 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'examenModel' => $examenModel,
         ]);
     }
 

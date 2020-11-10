@@ -38,11 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
             }
           ],
           [
-            'attribute'=>'datum_van',
+            'attribute'=>'datum_start',
             'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
           ],
           [
-            'attribute'=>'datum_tot',
+            'attribute'=>'datum_eind',
             'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
           ],
 
@@ -66,8 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
           ],
           [
             'class' => 'yii\grid\ActionColumn',
-            'contentOptions' => ['style' => 'width:50px;'],
-            'template' => '{delete}', 
+            'contentOptions' => ['style' => 'width:60px;'],
+            'template' => '{view} {update}', 
             'visibleButtons'=>[
               'delete'=> function($model){
                     return $model->actief!=1;
@@ -97,7 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?= Html::a('Nieuw Examen', ['create'], ['class' => 'btn btn-success']) ?>
   &nbsp;
-  <?= Html::a('<span class="glyphicon glyphicon-edit">Planner</span>', ['/gesprek/overzicht'], ['class' => 'btn btn-info', 'title' => 'Naar examenplanner']) ?>
+  <?= Html::a('<span class="glyphicon glyphicon-edit">Planner</span>', ['/gesprek'], ['class' => 'btn btn-info', 'title' => 'Naar examenplanner']) ?>
 </p>
 <br>
 <hr>

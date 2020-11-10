@@ -60,7 +60,7 @@ use yii\widgets\LinkPager;
 <div class="Beoordelingsformulier">
     <h1>
     Beoordelingsformulier
-    <?= $studentNaam ?>
+    <a href="sip:<?=$studentNr?>@talnet.nl" title="Open in MS Teams"><?= $studentNaam ?></a>
     </h1>
     <i>Gesprek: <?= $form->nr ?> - <?= $form->omschrijving ?></i>
     <br><br>
