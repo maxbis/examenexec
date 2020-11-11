@@ -164,8 +164,11 @@ $barlen2 = max(5,$counts[1]*2);
                         return Html::dropDownList('status', $alleGesprekken->rolspelerid, $rolspelerList,
                         ['onchange' => "changeStatus('$alleGesprekken->id', '$alleGesprekken->status', $(this).val())"]);
                     } else {
-                        // return $alleGesprekken->rolspeler->naam;
-                        return("???");
+                        if (isset($alleGesprekken->rolspeler->naam)) {
+                            return $alleGesprekken->rolspeler->naam;
+                        } else {
+                            return("???");
+                        }
                     }
                 }
             ],
