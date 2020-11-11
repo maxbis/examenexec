@@ -67,6 +67,7 @@ class VraagController extends Controller
         $searchModel = new VraagSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $formModel = Form::find()->all();
+        $dataProvider->setSort(['defaultOrder' => ['formid'=>SORT_ASC, 'volgnr'=>SORT_ASC]]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
