@@ -106,8 +106,14 @@ class GesprekController extends Controller
     {
         $model = new Gesprek();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
-            return $this->redirect(['vraag/form', 'gesprekid' => $model->id], );
+            if ( $model->rolspelerid ) {
+                // if rolspeler defined, then go to fill in form
+                return $this->redirect(['vraag/form', 'gesprekid' => $model->id], );
+            } else {
+                // else just init a new gesprek and put it in the list wating for a rolspeler
+                return $this->redirect(['gesprek/index']);
+            }
+            
         }
         // this code is never executed, create is only called wwith a filled in model.
         writeLog("ERROR: We should never be here in the code, please check!");
