@@ -107,11 +107,11 @@ $barlen2 = max(5,$counts[1]*2);
         'columns' => [
             [   'attribute'=>'created',
                 'format' => 'raw',
-                'value' => function ($model) use ($statusIcon) {
-                    $date = new DateTime($model->created);
-                    $text = $date->format('H:i')."&nbsp;&nbsp;&nbsp;".$statusIcon[$model->status];
-                    if ( $model->status == 2 ) {
-                        return Html::a($text, ['/vraag/form', 'gesprekid'=>$model->id,'compleet'=>'1']);
+                'value' => function ($alleGesprekken) use ($statusIcon) {
+                    $date = new DateTime($alleGesprekken->created);
+                    $text = $date->format('H:i')."&nbsp;&nbsp;&nbsp;".$statusIcon[$alleGesprekken->status];
+                    if ( $alleGesprekken->status == 2 ) {
+                        return Html::a($text, ['/vraag/form', 'gesprekid'=>$alleGesprekken->id,'compleet'=>'1']);
                     } else {
                         return $text;
                     }
@@ -123,8 +123,8 @@ $barlen2 = max(5,$counts[1]*2);
             //'beoordeling.id',
             //[
             //    'label' => 'cnt',
-            //    'value' => function($model) {
-            //        return $model->getBeoordeling()->count();
+            //    'value' => function($alleGesprekken) {
+            //        return $alleGesprekken->getBeoordeling()->count();
             //    }
             //],
             
@@ -137,17 +137,17 @@ $barlen2 = max(5,$counts[1]*2);
                     'prompt' => '...'
                 ],
                 'format' => 'raw',
-                'value' => function ($model)  {
-                    return $model->form->omschrijving;
+                'value' => function ($alleGesprekken)  {
+                    return $alleGesprekken->form->omschrijving;
                 }
             ],
 
             [
                 'attribute' => 'student.naam',
                 'format' => 'raw',
-                'value' => function ($model) {
-                    //return $model->student->naam;
-                    return Html::a($model->student->naam, ['/gesprek/student', 'id'=>$model->studentid]);
+                'value' => function ($alleGesprekken) {
+                    //return $alleGesprekken->student->naam;
+                    return Html::a($alleGesprekken->student->naam, ['/gesprek/student', 'id'=>$alleGesprekken->studentid]);
                 }
             ],
 
@@ -159,12 +159,12 @@ $barlen2 = max(5,$counts[1]*2);
                     'prompt' => '...'
                     ],
                 'format' => 'raw',
-                'value' => function ($model) use ($rolspelerList) {
-                    if ($model->status==0) {
-                        return Html::dropDownList('status', $model->rolspelerid, $rolspelerList,
-                        ['onchange' => "changeStatus('$model->id', '$model->status', $(this).val())"]);
+                'value' => function ($alleGesprekken) use ($rolspelerList) {
+                    if ($alleGesprekken->status==0) {
+                        return Html::dropDownList('status', $alleGesprekken->rolspelerid, $rolspelerList,
+                        ['onchange' => "changeStatus('$alleGesprekken->id', '$alleGesprekken->status', $(this).val())"]);
                     } else {
-                        return $model->rolspeler->naam;
+                        return $alleGesprekken->rolspeler->naam;
                         // return("???");
                     }
                 }
@@ -173,8 +173,8 @@ $barlen2 = max(5,$counts[1]*2);
             [   'attribute' => 'opmerking',
                 'contentOptions' => ['style' => 'width:80px;'],
                 'format' => 'raw',
-                'value' => function ($model) {
-                    return substr($model->opmerking, 0, 10);
+                'value' => function ($alleGesprekken) {
+                    return substr($alleGesprekken->opmerking, 0, 10);
                 }
             ],
 
@@ -187,13 +187,13 @@ $barlen2 = max(5,$counts[1]*2);
                     'prompt' => '...'
                     ],
                 'format' => 'raw',
-                'value' => function ($model) {
+                'value' => function ($alleGesprekken) {
                     //$test = Html::dropDownList('status', 3, $rolspelerList);
-                    if ( $model->status != 9 ){ // replace != 9 into ==2 in order to enabel  edit only for status 2
-                        return Html::dropDownList('status', $model->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
-                        ['onchange' => "changeStatus('$model->id', $(this).val(), '$model->rolspelerid')"]);
+                    if ( $alleGesprekken->status == 9 ){ // replace != 9 into ==2 in order to enabel  edit only for status 2
+                        return Html::dropDownList('status', $alleGesprekken->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
+                        ['onchange' => "changeStatus('$alleGesprekken->id', $(this).val(), '$alleGesprekken->rolspelerid')"]);
                     } else {
-                        return  ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'][$model->status];
+                        return  ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'][$alleGesprekken->status];
                     }
                     
                      }
@@ -201,7 +201,7 @@ $barlen2 = max(5,$counts[1]*2);
 
             [   'class' => 'yii\grid\ActionColumn', 'template' => '{view} {delete}',
             'visibleButtons'=>[
-                'delete'=> function($model){
+                'delete'=> function($alleGesprekken){
                       return 0;
                  },
             ]

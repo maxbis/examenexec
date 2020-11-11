@@ -197,13 +197,16 @@ class BeoordelingController extends Controller
         // temp function, in the future this needs to be integrated with the Kerntaakbeoordelingen App
         // for now the interface is manual -> output queries and manual exucutes them
         // 1-0 means form 1 question 0 maps to cirteriumID (in other app) 36
-        $formMapping = [    '1-0' => 36,
-                            '1-1' => 37, '1-2' => 37, '1-3' => 37, '1-4' => 37, '1-5' => 37,  '1-6' => 37,
-                            '1-7' => 38, '1-8' => 38,
-                            '2-0' => 42, '2-1' => 42,
-                            '3-0' => 46, '3-1' => 46,
-                            '4-0' => 50, '4-1' => 50, '4-2' => 50,
-                            '5-0' => 53, '5-1' => 53,
+        // ToDo put mapping in vraag and change json to contain mapping
+        $formMapping = [    '1-0' => 36, // Gesprek PvE1
+                            '1-1' => 37, '1-2' => 37, '1-3' => 37, '1-4' => 37, '1-5' => 37,  '1-6' => 37, // Gesprek PvE1
+                            '1-7' => 38, '1-8' => 38, // Gesprek PvE1
+                            '2-0' => 42, '2-1' => 42, // Gesprek PvE2
+                            '3-0' => 46, '3-1' => 46, // Gesprek PP
+                            '4-0' => 50, '4-1' => 50, '4-2' => 50, // Gesprek FO
+                            '5-0' => 53, '5-1' => 53, // Gesprek TO
+                            '11-0' => 51, '11-1' => 51, '11-2' => 51, // Document TO (Schema e.d.)
+                            '11-3' => 52, '11-4' => 52, '11-5' => 52, '11-6' => 52, '11-7' => 52, '11-8' => 52, '11-9' => 52, // Document TO (ERD)
                         ];  
         $examenID = 12; // examenID in foreign app.
 

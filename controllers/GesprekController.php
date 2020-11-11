@@ -106,6 +106,7 @@ class GesprekController extends Controller
     {
         $model = new Gesprek();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
             return $this->redirect(['vraag/form', 'gesprekid' => $model->id], );
         }
         // this code is never executed, create is only called wwith a filled in model.
@@ -269,6 +270,7 @@ class GesprekController extends Controller
         } elseif($token) {
             $rolspeler = Rolspeler::find()->where(['token' => $token])->andWhere(['not', ['token' => null]])->one();
         } else {
+            dd($token);
             return $this->render('rolspeler');
         }
 
@@ -289,7 +291,7 @@ class GesprekController extends Controller
                 'rolspeler' => $rolspeler,
             ]);
         }
-
+        
         return $this->render('rolspeler');
     }
 }
