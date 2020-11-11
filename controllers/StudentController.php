@@ -56,6 +56,7 @@ class StudentController extends Controller
     {
         $searchModel = new StudentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->setSort(['defaultOrder' => ['naam'=>SORT_ASC]]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

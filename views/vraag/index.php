@@ -60,7 +60,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [   'attribute' => 'nee',
                  'contentOptions' => ['style' => 'width:80px;'],
             ],
-
+            [   'attribute' => 'mappingid',
+                'label' => 'mapping',
+                'contentOptions' => ['style' => 'width:80px;'],
+            ],
             [   'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width:80px;'],
             ],

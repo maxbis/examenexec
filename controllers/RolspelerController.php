@@ -58,6 +58,7 @@ class RolspelerController extends Controller
     {
         $searchModel = new RolspelerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->setSort(['defaultOrder' => ['naam'=>SORT_ASC]]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -108,7 +109,7 @@ class RolspelerController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [

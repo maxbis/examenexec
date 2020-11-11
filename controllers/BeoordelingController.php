@@ -120,6 +120,11 @@ class BeoordelingController extends Controller
                     'formid' => $formId, 'rolspelerid' => $rolspelerid,
                     'answers' => explode("-",$statusString), 'points' => explode("-",$totaalString),
                     'totaalscore' => array_sum(explode("-",$totaalString))];
+        // ToDo hier moeten een mapping worden gemaakt tussen vragen en remote id
+        // dus alle antwoorden moeten hier worden doorlopen om de punten per mapping te maken.
+        // easiest is om alle foreign id's as hidden form variabele mee te sturen
+
+
         // d($result);
         $model = new Beoordeling();
         $model->gesprekid = $gesprekid;
@@ -129,9 +134,10 @@ class BeoordelingController extends Controller
         $model->rolspelerid = $rolspelerid;
         $model->resultaat = json_encode($result);
 
-        // delete old gesprekken
-        // als status van een gesprek is terugegeset wordt een nieuwe beoordeling gesaved en worden
-        // oude met zelfde gesprekid verwijderd.
+        // delete old beoordeling
+        // als status van een gesprek is terugegezet wordt een nieuwe beoordeling gesaved en worden
+        // oude met zelfde gesprekid verwijderd. Er bestaat dus maar een beoordeling per gesprek
+        // In de log is de oude beoordleing nog wel te vinden.
         $sql="delete from beoordeling where gesprekid=:gesprekid";
         $params = [ ':gesprekid'=> $gesprekid, ];
         $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
@@ -222,7 +228,7 @@ class BeoordelingController extends Controller
         foreach($beoordeling as $item) {
             $output[] = json_decode( $item['resultaat'], true);
         }
-        // all beoordelingen are now put in array of assiociotive arrays
+        // all beoordelingen are now put in array of assiociative arrays
 
         echo "<pre>";
         foreach($output as $item) { // take one beoordeling at a time

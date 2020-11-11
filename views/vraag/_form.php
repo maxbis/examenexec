@@ -28,6 +28,8 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'nee')->textInput()->label('Nee-punten') ?>
 
+    <?= $form->field($model, 'mappingid')->textInput()->label('mappingid') ?>
+
     <?= HTMLInclude('formSave') ?>
 
     <?php ActiveForm::end(); ?>

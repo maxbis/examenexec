@@ -22,7 +22,7 @@ class VraagSearch extends Vraag
     {   
         // added formNaam for N:1 relation vraag:form
         return [
-            [['id', 'formid', 'volgnr', 'ja', 'soms', 'nee'], 'integer'],
+            [['id', 'formid', 'volgnr', 'ja', 'soms', 'nee', 'mappingid'], 'integer'],
             [['vraag', 'formNaam'], 'safe'],
         ];
     }
@@ -76,6 +76,7 @@ class VraagSearch extends Vraag
             'ja' => $this->ja,
             'soms' => $this->soms,
             'nee' => $this->nee,
+            'mappingid' => $this->mappingid,
         ]);
 
         $query->andFilterWhere(['like', 'vraag', $this->vraag])

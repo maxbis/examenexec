@@ -143,11 +143,12 @@ $barlen2 = max(5,$counts[1]*2);
             ],
 
             [
-                'attribute' => 'student.naam',
+                'attribute' => 'studentid',
+                'label' => 'student',
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) {
                     //return $alleGesprekken->student->naam;
-                    return Html::a($alleGesprekken->student->naam, ['/gesprek/student', 'id'=>$alleGesprekken->studentid]);
+                    return Html::a($alleGesprekken->student->naam, ['/gesprek/student', 'id'=>$alleGesprekken->studentid], ['title'=>'Search ID: '.$alleGesprekken->studentid]);
                 }
             ],
 
@@ -174,7 +175,7 @@ $barlen2 = max(5,$counts[1]*2);
             ],
 
             [   'attribute' => 'opmerking',
-                'contentOptions' => ['style' => 'width:80px;'],
+                'contentOptions' => ['style' => 'width:20px;'],
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) {
                     return substr($alleGesprekken->opmerking, 0, 10);
