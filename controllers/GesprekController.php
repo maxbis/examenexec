@@ -106,12 +106,16 @@ class GesprekController extends Controller
     {
         $model = new Gesprek();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if ( $model->rolspelerid ) {
-                // if rolspeler defined, then go to fill in form
-                return $this->redirect(['vraag/form', 'gesprekid' => $model->id], );
-            } else {
-                // else just init a new gesprek and put it in the list wating for a rolspeler
-                return $this->redirect(['gesprek/index']);
+            if (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin') { 
+                if ( $model->rolspelerid ) {
+                    // if rolspeler defined, then go to fill in form
+                    return $this->redirect(['vraag/form', 'gesprekid' => $model->id], );
+                } else { // if logged on as admin 
+                    // else just init a new gesprek and put it in the list wating for a rolspeler
+                    return $this->redirect(['gesprek/index']);
+                }
+            } else { // no admin so we are student (or rolspeler).
+                return $this->redirect(['gesprek/student']);
             }
             
         }
