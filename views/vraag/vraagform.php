@@ -15,7 +15,7 @@ use yii\widgets\LinkPager;
         for (var i=0; i < radios.length; i++) {
             if ( radios[i].checked ) { // radio checked?
                 totaalString += radios[i].value + "-";
-                statusString += radios[i].id + "-";
+                statusString += radios[i].id.split("-",1) + "-";
             }
         }
         totaalString = totaalString.slice(0,-1);
@@ -95,13 +95,13 @@ use yii\widgets\LinkPager;
                     <td><?= $item->volgnr ?></td>
                     <td><?= $item->vraag ?></td>
                     
-                    <td><input type="radio" id="1" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
+                    <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
                     <?php if ( isset($item->soms) ) : ?>
-                        <td><input type="radio" id="2" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></td>
+                        <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></td>
                     <?php else: ?>
                         <td>nvt</td>
                     <?php endif; ?>
-                    <td><input type="radio" id="3" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
+                    <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
                 </tr>
             <?php endforeach; ?>
             
