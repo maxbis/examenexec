@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => '#',
                 'contentOptions' => ['style' => 'width:20px;'],
                 'value' => function ($model) use ($formList) {
-                    return $model->formid.'-'.$model->volgnr;
+                    return $model->form->nr.'-'.$model->volgnr;
                 }
             ],
             [
