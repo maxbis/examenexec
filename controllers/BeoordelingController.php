@@ -293,7 +293,7 @@ class BeoordelingController extends Controller
                 WHERE v.volgnr = r.vraagnr
                 AND e.actief = 1
                 group by naam, studentnr, formnaam, mappingid
-                order by s.naam, v.formid, v.volgnr
+                order by naam, mappingid
                 ";
         $result = Yii::$app->db->createCommand($sql)->queryAll();
         echo "<pre>";
