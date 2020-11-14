@@ -135,10 +135,10 @@ class StudentController extends Controller
         
         if (isset($_COOKIE['student'])) {
             $id = $_COOKIE['student'];
+            writeLog("Log in via Cookie for student id: ".$id);
         } else {
             $id = "";
         }
-        writeLog(" Nummer:".$nummer." "."cookie:".$id);
 
         if ( isset($_COOKIE['student']) ) {
             return $this->redirect(['/gesprek/student']);

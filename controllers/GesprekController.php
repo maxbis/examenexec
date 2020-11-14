@@ -218,6 +218,7 @@ class GesprekController extends Controller
         if ( Yii::$app->request->post() ) {
             $nummer=Yii::$app->request->post();
             isset($nummer['nummer']) ? $nummer=$nummer['nummer'] : $nummer=0;
+            writeLog("Login studentnr: ".$nummer);
         }
 
         if ( $id==0 && $nummer==0 && isset($_COOKIE['student']) ) {
@@ -226,12 +227,14 @@ class GesprekController extends Controller
         if ($id) {
             $student = Student::find()->where(['id' => $id])->one();
             if (empty($student)) {
+                writeLog("Login with wrong studentid (possible hack!): ".$id);
                 sleep(2); // help to prevent brute force attack
                 return $this->render('/student/login');
             }
         } elseif ($nummer) { 
             $student = Student::find()->where(['nummer' => $nummer])->one();
             if (empty($student)) {
+                writeLog("Login with wrong studentnr: ".$nummer);
                 sleep(2);
                 return $this->render('/student/login');
             }

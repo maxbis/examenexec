@@ -30,7 +30,6 @@ class SiteController extends Controller
                     [
                         'actions' => ['login'],
                         'allow' => true,
-                        'ips' => ['111.111.111.*', '222.222.222.222'],
                         'roles' => ['?'],
                     ],
                 ],
@@ -83,13 +82,12 @@ class SiteController extends Controller
     {
 
         MyHelpers::CheckIP();
-        
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
             return $this->goBack();
         }
 
@@ -99,8 +97,6 @@ class SiteController extends Controller
         ]);
     }
 
-   
-
 
     /**
      * Logout action.
@@ -109,8 +105,9 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        setcookie("student", "0", time()-7200, "/");
-        setcookie("rolspeler", "0", time()-7200, "/");
+        //setcookie("student", "0", time()-7200, "/");
+        //setcookie("rolspeler", "0", time()-7200, "/");
+        $this->actionClear();
 
         Yii::$app->user->logout();
 
@@ -121,8 +118,6 @@ class SiteController extends Controller
     {
         setcookie("student", "0", time(), "/");
         setcookie("rolspeler", "0", time(), "/");
-
-        areWeOK("clear");
 
         return $this->render('/student/login');
     }

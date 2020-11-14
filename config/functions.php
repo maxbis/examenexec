@@ -39,5 +39,5 @@ function writeLog($msg="")
             .Yii::$app->controller->id."Controller "
             ."action".Yii::$app->controller->action->id." "
             .$msg;
-    $result = file_put_contents('../log/log_'.date("j-m-Y").'.log', $log.PHP_EOL, FILE_APPEND);
+    $result = file_put_contents('../log/audit_'.date("dmY").'.log', $log.PHP_EOL, FILE_APPEND);
 }

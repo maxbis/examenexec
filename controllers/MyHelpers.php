@@ -43,7 +43,7 @@ class MyHelpers
             $ipRange = self::ipRange($item);
             if ( ip2long($remoteIP) >= ip2long($ipRange[0]) && ip2long($remoteIP) <= ip2long($ipRange[1]) ) {
                 $string = $remoteIP.' - '.$ipRange[0].' - '.$ipRange[1];
-                writeLog($string);
+                writeLog('IP-check OK: '.$string);
                 $weAreOK=true;
             }
         }
