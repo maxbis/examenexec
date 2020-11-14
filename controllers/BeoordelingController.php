@@ -249,7 +249,7 @@ class BeoordelingController extends Controller
         // all beoordelingen are now put in array of assiociative arrays
 
         echo "<pre>";
-        foreach($output as $item) { // take one beoordeling at a time
+        foreach($output as $item) { // take one beoordeling at a time      
             echo '<br>'.'# Student: '.$item['studentnr'].'<br>';
             $result = [];
 
@@ -279,5 +279,33 @@ class BeoordelingController extends Controller
         echo "<pre>";
         exit;
 
+    }
+
+    public function actionExport3() {
+        
+        $examenid=12;
+        $sql="  SELECT s.naam naam, s.nummer studentnr, f.omschrijving formnaam, v.mappingid mappingid, min(v.volgnr) vraagnr, count(*) aantal, v.mappingid mappingid, sum(r.score) score
+                FROM results r
+                INNER JOIN student s on s.id=r.studentid
+                INNER JOIN vraag v on v.formid = r.formid
+                INNER JOIN form f on f.id=v.formid
+                INNER JOIN examen e on e.id = f.examenid
+                WHERE v.volgnr = r.vraagnr
+                AND e.actief = 1
+                group by naam, studentnr, formnaam, mappingid
+                order by s.naam, v.formid, v.volgnr
+                ";
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+        echo "<pre>";
+        foreach($result as $row) {
+            $totVraag = $row['vraagnr'] + $row['aantal'] -1;
+            $score = intval( ($row['score']+5)/10 );
+            echo "<br>### student: ".$row['naam']." form ".$row['formnaam']." vraag ".$row['vraagnr']." - ".$totVraag." SPL score: ".$score."(".$row['score'].") ###<br>";
+            echo "delete from scorestudent where examenid=".$examenid." and studentnummer=".$row['studentnr']." and criteriumId=".$row['mappingid'].";";
+            echo "<br>";
+            echo "insert into scorestudent (studentnummer, criteriumId, score, examenid) values(".$row['studentnr'].",". $row['mappingid'].",". $score.", ".$examenid." );";
+            echo "<br>";
+        }
+        echo "</pre>";
     }
 }

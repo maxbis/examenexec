@@ -136,9 +136,9 @@ class GesprekController extends Controller
                         ->where(['form.actief'=>1])
                         ->andWhere(['examen.actief'=>1])->all();
 
-        $studenten = Student::find()->all();
+        $studenten = Student::find()->orderBy(['naam'=>SORT_ASC])->all();
 
-        $rolspelers = Rolspeler::find()->all();
+        $rolspelers = Rolspeler::find()->orderBy(['naam'=>SORT_ASC])->all();
 
         return $this->render('createAndGo',[
             'gesprek' => $newGesprek,
@@ -295,7 +295,7 @@ class GesprekController extends Controller
         }
        
         if (!empty($rolspeler)) {
-            $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderby(['status' => 'ASC', 'id' => 'DESC'])->all();
+            $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderBy(['status' => 'SORT_ASC', 'id' => SORT_DESC])->all();
             $alleGesprekken = Gesprek::find()->all();
             setcookie("rolspeler", $rolspeler->id, time()+7200, "/");
             return $this->render('/gesprek/rolspeler', [

@@ -5,7 +5,7 @@ use yii\bootstrap4\NavBar;
 use yii\helpers\Html;
 
 NavBar::begin([
-    'brandLabel' => Html::img(['@web/planner.jpg']),
+    'brandLabel' => Html::img('@web/planner.jpg', ['alt' => 'My logo']) ,
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
         //'class' => 'navbar-inverse navbar-fixed-top',
@@ -31,7 +31,7 @@ echo Nav::widget([
                  ['label' => 'Nieuwe Beoordeling', 'url' => ['/gesprek/create-and-go']],
                  ['label' => '-----------------------------------'],
                  ['label' => 'Export Resultaten to File', 'url' => ['/beoordeling/export']],
-                 ['label' => 'Export Resultaten to Query', 'url' => ['/beoordeling/export2']],
+                 ['label' => 'Export Resultaten to Query2', 'url' => ['/beoordeling/export3']],
 
             ],
             'options' => ['class' => 'nav-item']

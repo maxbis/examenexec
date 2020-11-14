@@ -50,7 +50,9 @@ class MyHelpers
         if ( $weAreOK == false ) {
             $string = "Permission denied for ". $remoteIP;
             writeLog($string);
+            sleep(2);
             echo $string;
+            sleep(3);
             exit;
         }
     }
