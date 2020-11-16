@@ -43,6 +43,7 @@ echo Nav::widget([
         'items' => [
             ['label' => 'Studenten', 'url' => ['/student']],
             ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
+            ['label' => 'Vrije rolspelers', 'url' => ['/beoordeling/export4']],
             ['label' => 'Alle Gesprekken', 'url' => ['/gesprek']],
             ['label' => 'Overzicht Gesprekken', 'url' => ['/student/status']],
         ],

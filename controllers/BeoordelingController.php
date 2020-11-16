@@ -315,4 +315,32 @@ class BeoordelingController extends Controller
         ]);
         echo $output;
     }
+
+
+    public function actionExport4() {
+            
+        $examenid=12;
+        $sql="  select * 
+                from rolspeler r where 
+                actief = 1 AND id  not in (
+                select rolspelerid from gesprek g
+                where r.id=g.rolspelerid
+                and status <2 )
+                order by r.naam
+            ";
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+        $teller=0;
+        $output = "";
+        $output .= "<pre>";
+        foreach($result as $row) {
+            $output .= $row['naam']."<br>";
+        }
+        $output .=  "</pre>";
+
+        return $this->render('query', [
+            'output' => $output,
+        ]);
+        echo $output;
+    }
+
 }
