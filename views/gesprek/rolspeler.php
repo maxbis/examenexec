@@ -16,6 +16,8 @@ $barlen2 = max(5,$counts[1]*2);
 
 $this->title="Gesprekken ".$rolspeler->naam;
 
+$waar=['-','On the Move','Waiting for Call'];
+
 ?>
 
 <meta http-equiv="refresh" content="60">
@@ -79,6 +81,7 @@ $this->title="Gesprekken ".$rolspeler->naam;
       <th scope="col" style="width: 15rem;">Gesprek</th>
       <th scope="col" style="width: 15rem;">Opmerking</th>
       <th scope="col" style="width: 20rem;">Status</th>
+      <th scope="col" style="width: 20rem;">Waar</th>
       <th scope="col" style="width: 20rem;">Time</th>
       <th scope="col" style="width: 10rem;">&nbsp;</th>
     </tr>
@@ -97,6 +100,16 @@ $this->title="Gesprekken ".$rolspeler->naam;
                     echo $status[$item->status];
                 }
             ?>      
+        </td>
+        
+        <td>
+        <?php
+            if ( isset($item->statusstudent) && $item->status!=2 ) {
+                echo $waar[$item->statusstudent];
+            } else {
+                echo "";
+            }
+        ?>
         </td>
 
         <?php

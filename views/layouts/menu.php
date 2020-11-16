@@ -31,7 +31,7 @@ echo Nav::widget([
                  ['label' => 'Nieuwe Beoordeling', 'url' => ['/gesprek/create-and-go']],
                  ['label' => '-----------------------------------'],
                  ['label' => 'Export Resultaten to File', 'url' => ['/beoordeling/export']],
-                 ['label' => 'Export Resultaten to Query2', 'url' => ['/beoordeling/export3']],
+                 ['label' => 'Export Resultaten to Query', 'url' => ['/beoordeling/export3']],
 
             ],
             'options' => ['class' => 'nav-item']

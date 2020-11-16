@@ -15,9 +15,23 @@ if ( !isset($counts[1]) ) $counts[1]=0;
 
 $barlen1 = max(5,$counts[0]*2);
 $barlen2 = max(5,$counts[1]*2);
+
 ?>
 
 <meta http-equiv="refresh" content="60">
+
+<script>
+    function changeStatus(id, status, rolspelerid, statusstudent) {
+        // console.log(val, id);
+        $.ajax({
+        url: "<?= Url::to(['/gesprek/update-status']) ?>",
+            data: {id: id, 'status': status, 'rolspelerid': rolspelerid, 'statusstudent': statusstudent},
+            cache: false
+        }).done(function (html) {
+            location.reload();
+        });
+    }
+</script>
 
 <div class="container">
 
@@ -95,14 +109,28 @@ $barlen2 = max(5,$counts[1]*2);
         <th scope="col" style="width: 15rem;">Gesprek</th>
         <th scope="col" style="width: 20rem;">Status</th>
         <th scope="col" style="width: 15rem;">Opmerking</th>
+        <th scope="col" style="width: 15rem;">Waar is Student</th>
       </tr>
     
+      <?php $waar=['-','On the Move!','Waiting for Call']; ?>
+
       <?php foreach ($gesprekken as $item): ?>
           <tr>
           <td><?= Yii::$app->formatter->asTime($item->created) ?> </td>
           <td><?= $item->form->omschrijving ?> </td>
           <td><?= $status[$item->status] ?> </td>
-          <td><?= $item->opmerking ?> </td>
+          <td><?= $item->opmerking ?></td>
+          <td>
+          <?php
+            if ( $item->statusstudent!=0 ) {
+              echo Html::dropDownList('$item', $item->statusstudent, ['1'=>'On the Move','2'=>'Waiting for Call'],
+                    ['onchange' => "changeStatus('$item->id','$item->status', '$item->rolspelerid', $(this).val() )"]);
+            } else {
+              echo '';
+            }
+            
+            ?>
+            </td>
           </tr>
       <?php endforeach; ?>
 

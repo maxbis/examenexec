@@ -296,16 +296,23 @@ class BeoordelingController extends Controller
                 order by naam, mappingid
                 ";
         $result = Yii::$app->db->createCommand($sql)->queryAll();
-        echo "<pre>";
+        $teller=0;
+        $output = "";
+        $output .= "<pre>";
         foreach($result as $row) {
             $totVraag = $row['vraagnr'] + $row['aantal'] -1;
             $score = intval( ($row['score']+5)/10 );
-            echo "<br>### student: ".$row['naam']." form ".$row['formnaam']." vraag ".$row['vraagnr']." - ".$totVraag." SPL score: ".$score."(".$row['score'].") ###<br>";
-            echo "delete from scorestudent where examenid=".$examenid." and studentnummer=".$row['studentnr']." and criteriumId=".$row['mappingid'].";";
-            echo "<br>";
-            echo "insert into scorestudent (studentnummer, criteriumId, score, examenid) values(".$row['studentnr'].",". $row['mappingid'].",". $score.", ".$examenid." );";
-            echo "<br>";
+            $output .= "<br>### ".++$teller." student: ".$row['naam']." form ".$row['formnaam']." vraag ".$row['vraagnr']." - ".$totVraag." SPL score: ".$score."(".$row['score'].") ###<br>";
+            $output .= "delete from scorestudent where examenid=".$examenid." and studentnummer=".$row['studentnr']." and criteriumId=".$row['mappingid'].";";
+            $output .= "<br>";
+            $output .= "insert into scorestudent (studentnummer, criteriumId, score, examenid) values(".$row['studentnr'].",". $row['mappingid'].",". $score.", ".$examenid." );";
+            $output .= "<br>";
         }
-        echo "</pre>";
+        $output .=  "</pre>";
+
+        return $this->render('query', [
+            'output' => $output,
+        ]);
+        echo $output;
     }
 }

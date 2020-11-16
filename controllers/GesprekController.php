@@ -37,7 +37,7 @@ class GesprekController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     // when logged in, any user
-                    [ 'actions' => ['student','create'],
+                    [ 'actions' => ['student','create', 'update-status'],
                         'allow' => true,
                     ],
                     [ 'actions' => [ 'rolspeler', 'update' ],
@@ -171,10 +171,11 @@ class GesprekController extends Controller
         ]);
     }
 
-    public function actionUpdateStatus($id, $status, $rolspelerid) {
-        $model = $this->findModel($id);
+    public function actionUpdateStatus($id, $status, $rolspelerid, $statusstudent) {
+        $model = $this->findModel($id);        
         $model->status=$status;
         $model->rolspelerid=$rolspelerid;
+        $model->statusstudent=$statusstudent;
         $model->save();
     }
 
@@ -253,10 +254,12 @@ class GesprekController extends Controller
                         ->andWhere(['examen.actief'=>1])->all();
         // ToDo show only gesprekken van current examen!
         // $gesprekken = Gesprek::find()->where(['studentid' => $id])->all(); // this is code before examen
-        $sql = "select * FROM gesprek
-                INNER JOIN form ON gesprek.formid=form.id
+        $sql = "select g.id id, g.formid formid, g.rolspelerid rolspelerid,  g.studentid studentid,
+                        g.opmerking opmerking, g.status status, g.statusstudent statusstudent, g.created created 
+                FROM gesprek g
+                INNER JOIN form ON g.formid=form.id
                 INNER JOIN examen ON form.examenid=examen.id
-                WHERE gesprek.studentid=:id
+                WHERE g.studentid=:id
                 AND examen.actief=1";
         $gesprekken = Gesprek::findBySql($sql, [':id' => $id])->all();
 

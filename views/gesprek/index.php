@@ -25,11 +25,11 @@ $barlen2 = max(5,$counts[1]*2);
 ?>
 	
 <script>
-    function changeStatus(id, status, rolspelerid) {
+    function changeStatus(id, status, rolspelerid, statusstudent) {
         // console.log(val, id);
         $.ajax({
         url: "<?= Url::to(['/gesprek/update-status']) ?>",
-            data: {id: id, 'status': status, 'rolspelerid': rolspelerid },
+            data: {id: id, 'status': status, 'rolspelerid': rolspelerid, 'statusstudent': statusstudent},
             cache: false
         }).done(function (html) {
             location.reload();
@@ -163,7 +163,7 @@ $barlen2 = max(5,$counts[1]*2);
                 'value' => function ($alleGesprekken) use ($rolspelerList) {
                     if ($alleGesprekken->status==0) {
                         return Html::dropDownList('status', $alleGesprekken->rolspelerid, $rolspelerList,
-                        ['onchange' => "changeStatus('$alleGesprekken->id', '$alleGesprekken->status', $(this).val())"]);
+                        ['onchange' => "changeStatus('$alleGesprekken->id', '$alleGesprekken->status', $(this).val(), '$alleGesprekken->statusstudent')"]);
                     } else {
                         if (isset($alleGesprekken->rolspeler->naam)) {
                             return $alleGesprekken->rolspeler->naam;
@@ -195,7 +195,7 @@ $barlen2 = max(5,$counts[1]*2);
                     //$test = Html::dropDownList('status', 3, $rolspelerList);
                     if ( $alleGesprekken->status == 9 ){ // replace != 9 into ==2 in order to enabel  edit only for status 2
                         return Html::dropDownList('status', $alleGesprekken->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
-                        ['onchange' => "changeStatus('$alleGesprekken->id', $(this).val(), '$alleGesprekken->rolspelerid')"]);
+                        ['onchange' => "changeStatus('$alleGesprekken->id', $(this).val(), '$alleGesprekken->rolspelerid', '$alleGesprekken->statusstudent')"]);
                     } else {
                         return  ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'][$alleGesprekken->status];
                     }
@@ -203,8 +203,24 @@ $barlen2 = max(5,$counts[1]*2);
                      }
             ],
 
+            
+            [
+                'attribute' => 'studentstatus',
+                'filterInputOptions' => [
+                    'class' => 'form-control',
+                    'prompt' => '...'
+                    ],
+                'format' => 'raw',
+                'value' => function ($alleGesprekken) {
+                    //$test = Html::dropDownList('status', 3, $rolspelerList);
+                    return Html::dropDownList('statusstudent', $alleGesprekken->statusstudent, ['0'=>'-','1'=>'On the Move','2'=>'Waiting for Call'],
+                    ['onchange' => "changeStatus('$alleGesprekken->id','$alleGesprekken->status', '$alleGesprekken->rolspelerid', $(this).val() )"]);
+
+                }
+            ],
+
             [   'class' => 'yii\grid\ActionColumn', 'template' => '{view} {delete}',
-            'visibleButtons'=>[
+                'visibleButtons'=>[
                 'delete'=> function($alleGesprekken){
                       return 0;
                  },
