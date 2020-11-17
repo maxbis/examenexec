@@ -212,9 +212,12 @@ $barlen2 = max(5,$counts[1]*2);
                     ],
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) {
-                    //$test = Html::dropDownList('status', 3, $rolspelerList);
-                    return Html::dropDownList('statusstudent', $alleGesprekken->statusstudent, ['0'=>'-','1'=>'On the Move','2'=>'Waiting for Call'],
-                    ['onchange' => "changeStatus('$alleGesprekken->id','$alleGesprekken->status', '$alleGesprekken->rolspelerid', $(this).val() )"]);
+                    if ( $alleGesprekken->status != 2 && $alleGesprekken->rolspelerid ){
+                        return Html::dropDownList('statusstudent', $alleGesprekken->statusstudent, ['0'=>'-','1'=>'On the Move','2'=>'Waiting for Call'],
+                        ['onchange' => "changeStatus('$alleGesprekken->id','$alleGesprekken->status', '$alleGesprekken->rolspelerid', $(this).val() )"]);
+                    } else {
+                        return "-";
+                    }
 
                 }
             ],
