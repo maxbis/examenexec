@@ -44,6 +44,13 @@ use yii\widgets\LinkPager;
                     <?php endif; ?>
                     <td><input type="radio" id="3" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
                 </tr>
+                <?php if (isset($item->toelichting)): ?>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class="font-weight-light"><?= $item->toelichting ?></td>
+                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                    </tr>
+                <?php endif; ?>
             <?php endforeach; ?>
             
 

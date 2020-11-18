@@ -32,6 +32,13 @@ echo Nav::widget([
                  ['label' => '-----------------------------------'],
                  ['label' => 'Export Resultaten to File', 'url' => ['/beoordeling/export']],
                  ['label' => 'Export Resultaten to Query', 'url' => ['/beoordeling/export3']],
+                 ['label' => '-----------------------------------'],
+                 [
+                    'label' => 'Kentaak Beoordelingen',
+                    'url' => 'http://vps789715.ovh.net/KerntaakBeoordelingen/',
+                    'template'=> '<a href="{url}" target="_blank">{label}</a>',
+                    'linkOptions' => ['target' => '_blank'],
+                 ],
 
             ],
             'options' => ['class' => 'nav-item']

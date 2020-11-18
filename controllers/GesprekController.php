@@ -70,7 +70,11 @@ class GesprekController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $rolspeler = Rolspeler::find()->where(['actief' => '1'])->orderBy(['naam' => SORT_ASC  ])->all();
-        $form = Form::find()->where(['actief' => '1'])->all();
+        $form = Form::find()
+            ->joinwith('examen')
+            ->where(['form.actief' => '1'])
+            ->andwhere(['examen.actief' => '1'])
+            ->all();
      
         return $this->render('index', [
             'searchModel' => $searchModel,

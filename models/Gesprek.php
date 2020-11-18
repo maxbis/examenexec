@@ -31,7 +31,7 @@ class Gesprek extends \yii\db\ActiveRecord
     {
         return [
             [['formid', 'studentid'], 'required'],
-            [['formid', 'rolspelerid', 'studentid', 'status'], 'integer'],
+            [['formid', 'rolspelerid', 'studentid', 'status', 'statusstudent'], 'integer'],
             [['created'], 'safe'],
             [['opmerking'], 'string', 'max' => 200],
             [['studentid'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['studentid' => 'id']],
@@ -53,12 +53,17 @@ class Gesprek extends \yii\db\ActiveRecord
             'opmerking' => 'Opmerking',
             'status' => 'Status',
             'created' => 'Created',
+            'statusstudent' => 'statusstudent',
         ];
     }
 
     public function getForm()
     {
         return $this->hasOne(Form::className(), ['id' => 'formid']);
+    }
+
+    public function getExamen() {
+        return $this->hasOne(Examen::className(), ['id' => 'examenid'])->via('form');
     }
 
     public function getStudent()

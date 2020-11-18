@@ -22,6 +22,8 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'vraag')->textInput() ?>
 
+    <?= $form->field($model, 'toelichting')->textInput(['maxlength' => true])->textArea( ['style'=>'width:800px'] ) ?>
+
     <?= $form->field($model, 'ja')->textInput()->label('Ja-punten') ?>
 
     <?= $form->field($model, 'soms')->textInput()->label('Soms-punten') ?>
@@ -35,3 +37,4 @@ use yii\helpers\ArrayHelper;
     <?php ActiveForm::end(); ?>
 
 </div>
+

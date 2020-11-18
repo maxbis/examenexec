@@ -11,9 +11,11 @@ use Yii;
  * @property int $formid
  * @property int $volgnr
  * @property string $vraag
+ * @property string|null $toelichting
  * @property int|null $ja
  * @property int|null $soms
  * @property int|null $nee
+ * @property int|null $mappingid
  *
  * @property Form $form
  */
@@ -34,8 +36,9 @@ class Vraag extends \yii\db\ActiveRecord
     {
         return [
             [['formid', 'volgnr', 'vraag'], 'required'],
-            [['formid', 'volgnr', 'ja', 'soms', 'nee','mappingid'], 'integer'],
+            [['formid', 'volgnr', 'ja', 'soms', 'nee', 'mappingid'], 'integer'],
             [['vraag'], 'string', 'max' => 200],
+            [['toelichting'], 'string', 'max' => 500],
             [['formid'], 'exist', 'skipOnError' => true, 'targetClass' => Form::className(), 'targetAttribute' => ['formid' => 'id']],
         ];
     }
@@ -50,10 +53,11 @@ class Vraag extends \yii\db\ActiveRecord
             'formid' => 'Formid',
             'volgnr' => 'Volgnr',
             'vraag' => 'Vraag',
+            'toelichting' => 'Toelichting',
             'ja' => 'Ja',
             'soms' => 'Soms',
             'nee' => 'Nee',
-            'mappingid' => 'mappingid',
+            'mappingid' => 'Mappingid',
         ];
     }
 

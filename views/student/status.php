@@ -6,7 +6,7 @@ use yii\helpers\Url;
 
 <p></p>
 
-<div class="card" style="width: 22rem;">
+<div class="card">
     <div class="card-body">
         <table class="table">
             <thead>

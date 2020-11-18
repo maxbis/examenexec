@@ -40,7 +40,12 @@ class GesprekSearch extends Gesprek
      */
     public function search($params)
     {
-        $query = Gesprek::find();
+   
+        $query = Gesprek::find()
+            ->joinwith('examen')
+            ->joinwith('form')
+            ->where(['examen.actief'=>1])
+            ->andwhere(['form.actief'=>1]);
 
         // add conditions that should always apply here
 

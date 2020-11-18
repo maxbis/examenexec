@@ -22,7 +22,7 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'omschrijving')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'instructie')->textInput(['maxlength' => true])->textArea( ['style'=>'width:600px'] ) ?>
+    <?= $form->field($model, 'instructie')->textInput(['maxlength' => true])->textArea( ['style'=>'width:800px'] ) ?>
 
 
     <?= HTMLInclude('formSave') ?>

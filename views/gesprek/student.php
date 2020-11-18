@@ -122,7 +122,7 @@ $barlen2 = max(5,$counts[1]*2);
           <td><?= $item->opmerking ?></td>
           <td>
           <?php
-            if ( $item->statusstudent!=0 ) {
+            if ( $item->statusstudent!=0 && $item->status != 2 ) {
               echo Html::dropDownList('$item', $item->statusstudent, ['1'=>'On the Move','2'=>'Waiting for Call'],
                     ['onchange' => "changeStatus('$item->id','$item->status', '$item->rolspelerid', $(this).val() )"]);
             } else {
