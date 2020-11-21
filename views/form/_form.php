@@ -13,17 +13,18 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'nr')->textInput() ?> 
+    <?= $form->field($model, 'nr')->textInput(['style'=>'width:50px'])->label('Volgnummer') ?> 
     
     <?php
         $itemList=ArrayHelper::map($examenModel,'id','naam');
-        echo $form->field($model, 'examenid')->dropDownList($itemList,['prompt'=>'Please select'])->label('examen');
+        echo $form->field($model, 'examenid')->dropDownList($itemList,['prompt'=>'Please select', 'style'=>'width:250px'])->label('Examen');
     ?>
 
-    <?= $form->field($model, 'omschrijving')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'omschrijving')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Naam van deze beoordeling (of gesprek)')  ?>
 
-    <?= $form->field($model, 'instructie')->textInput(['maxlength' => true])->textArea( ['style'=>'width:800px'] ) ?>
+    <?= $form->field($model, 'instructie')->textInput(['maxlength' => true])->textArea( ['style'=>'width:800px; height:200px'] ) ?>
 
+    <?= $form->field($model, 'werkproces')->textInput(['style'=>'width:250px'])->label('werkprocesid for export KTB db') ?> 
 
     <?= HTMLInclude('formSave') ?>
 

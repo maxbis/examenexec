@@ -46,7 +46,11 @@ class VraagSearch extends Vraag
     public function search($params)
     {
         // added innerjoin for N:1 relation vraag:form
-        $query = Vraag::find()->innerJoinWith('form', true);
+        $query = Vraag::find()
+            ->joinwith('examen')
+            ->joinwith('form')
+            ->where(['examen.actief'=>1])
+            ->andwhere(['form.actief'=>1]);
 
         // add conditions that should always apply here
 
@@ -80,7 +84,7 @@ class VraagSearch extends Vraag
         ]);
 
         $query->andFilterWhere(['like', 'vraag', $this->vraag])
-            ->andFilterWhere(['like', 'form.omschrijving', $this->formNaam]);;
+        ->andFilterWhere(['like', 'form.omschrijving', $this->formNaam]);;
 
         return $dataProvider;
     }

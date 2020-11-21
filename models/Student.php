@@ -31,7 +31,7 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [['nummer', 'naam', 'klas'], 'required'],
-            [['nummer'], 'integer', 'max' => 999999 ],
+            [['nummer'], 'integer', 'max' => 9999999 ],
             [['naam'], 'string', 'max' => 30],
             [['klas'], 'string', 'max' => 2],
         ];

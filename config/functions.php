@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Debug function
  * d($var);

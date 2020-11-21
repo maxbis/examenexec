@@ -144,8 +144,7 @@ class RolspelerController extends Controller
 
         if ( $token != "" ) {
             writeLog($msg="Trying to get acces with token ".$token);
-        }
-       
+        }       
 
         if ( isset($_POST['rolspeler']) ) $id=$_POST['rolspeler'];
         

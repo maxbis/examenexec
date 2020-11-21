@@ -97,7 +97,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?= Html::a('Nieuw Examen', ['create'], ['class' => 'btn btn-success']) ?>
   &nbsp;
-  <?= Html::a('<span class="glyphicon glyphicon-edit">Planner</span>', ['/gesprek'], ['class' => 'btn btn-info', 'title' => 'Naar examenplanner']) ?>
+  <?= Html::a('<span>Planner</span>', ['/gesprek'], ['class' => 'btn btn-secondary', 'title' => 'Naar examenplanner']) ?>
+  &nbsp;
+  <?= Html::a('<span>Forms</span>', ['/form'], ['class' => 'btn btn-secondary', 'title' => 'Naar examenplanner']) ?>
 </p>
 <br>
 <hr>

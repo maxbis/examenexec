@@ -12,11 +12,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'nummer')->textInput() ?>
+    <?= $form->field($model, 'nummer')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Studentnummer') ?>
 
-    <?= $form->field($model, 'naam')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'naam')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Naam') ?>
 
-    <?= $form->field($model, 'klas')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'klas')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Klas') ?>
 
     <?= HTMLInclude('formSave') ?>
     

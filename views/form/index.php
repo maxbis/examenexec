@@ -14,9 +14,6 @@ $this->title = 'Formulieren';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -44,6 +41,10 @@ $this->title = 'Formulieren';
             ],
             [
                 'attribute'=>'examen.naam',
+                'label' => 'Examen',
+            ],
+            [
+                'attribute'=>'werkproces',
 
             ],
             ['class' => 'yii\grid\ActionColumn'],
@@ -55,4 +56,8 @@ $this->title = 'Formulieren';
 
 <p>
     <?= Html::a('New Form', ['create'], ['class' => 'btn btn-success']) ?>
+    &nbsp;
+     <?= Html::a('<span>Planner</span>', ['/gesprek'], ['class' => 'btn btn-secondary', 'title' => 'Naar examenplanner']) ?>
+    &nbsp;
+  <?= Html::a('<span>Examens</span>', ['/examen'], ['class' => 'btn btn-secondary', 'title' => 'Naar Examens']) ?>
 </p>

@@ -14,11 +14,14 @@ class GesprekSearch extends Gesprek
     /**
      * {@inheritdoc}
      */
+
+    public $student;
+
     public function rules()
     {
         return [
-            [['id', 'formid', 'rolspelerid', 'studentid', 'status'], 'integer'],
-            [['opmerking'], 'safe'],
+            [['formid', 'rolspelerid', 'status','statusstudent'], 'integer'],
+            [['opmerking', 'student'], 'safe'],
         ];
     }
 
@@ -42,8 +45,7 @@ class GesprekSearch extends Gesprek
     {
    
         $query = Gesprek::find()
-            ->joinwith('examen')
-            ->joinwith('form')
+            ->joinwith(['examen', 'form', 'student'])
             ->where(['examen.actief'=>1])
             ->andwhere(['form.actief'=>1]);
 
@@ -53,6 +55,11 @@ class GesprekSearch extends Gesprek
             'query' => $query,
             'sort'=> ['defaultOrder' => ['status' => SORT_ASC, 'id' => SORT_DESC]],
         ]);
+
+        $dataProvider->sort->attributes['student'] = [
+            'asc' => ['student.naam' => SORT_ASC],
+            'desc' => ['student.naam' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -67,12 +74,14 @@ class GesprekSearch extends Gesprek
             'id' => $this->id,
             'formid' => $this->formid,
             'rolspelerid' => $this->rolspelerid,
-            'studentid' => $this->studentid,
             'status' => $this->status,
+            'statusstudent' => $this->statusstudent,
         ]);
-
         $query->andFilterWhere(['like', 'opmerking', $this->opmerking]);
+        $query->andFilterWhere(['like', 'student.naam', $this->student]);
 
         return $dataProvider;
     }
 }
+
+http://localhost:8080/gesprek/index?GesprekSearch%5Bformid%5D=&GesprekSearch%5Bstudentid%5D=&GesprekSearch%5Bstudent%5D=&GesprekSearch%5Brolspelerid%5D=10&GesprekSearch%5Bopmerking%5D=o&GesprekSearch%5Bstatus%5D=&sort=student

@@ -11,8 +11,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'naam')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'token')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'naam')->textInput(['maxlength' => true, 'style'=>'width:250px']) ?>
+    <?= $form->field($model, 'token')->textInput(['maxlength' => true, 'style'=>'width:250px']) ?>
 
 
     <?php $model->actief=1 ?>

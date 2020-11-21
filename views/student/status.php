@@ -2,7 +2,7 @@
 use yii\helpers\Url;
 ?>
 
-<h1>Afgeronde gesprekken per student</h1>
+<h1>Ingevulde formulieren  per student</h1>
 
 <p></p>
 

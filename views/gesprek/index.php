@@ -95,9 +95,9 @@ $barlen2 = max(5,$counts[1]*2);
 
         $rolspelerList = ArrayHelper::map($rolspeler,'id','naam');
         $statusIcon = ['&#128347;', '&#128172;', '&#128504;'];
-        $rolspelerList = [ ''=> '...'] + $rolspelerList;
+        $rolspelerList = [ ''=> '-'] + $rolspelerList;
+        //dd($rolspelerList);
         $formlist =  ArrayHelper::map($form,'id','omschrijving');  // gespreksnaam
-        // dd($rolspelerList);
     ?>
 
 
@@ -143,15 +143,13 @@ $barlen2 = max(5,$counts[1]*2);
             ],
 
             [
-                'attribute' => 'studentid',
-                'label' => 'student',
+                'attribute' => 'student',
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) {
                     //return $alleGesprekken->student->naam;
                     return Html::a($alleGesprekken->student->naam, ['/gesprek/student', 'id'=>$alleGesprekken->studentid], ['title'=>'Search ID: '.$alleGesprekken->studentid]);
                 }
             ],
-
             [
                 'attribute' => 'rolspelerid',
                 'filter' => $rolspelerList,
@@ -166,7 +164,7 @@ $barlen2 = max(5,$counts[1]*2);
                         ['onchange' => "changeStatus('$alleGesprekken->id', '$alleGesprekken->status', $(this).val(), '$alleGesprekken->statusstudent')"]);
                     } else {
                         if (isset($alleGesprekken->rolspeler->naam)) {
-                            return $alleGesprekken->rolspeler->naam;
+                            return Html::a($alleGesprekken->rolspeler->naam, ['/gesprek/rolspeler', 'id'=>$alleGesprekken->rolspelerid]);
                         } else {
                             return("???");
                         }
@@ -185,7 +183,7 @@ $barlen2 = max(5,$counts[1]*2);
 
             [
                 'attribute' => 'status',
-                'filter' => ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
+                'filter' => Yii::$app->params['gesprekStatus'], // list defined in config/params.php
                 'filterInputOptions' => [
                     'class' => 'form-control',
                     'prompt' => '...'
@@ -194,10 +192,10 @@ $barlen2 = max(5,$counts[1]*2);
                 'value' => function ($alleGesprekken) {
                     //$test = Html::dropDownList('status', 3, $rolspelerList);
                     if ( $alleGesprekken->status == 9 ){ // replace != 9 into ==2 in order to enabel  edit only for status 2
-                        return Html::dropDownList('status', $alleGesprekken->status, ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'],
+                        return Html::dropDownList('status', $alleGesprekken->status,Yii::$app->params['gesprekStatus'],
                         ['onchange' => "changeStatus('$alleGesprekken->id', $(this).val(), '$alleGesprekken->rolspelerid', '$alleGesprekken->statusstudent')"]);
                     } else {
-                        return  ['0'=>'Wachten','1'=>'Loopt','2'=>'Klaar'][$alleGesprekken->status];
+                        return  Yii::$app->params['gesprekStatus'][$alleGesprekken->status];
                     }
                     
                      }
@@ -205,7 +203,9 @@ $barlen2 = max(5,$counts[1]*2);
 
             
             [
-                'attribute' => 'studentstatus',
+                'attribute' => 'statusstudent',
+                'filter' =>  Yii::$app->params['studentStatus'], // list defined in config/params.php
+                'label' => 'Student Status',
                 'filterInputOptions' => [
                     'class' => 'form-control',
                     'prompt' => '...'
@@ -213,7 +213,7 @@ $barlen2 = max(5,$counts[1]*2);
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) {
                     if ( $alleGesprekken->status != 2 && $alleGesprekken->rolspelerid ){
-                        return Html::dropDownList('statusstudent', $alleGesprekken->statusstudent, ['0'=>'-','1'=>'On the Move','2'=>'Waiting for Call'],
+                        return Html::dropDownList('statusstudent', $alleGesprekken->statusstudent, Yii::$app->params['studentStatus'],
                         ['onchange' => "changeStatus('$alleGesprekken->id','$alleGesprekken->status', '$alleGesprekken->rolspelerid', $(this).val() )"]);
                     } else {
                         return "-";

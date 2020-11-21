@@ -70,4 +70,7 @@ class Vraag extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Form::className(), ['id' => 'formid']);
     }
+    public function getExamen() {
+        return $this->hasOne(Examen::className(), ['id' => 'examenid'])->via('form');
+    }
 }

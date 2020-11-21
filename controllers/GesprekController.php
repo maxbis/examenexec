@@ -278,6 +278,33 @@ class GesprekController extends Controller
         ]);
     }
 
+    public function actionCallStudent($id=0) {
+        if ( Yii::$app->user->identity->role == 'rolspeler') {
+            if ( isset($_COOKIE['rolspeler']) ) $id = $_COOKIE['rolspeler'];
+        } elseif ( ! (Yii::$app->user->identity->role == 'admin' && $id) ) {
+            echo "Oops...not logged in as rolspeler or admin";
+            exit; // we are not logged on so we are not able to call a student
+        }
+
+        // if rolspeler is set inactive, set back to active (since student is picked up)
+        $sql = "update rolspeler set actief=1 where id=:id";
+        $params = array(':id'=>$id);
+        $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+        $sql = "select * from gesprek where status =0 and (rolspelerid='' or rolspelerid is null) order by created ASC";
+        $student = Yii::$app->db->createCommand($sql)->queryOne();
+
+        if ($student) { // doi we have a waiting student
+            $sql = "update gesprek set rolspelerid=:rolspelerid where id=:id";
+            $params = array(':rolspelerid'=>$id,':id'=>$student['id']);
+            $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+        }
+
+
+        return $this->actionRolspeler($id);
+
+    }
+
     public function actionRolspeler($id=0,$token="",$gesprekid=0)
     {
         // only if not admin, becasue admin needs easy access via GET token=ABC
@@ -290,7 +317,6 @@ class GesprekController extends Controller
         } elseif($token) {
             $rolspeler = Rolspeler::find()->where(['token' => $token])->andWhere(['not', ['token' => null]])->one();
         } else {
-            dd($token);
             return $this->render('rolspeler');
         }
 
@@ -300,14 +326,17 @@ class GesprekController extends Controller
             $params = array(':id'=> $gesprekid);
             Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
         }
-       
+        
         if (!empty($rolspeler)) {
             $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderBy(['status' => 'SORT_ASC', 'id' => SORT_DESC])->all();
             $alleGesprekken = Gesprek::find()->all();
+            $unassigned = Gesprek::find()->where('rolspelerid=0 OR rolspelerid is null')->count();
             setcookie("rolspeler", $rolspeler->id, time()+7200, "/");
+
             return $this->render('/gesprek/rolspeler', [
                 'alleGesprekken' => $alleGesprekken,
                 'gesprekken' => $gesprekken,
+                'unassigned' => $unassigned,
                 'rolspeler' => $rolspeler,
             ]);
         }

@@ -94,6 +94,13 @@ use yii\widgets\LinkPager;
                     ?>
                 </td>
             </tr>
+            <?php if ( $item->toelichting != "" ): ?>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class="font-weight-light"><?= $item->toelichting ?></td>
+                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                    </tr>
+                <?php endif; ?>
             <?php $i++; ?>
         <?php endforeach; ?>
         
@@ -117,7 +124,7 @@ use yii\widgets\LinkPager;
     </div>
 
     <br>
-    Gesprek op
+    Ingevuld op
     <?php
         $date = new DateTime($beoordeling->timestamp);
         echo $date->format('d-m-y - H:i').' uur, door '.$rolspeler->naam."<br><hr>";
