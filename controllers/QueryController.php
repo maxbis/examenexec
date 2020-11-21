@@ -118,8 +118,16 @@ class QueryController extends Controller
 
     public function actionExportResults() {
 
-        $examenid=12;
         $db_naam="beoordeling";
+
+        $sql = "select otherid from examen where actief=1";
+        $examenid = Yii::$app->db->createCommand($sql)->queryOne();
+
+        if ($examenid) {
+            $examenid=$examenid['otherid'];
+        } else {
+            $examenid=0;
+        }
 
         $sql="  SELECT s.naam naam, s.nummer studentnr, f.omschrijving formnaam, v.mappingid mappingid, min(v.volgnr) vraagnr, count(*) aantal, v.mappingid mappingid, sum(r.score) score
                 FROM results r
@@ -158,8 +166,16 @@ class QueryController extends Controller
     }
 
     public function actionExportComments() {
-      $examenid=12;
-      $db_naam="beoordeling";
+        $db_naam="beoordeling";
+
+        $sql = "select otherid from examen where actief=1";
+        $examenid = Yii::$app->db->createCommand($sql)->queryOne();
+
+        if ($examenid) {
+            $examenid=$examenid['otherid'];
+        } else {
+            $examenid=0;
+        }
 
         $sql="  SELECT werkproces, s.naam naam, s.nummer studentnr, GROUP_CONCAT(CONCAT('[',f.omschrijving, ']: ', opmerking)) opmerkingen
                 FROM beoordeling b
@@ -169,7 +185,7 @@ class QueryController extends Controller
                 AND werkproces != ''
                 GROUP BY 1,2,3
                 ORDER BY 1,2,3
-              ";
+                ";
         $result = Yii::$app->db->createCommand($sql)->queryAll();
 
         $output1 = "";
@@ -188,7 +204,7 @@ class QueryController extends Controller
                 $sql = "INSERT INTO ".$db_naam.".printwerkproces (examenid, studentnummer, werkprocesId, opmerkingen)
                         VALUES(:examenid, :studentnr, :wekrproces, :opmerking)";
                 $params = array(':examenid'=>$examenid,':studentnr'=>$row['studentnr'],':werkproces'=>$row['werkproces'],
-                                 ':opmerking'=>$opmerking);
+                                    ':opmerking'=>$opmerking);
                 try {
                     $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
                 } catch (\yii\db\Exception $e) {
@@ -207,8 +223,9 @@ class QueryController extends Controller
             $output1.="<hr>";
         }
 
-        $sql="select werkprocesid, studentnummer, opmerkingen from ".$db_naam.".printwerkproces order by 1,2";
-        $result = Yii::$app->db->createCommand($sql)->queryAll();
+        $sql="select werkprocesid, studentnummer, opmerkingen from ".$db_naam.".printwerkproces where examenid=:examenid order by 1,2";
+        $params = array(':examenid'=>$examenid);
+        $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
         $output2="";
         foreach($result as $row) {
             $output2 .= $row['werkprocesid']."-".$row['studentnummer']."<br>".$row['opmerkingen']."<hr>";
@@ -216,7 +233,7 @@ class QueryController extends Controller
 
         // first list show result in target DB and 2nd shows proces log
         $output="Note that comments are updates if the comments are empty or if the comment starts with a '['<br>";
-        $output.="<br>Content of target DB after update:<pre>$output2</pre><h1>Process Log</h1><pre>$output1</pr>";
+        $output.="<br>Content of target DB (with examenid ".$examenid.") after update:<pre>$output2</pre><h1>Process Log</h1><pre>$output1</pr>";
 
         return $this->render('query', [
             'output' => $output,
@@ -225,7 +242,7 @@ class QueryController extends Controller
 
     public function actionVrijeRolspelers() {
         // Vrije Rolspers
-        $examenid=12;
+
         $sql="  select *
                 from rolspeler r where
                 actief = 1 AND id  not in (

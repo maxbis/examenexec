@@ -55,6 +55,10 @@ $this->params['breadcrumbs'][] = $this->title;
             },
           ],
           [
+            'attribute'=>'otherid',
+            'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
+          ],
+          [
             'attribute'=>'',
             'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
             'format' => 'raw',

@@ -32,7 +32,7 @@ class Examen extends \yii\db\ActiveRecord
     {
         return [
             [['naam'], 'required'],
-            [['actief'], 'integer'],
+            [['actief', 'otherid'], 'integer'],
             [['datum_start', 'datum_eind'], 'safe'],
             [['naam'], 'string', 'max' => 100],
         ];
@@ -49,6 +49,7 @@ class Examen extends \yii\db\ActiveRecord
             'actief' => 'Actief',
             'datum_start' => 'Datum Start',
             'datum_eind' => 'Datum Eind',
+            'otherid' => 'KTB Examen ID',
         ];
     }
 

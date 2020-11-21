@@ -17,7 +17,7 @@ use nex\datepicker\DatePicker;
 
       <div class="row">
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <?= $form->field($model, 'naam')->textInput(['maxlength' => true]) ?>
         </div>
       </div>
@@ -48,7 +48,12 @@ use nex\datepicker\DatePicker;
               ]);
           ?>
         </div>
-           
+      </div>
+
+      <div class="row">
+        <div class="col-sm-2">
+          <?= $form->field($model, 'otherid')->textInput(['maxlength' => true]) ?>
+          </div>
       </div>
     
     <?php $model->actief=0 ?>
