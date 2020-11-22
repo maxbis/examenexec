@@ -202,18 +202,18 @@ class QueryController extends Controller
             d($sql);
             d($params);
             $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
-
+            d($result);
             if ( ! $result[0]['cnt'] ) {
                 $output1 .= "INSERT ";
                 $sql = "INSERT INTO ".$db_naam.".printwerkproces (examenid, studentnummer, werkprocesId, opmerkingen)
                         VALUES(:examenid, :studentnr, :werkproces, :opmerking)";
                 $params = array(':examenid'=>$examenid,':studentnr'=>$row['studentnr'],':werkproces'=>$row['werkproces'],
                                     ':opmerking'=>$opmerking);
-                try {
+                //try {
                     $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-                } catch (\yii\db\Exception $e) {
-                    $output1 .= "<span style=\"color: #ff0000\">Warning:</span> failed, unknown werkproces ".$row['werkproces'];
-                }
+                //} catch (\yii\db\Exception $e) {
+                   // $output1 .= "<span style=\"color: #ff0000\">Warning:</span> failed, unknown werkproces ".$row['werkproces'];
+                //}
                         
             } else {
                 $output1 .= "UPDATE ";
