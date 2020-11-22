@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="examen-index">
 
   <h1><?= Html::encode($this->title) ?></h1>
-  <?php $examenNaam = $examen->naam ?? "-"; ?>
-  Open voor gespreksaanvragen: <span style="text-decoration:underline;" class="" > <?= $examenNaam ?> </span>
   <hr>
 
   <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -105,8 +103,4 @@ $this->params['breadcrumbs'][] = $this->title;
   &nbsp;
   <?= Html::a('<span>Forms</span>', ['/form'], ['class' => 'btn btn-secondary', 'title' => 'Naar examenplanner']) ?>
 </p>
-<br>
-<hr>
-<p>
-Examenesprekken kunnen worden aangemaakt vanuit het <?= Html::a('gesprekkenoverzicht', ['/gespreks-soort/index']) ?>.
-</p>
+

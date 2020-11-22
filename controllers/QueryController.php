@@ -116,18 +116,22 @@ class QueryController extends Controller
 
     }
 
-    public function actionExportResults() {
-
-        $db_naam="beoordeling";
-
+    private function getExamenId() {
         $sql = "select otherid from examen where actief=1";
         $examenid = Yii::$app->db->createCommand($sql)->queryOne();
 
         if ($examenid) {
-            $examenid=$examenid['otherid'];
+            return $examenid['otherid'];
         } else {
-            $examenid=0;
+            return 0;
         }
+    }
+
+    public function actionExportResults() {
+
+        $db_naam="beoordeling";
+
+        $examenid=$this->getExamenId();
 
         $sql="  SELECT s.naam naam, s.nummer studentnr, f.omschrijving formnaam, v.mappingid mappingid, min(v.volgnr) vraagnr, count(*) aantal, v.mappingid mappingid, sum(r.score) score
                 FROM results r
@@ -142,7 +146,7 @@ class QueryController extends Controller
                 ";
         $result = Yii::$app->db->createCommand($sql)->queryAll();
         $teller=0;
-        $output = "";
+        $output = "Import to examenid ".$examenid."<br>";;
         $output .= "<pre>";
         foreach($result as $row) {
             $totVraag = $row['vraagnr'] + $row['aantal'] -1;
@@ -165,17 +169,11 @@ class QueryController extends Controller
         ]);
     }
 
+
     public function actionExportComments() {
         $db_naam="beoordeling";
 
-        $sql = "select otherid from examen where actief=1";
-        $examenid = Yii::$app->db->createCommand($sql)->queryOne();
-
-        if ($examenid) {
-            $examenid=$examenid['otherid'];
-        } else {
-            $examenid=0;
-        }
+        $examenid=$this->getExamenId();
 
         $sql="  SELECT werkproces, s.naam naam, s.nummer studentnr, GROUP_CONCAT(CONCAT('[',f.omschrijving, ']: ', opmerking)) opmerkingen
                 FROM beoordeling b

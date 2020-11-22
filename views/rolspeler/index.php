@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute'=>'naam',
-                'contentOptions' => ['style' => 'width:400px; white-space: normal;'],
+                'contentOptions' => ['style' => 'width:200px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
                   return Html::a($data->naam, ['/gesprek/rolspeler?token='.$data->token],['title' => 'Edit',]);

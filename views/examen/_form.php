@@ -51,8 +51,8 @@ use nex\datepicker\DatePicker;
       </div>
 
       <div class="row">
-        <div class="col-sm-2">
-          <?= $form->field($model, 'otherid')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-4">
+          <?= $form->field($model, 'otherid')->textInput(['maxlength' => true])->label('Examenid for export to KTB') ?>
           </div>
       </div>
     
