@@ -188,16 +188,19 @@ class QueryController extends Controller
                 ORDER BY 1,2,3
                 ";
         $result = Yii::$app->db->createCommand($sql)->queryAll();
-        d($result);
+
         $output1 = "";
         foreach($result as $row) {
 
             $opmerking = str_replace(",[", "\n[",$row['opmerkingen'] ); // the query put a , between the concat, replace it with newline
             $output1 .= $row['werkproces']." ".$row['studentnr']." ".$row['naam']."<br>";
             $output1 .= $opmerking." <br>";
+
             $sql = "SELECT count(*) cnt FROM ".$db_naam.".printwerkproces
                     WHERE studentnummer=:studentnr AND examenid=:examenid AND werkprocesId=:werkproces";
             $params = array(':examenid'=>$examenid,':studentnr'=>$row['studentnr'],':werkproces'=>$row['werkproces']);
+            d($sql);
+            d($params);
             $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
 
             if ( ! $result[0]['cnt'] ) {
