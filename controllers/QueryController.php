@@ -238,9 +238,10 @@ class QueryController extends Controller
 
         // first list show result in target DB and 2nd shows proces log
         $output="";
-        $output.="<h1>Process Log</h1><pre>$output1</pre>";
+        $output.="<h1>Process Log</h1>";
         $output.="Note that comments are updates if the comments are empty or if the comment starts with a '['<br>";
-        $output.="<h1>Updated Content</h1><br>Content of target DB (with examenid ".$examenid." for all foms) after update:<pre>$output2</pre>";
+        $output.="<pre>$output1</pre>";
+        $output.="<h1>Updated Content</h1>Content of target DB (with examenid ".$examenid." for all foms) after update:<pre>$output2</pre>";
 
         return $this->render('query', [
             'output' => $output,
