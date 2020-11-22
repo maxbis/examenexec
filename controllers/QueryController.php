@@ -180,7 +180,7 @@ class QueryController extends Controller
                 INNER JOIN form f ON f.id=b.formid
                 INNER JOIN student s ON s.id=b.studentid
                 INNER JOIN examen e ON e.id=f.examenid
-                AND E.actief = 1
+                AND e.actief = 1
                 AND f.actief = 1
                 AND opmerking != ''
                 AND werkproces != ''
