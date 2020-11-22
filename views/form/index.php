@@ -36,7 +36,7 @@ $this->title = 'Formulieren';
                 'attribute'=>'omschrijving',
                 'format' => 'raw',
                 'value' => function ($data) {
-                  return Html::a($data->omschrijving, ['/form/form?id='.$data->id],['title' => 'Edit',]);
+                  return Html::a($data->omschrijving, ['/form/form?id='.$data->id],['title' => 'Show Form',]);
                 },  
             ],
             [
@@ -45,7 +45,15 @@ $this->title = 'Formulieren';
             ],
             [
                 'attribute'=>'werkproces',
-
+            ],
+            [
+                'attribute'=>'',
+                'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
+                'format' => 'raw',
+                'value' => function ($data) {
+                  return Html::a('<span class="glyphicon glyphicon-play"></span>',
+                  ['/vraag/index?VraagSearch[formid]='.$data->id],['title'=> 'Naar vragen',]);
+                },
             ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
@@ -57,7 +65,7 @@ $this->title = 'Formulieren';
 <p>
     <?= Html::a('New Form', ['create'], ['class' => 'btn btn-success']) ?>
     &nbsp;
-     <?= Html::a('<span>Planner</span>', ['/gesprek'], ['class' => 'btn btn-secondary', 'title' => 'Naar examenplanner']) ?>
+     <?= Html::a('<span>Planner</span>', ['/gesprek'], ['class' => 'btn btn-primary', 'title' => 'Naar examenplanner']) ?>
     &nbsp;
-  <?= Html::a('<span>Examens</span>', ['/examen'], ['class' => 'btn btn-secondary', 'title' => 'Naar Examens']) ?>
+  <?= Html::a('<span>Examens</span>', ['/examen'], ['class' => 'btn btn-primary', 'title' => 'Naar Examens']) ?>
 </p>

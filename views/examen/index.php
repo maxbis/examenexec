@@ -56,16 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute'=>'otherid',
             'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
           ],
-          [
-            'attribute'=>'',
-            'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
-            'format' => 'raw',
-            'value' => function ($data) {
-              return Html::a('<span class="glyphicon glyphicon-play"></span>',
-              ['/gesprek/index?GesprekSearch[statusNaam]=&GesprekSearch[student_naam]=&GesprekSearch[lokaal]=
-              &GesprekSearch[examen_id]='.$data->id],['title'=> 'Naar Gesprekken',]);
-            },
-          ],
+
           [
             'class' => 'yii\grid\ActionColumn',
             'contentOptions' => ['style' => 'width:60px;'],
@@ -74,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'delete'=> function($model){
                     return $model->actief!=1;
                },
-              ],
+          ],
             'buttons' => [
               'delete' => function($url, $model){
                   return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->id], [
@@ -99,8 +90,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?= Html::a('Nieuw Examen', ['create'], ['class' => 'btn btn-success']) ?>
   &nbsp;
-  <?= Html::a('<span>Planner</span>', ['/gesprek'], ['class' => 'btn btn-secondary', 'title' => 'Naar examenplanner']) ?>
+  <?= Html::a('<span>Planner</span>', ['/gesprek'], ['class' => 'btn btn-primary', 'title' => 'Naar examenplanner']) ?>
   &nbsp;
-  <?= Html::a('<span>Forms</span>', ['/form'], ['class' => 'btn btn-secondary', 'title' => 'Naar examenplanner']) ?>
+  <?= Html::a('<span>Forms</span>', ['/form'], ['class' => 'btn btn-primary', 'title' => 'Naar examenplanner']) ?>
 </p>
 

@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 'format' => 'raw',
                 'value' => function ($model) use ($formList) {
-                    return $formList[$model->formid];
+                    return Html::a($formList[$model->formid],['/form/form','id'=>$model->formid],['title'=> 'Show Form',]);
                 }
             ],
             [   'attribute' => 'volgnr',
