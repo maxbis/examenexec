@@ -179,6 +179,9 @@ class QueryController extends Controller
                 FROM beoordeling b
                 INNER JOIN form f ON f.id=b.formid
                 INNER JOIN student s ON s.id=b.studentid
+                INNER JOIN examen e ON e.id=f.examenid
+                AND E.actief = 1
+                AND f.actief = 1
                 AND opmerking != ''
                 AND werkproces != ''
                 GROUP BY 1,2,3
@@ -200,7 +203,7 @@ class QueryController extends Controller
             if ( ! $result[0]['cnt'] ) {
                 $output1 .= "INSERT ";
                 $sql = "INSERT INTO ".$db_naam.".printwerkproces (examenid, studentnummer, werkprocesId, opmerkingen)
-                        VALUES(:examenid, :studentnr, :wekrproces, :opmerking)";
+                        VALUES(:examenid, :studentnr, :werkproces, :opmerking)";
                 $params = array(':examenid'=>$examenid,':studentnr'=>$row['studentnr'],':werkproces'=>$row['werkproces'],
                                     ':opmerking'=>$opmerking);
                 try {
@@ -221,7 +224,8 @@ class QueryController extends Controller
             $output1.="<hr>";
         }
 
-        $sql="select werkprocesid, studentnummer, opmerkingen from ".$db_naam.".printwerkproces where examenid=:examenid order by 1,2";
+        $sql="select werkprocesid, studentnummer, opmerkingen
+                from ".$db_naam.".printwerkproces where examenid=:examenid order by 1,2";
         $params = array(':examenid'=>$examenid);
         $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
         $output2="";
@@ -230,8 +234,9 @@ class QueryController extends Controller
         }
 
         // first list show result in target DB and 2nd shows proces log
+        $output="<h1>Process Log</h1><pre>$output1</pre>";
         $output="Note that comments are updates if the comments are empty or if the comment starts with a '['<br>";
-        $output.="<br>Content of target DB (with examenid ".$examenid.") after update:<pre>$output2</pre><h1>Process Log</h1><pre>$output1</pr>";
+        $output.="<h1>Updated Content</h1><br>Content of target DB (with examenid ".$examenid." for all foms) after update:<pre>$output2</pre>";
 
         return $this->render('query', [
             'output' => $output,
