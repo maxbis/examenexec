@@ -210,7 +210,7 @@ class QueryController extends Controller
                                     ':opmerking'=>$opmerking);
                 try {
                     $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-                } catch (\yii\db\Exception $e) {
+                } catch (\yii\db\Exception $e) { // TODO, only works in debug mode?
                     $output1 .= $e."<br>";
                     $output1 .= "<span style=\"color: #ff0000\">Warning:</span> failed, unknown werkproces ".$row['werkproces'];
                 }
@@ -237,8 +237,9 @@ class QueryController extends Controller
         }
 
         // first list show result in target DB and 2nd shows proces log
-        $output="<h1>Process Log</h1><pre>$output1</pre>";
-        $output="Note that comments are updates if the comments are empty or if the comment starts with a '['<br>";
+        $output="";
+        $output.="<h1>Process Log</h1><pre>$output1</pre>";
+        $output.="Note that comments are updates if the comments are empty or if the comment starts with a '['<br>";
         $output.="<h1>Updated Content</h1><br>Content of target DB (with examenid ".$examenid." for all foms) after update:<pre>$output2</pre>";
 
         return $this->render('query', [
