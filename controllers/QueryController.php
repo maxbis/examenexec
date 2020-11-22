@@ -199,7 +199,7 @@ class QueryController extends Controller
                     WHERE studentnummer=:studentnr AND examenid=:examenid AND werkprocesId=:werkproces";
             $params = array(':examenid'=>$examenid,':studentnr'=>$row['studentnr'],':werkproces'=>$row['werkproces']);
             $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
-
+            d($result);
             if ( ! $result[0]['cnt'] ) {
                 $output1 .= "INSERT ";
                 $sql = "INSERT INTO ".$db_naam.".printwerkproces (examenid, studentnummer, werkprocesId, opmerkingen)
