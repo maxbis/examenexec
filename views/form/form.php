@@ -32,7 +32,9 @@ use yii\widgets\LinkPager;
         <?php foreach ($vragen as $item): ?>
             <tr>
                 <td><?= $item->volgnr ?></td>
-                <td colspan=2><?= $item->vraag ?></td>
+                <td colspan=2>
+                    <?= Html::a($item->vraag, ['/vraag/update', 'id'=>$item->id], ['title'=>'Edit']); ?>
+                </td>
                 
                 <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
                     <?php if ( isset($item->soms) ) : ?>
