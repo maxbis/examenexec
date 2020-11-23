@@ -64,6 +64,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'mapping',
                 'contentOptions' => ['style' => 'width:80px;'],
             ],
+            [
+                'attribute'=>'',
+                'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
+                'format' => 'raw',
+                'value' => function ($data) {
+                  return Html::a('<span class="glyphicon-sort-by-order-alt"></span>',
+                  ['/vraag/renumber?formid='.$data->formid],['title'=> 'Renumber',]);
+                },
+            ],
             [   'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width:80px;'],
             ],

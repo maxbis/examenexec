@@ -106,7 +106,7 @@ use yii\widgets\LinkPager;
                 <?php if ( $item->toelichting != "" ): ?>
                     <tr>
                         <td>&nbsp;</td>
-                        <td class="font-weight-light"><?= $item->toelichting ?></td>
+                        <td class="font-weight-normal"><?= $item->toelichting ?></td>
                         <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
                     </tr>
                 <?php endif; ?>

@@ -193,6 +193,28 @@ class VraagController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionRenumber($formid, $step="") {
+        $vragen= Vraag::find()->where(['formid'=>$formid])->orderby(['volgnr'=> 'SORT_ASC'])->all();
+     
+        if ($step=="") {
+            if ( $vragen[0]['volgnr'] > 1) {
+                $step=1;
+            } else {
+                $step=10;
+            }
+        }
+
+        $teller=$step;
+        foreach($vragen as $item) {
+            $sql="update vraag set volgnr=:volgnr where id=:id";
+            $params = array(':volgnr'=>$teller,':id'=>$item['id']);
+            $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+            $teller=$teller+$step;
+        }
+
+        return $this->redirect( ['/vraag/index?VraagSearch[formid]='.$formid] );
+    }
+
     /**
      * Finds the vraag model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
