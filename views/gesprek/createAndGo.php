@@ -34,7 +34,7 @@ use yii\helpers\ArrayHelper;
         echo $form->field($gesprek, 'formid')->dropDownList($itemList,[ 'style'=>'width:400px', 'prompt'=>'Please select'])->label('Form');
     ?>
 
-    <?= $form->field($gesprek, 'opmerking')->textArea( ['style'=>'width:400px'] ) ?>
+    <br>
 
     <div class="form-group">
       <?= Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>

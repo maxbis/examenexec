@@ -142,7 +142,7 @@ class GesprekController extends Controller
 
         $studenten = Student::find()->orderBy(['naam'=>SORT_ASC])->all();
 
-        $rolspelers = Rolspeler::find()->orderBy(['naam'=>SORT_ASC])->all();
+        $rolspelers = Rolspeler::find()->where(['actief'=>1])->orderBy(['naam'=>SORT_ASC])->all();
 
         return $this->render('createAndGo',[
             'gesprek' => $newGesprek,

@@ -40,8 +40,8 @@ echo Nav::widget([
             ['label' => 'Studenten', 'url' => ['/student']],
             ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
             ['label' => 'Vrije rolspelers', 'url' => ['/query/vrije-rolspelers']],
-            ['label' => 'Alle Gesprekken', 'url' => ['/gesprek'],],
-            ['label' => 'Overzicht Gesprekken', 'url' => ['/student/status']],
+            ['label' => 'Alle Gesprekken/beoordelingen', 'url' => ['/gesprek'],],
+            ['label' => 'Overzicht Gesprekken/beoordelingen', 'url' => ['/student/status']],
         ],
         'options' => ['class' => 'nav-item']
     ],

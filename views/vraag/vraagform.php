@@ -83,17 +83,17 @@ use yii\widgets\LinkPager;
         <table class="table">
 
         <tr>
-            <th scope="col" style="width: 3rem;">Nr.</th>
-            <th scope="col" style="width: 35rem;">Vraag</th>
-            <th scope="col" style="width: 5rem;">Ja</th>
-            <th scope="col" style="width: 5rem;">Soms/Beetje</th>
-            <th scope="col" style="width: 5rem;">Nee</th>
+            <th scope="col" style="width: 1px;"></th>
+            <th scope="col" style="width: 1px;" colspan=2>Vragen</th>
+            <th scope="col" style="width: 80px;">Ja</th>
+            <th scope="col" style="width: 80px;">Soms/Beetje</th>
+            <th scope="col" style="width: 80px;">Nee</th>
         </tr>
             
             <?php foreach ($vragen as $item): ?>
                 <tr>
                     <td><?= $item->volgnr ?></td>
-                    <td><?= $item->vraag ?></td>
+                    <td colspan=2><?= $item->vraag ?></td>
                     
                     <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
                     <?php if ( isset($item->soms) ) : ?>
@@ -105,10 +105,10 @@ use yii\widgets\LinkPager;
                 </tr>
                 <?php if ( $item->toelichting != "" ): ?>
                     <tr>
-                        <td>&nbsp;</td>
-                        <td class="font-weight-normal"><?= $item->toelichting ?></td>
+                        <td>&nbsp;</td><td>&nbsp;</td>
+                        <td><?= $item->toelichting ?></td>
                         <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-                    </tr>
+                    <tr>
                 <?php endif; ?>
             <?php endforeach; ?>
             
