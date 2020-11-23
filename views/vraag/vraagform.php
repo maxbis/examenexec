@@ -41,6 +41,7 @@ use yii\widgets\LinkPager;
             document.execCommand("copy");
         }
     }
+</script>
 
 <?php
     if ($student) {
