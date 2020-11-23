@@ -13,6 +13,7 @@ $this->title = 'Formulieren';
 <div class="form-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <i>Alleen formulieren die bij dit examen horen worden getoond.</i><br><br>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

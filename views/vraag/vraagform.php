@@ -41,7 +41,6 @@ use yii\widgets\LinkPager;
             document.execCommand("copy");
         }
     }
-</script>
 
 <?php
     if ($student) {
@@ -71,7 +70,7 @@ use yii\widgets\LinkPager;
     </div>
     <br><br>
 
-    <form action=<?= $action ?> onsubmit="return result()" method="get" id="myForm">
+    <form action=<?= $action ?> onsubmit="return result()" method="get" name="myForm">
 
         <input type="hidden" id="totaalString" name="totaalString" value="-">
         <input type="hidden" id="statusString" name="statusString" value="-">

@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
 <hr>
 <br>
 
-<h1>Nieuw formulier aanmaken en invullen (admin)
+<h1>Nieuwe beoordeling aanmaken en invullen (admin)
 </h1>
 
 <div class="gesprek-form">
@@ -31,7 +31,7 @@ use yii\helpers\ArrayHelper;
 
     <?php
         $itemList=ArrayHelper::map($forms,'id','omschrijving');
-        echo $form->field($gesprek, 'formid')->dropDownList($itemList,[ 'style'=>'width:400px', 'prompt'=>'Please select'])->label('Form');
+        echo $form->field($gesprek, 'formid')->dropDownList($itemList,[ 'style'=>'width:400px', 'prompt'=>'Please select'])->label('Formulier');
     ?>
 
     <br>
@@ -39,7 +39,7 @@ use yii\helpers\ArrayHelper;
     <div class="form-group">
       <?= Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>
       &nbsp;&nbsp;&nbsp;
-      <?= Html::submitButton('Go', ['class' => 'btn btn-success']) ?>
+      <?= Html::submitButton('&nbsp;&nbsp;&nbsp;Go&nbsp;&nbsp;&nbsp;', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

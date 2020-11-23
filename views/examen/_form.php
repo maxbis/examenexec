@@ -56,7 +56,6 @@ use nex\datepicker\DatePicker;
           </div>
       </div>
     
-    <?php $model->actief=0 ?>
     <?= $form->field($model, 'actief')->hiddenInput()->label(false); ?>
 
     <div class="form-group">

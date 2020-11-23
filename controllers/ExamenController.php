@@ -77,6 +77,7 @@ class ExamenController extends Controller
     public function actionCreate()
     {
         $model = new Examen();
+        $model->actief = 0;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);

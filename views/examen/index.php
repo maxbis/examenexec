@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\ExamenSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Examens';
+$this->title = 'Examen(events)';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="examen-index">

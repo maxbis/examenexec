@@ -37,6 +37,8 @@ $barlen2 = max(5,$counts[1]*2);
     }
 </script>
 
+<meta http-equiv="refresh" content="55">
+
 <div class="gesprek-index">
 
     <div class="row">
@@ -51,7 +53,7 @@ $barlen2 = max(5,$counts[1]*2);
                     <tr>
 
                     <td>&nbsp;</td>
-                    <td>Drukte</td>
+                    <td>Drukte</td><td style="text-align:right">Last update:</td>
                     <td><script> document.write(new Date().toLocaleTimeString('en-GB')); </script></td>
                     </tr>
 
@@ -60,7 +62,7 @@ $barlen2 = max(5,$counts[1]*2);
                         Wachtende:
                     </td>
 
-                    <td style="width: 600px;">
+                    <td colspan=2 style="width: 600px;">
                         <div class="progress-bar bg-info" style="width:<?= $barlen1 ?>%">
                         <font size="1" ><?= $counts[0] ?></font>
                         </div>
@@ -74,7 +76,7 @@ $barlen2 = max(5,$counts[1]*2);
                         loopt:
                         </td>
 
-                        <td style="width: 600px;">
+                        <td colspan=2 style="width: 600px;">
                             <div class="progress-bar bg-success" style="width:<?= $barlen2 ?>%">
                             <?= $counts[1] ?>
                             </div>

@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
-                  return Html::a('<span class="glyphicon-sort-by-order-alt"></span>',
+                  return Html::a('<span class="glyphicon glyphicon-th-list"></span>',
                   ['/vraag/renumber?formid='.$data->formid],['title'=> 'Renumber',]);
                 },
             ],

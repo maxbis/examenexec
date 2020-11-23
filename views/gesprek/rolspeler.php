@@ -18,7 +18,7 @@ $waar=Yii::$app->params['studentStatus']; // defined in config/params.php
 
 ?>
 
-<meta http-equiv="refresh" content="60">
+<meta http-equiv="refresh" content="50">
 
 <div class="gesprek-overzicht">
     <div class="row"> <!-- Header with Drukte monitor -->
