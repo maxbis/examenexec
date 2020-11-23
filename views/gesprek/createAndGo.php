@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
 <hr>
 <br>
 
-<h1>Nieuw Gesprek Beginnen (admin)
+<h1>Nieuw formulier aanmaken en invullen (admin)
 </h1>
 
 <div class="gesprek-form">

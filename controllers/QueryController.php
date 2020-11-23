@@ -260,18 +260,35 @@ class QueryController extends Controller
                 order by r.naam
             ";
         $result = Yii::$app->db->createCommand($sql)->queryAll();
-        $teller=0;
-        $output = "";
-        $output .= "<pre>";
-        foreach($result as $row) {
-            $output .= $row['naam']."<br>";
-        }
-        $output .=  "</pre>";
+        $data['title']="Vrije rolspelers";
+        $data['col']=['naam'];
+        $data['row']=$result;
 
-        return $this->render('query', [
-            'output' => $output,
+        return $this->render('output', [
+            'data' => $data,
         ]);
-        echo $output;
+    }
+
+
+    public function actionRolspelerBelasting() {
+
+        $sql="  select r.naam naam, count(*) aantal
+                from gesprek g 
+                inner join rolspeler r on r.id=g.rolspelerid
+                inner join form f on f.id=g.formid
+                inner join examen e on e.id=f.examenid
+                where e.actief = 1 
+                group by 1
+                order by 1
+            ";
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+        $data['title']="Rolspelerbelasting";
+        $data['col']=['naam','aantal'];
+        $data['row']=$result;
+ 
+        return $this->render('output', [
+            'data' => $data,
+        ]);
     }
 
 }

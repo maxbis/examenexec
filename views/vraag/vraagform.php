@@ -57,6 +57,8 @@ use yii\widgets\LinkPager;
     $action = Url::toRoute(['beoordeling/formpost']);
 ?>
 
+<!-- this is the real form that needs to be filled in -->
+
 <div class="Beoordelingsformulier">
     <h1>
     Beoordelingsformulier
@@ -79,7 +81,6 @@ use yii\widgets\LinkPager;
         <input type="hidden" id="gesprekid" name="gesprekid" value="<?= $gesprek->id ?>">
         <input type="hidden" id="formId" name="formId" value="<?= $form->id ?>">
 
-
         <table class="table">
 
         <tr>
@@ -96,11 +97,11 @@ use yii\widgets\LinkPager;
                     <td colspan=2><?= $item->vraag ?></td>
                     
                     <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
-                    <?php if ( isset($item->soms) ) : ?>
-                        <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></td>
-                    <?php else: ?>
-                        <td>nvt</td>
-                    <?php endif; ?>
+                        <?php if ( isset($item->soms) ) : ?>
+                            <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></td>
+                        <?php else: ?>
+                            <td>nvt</td>
+                        <?php endif; ?>
                     <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
                 </tr>
                 <?php if ( $item->toelichting != "" ): ?>

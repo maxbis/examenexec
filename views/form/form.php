@@ -4,6 +4,8 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 ?>
 
+<!-- preview form -->
+
 <div class="Beoordelingsformulier">
     <h1>
     Beoordelingsformulier
@@ -17,44 +19,40 @@ use yii\widgets\LinkPager;
 
     <form action="/beoordeling/formpost" onsubmit="return result()" method="get" id="myForm">
 
-        <table class="table" style="width: 100rem;">
+        <table class="table">
 
-        <tr>
-            <th scope="col" style="width: 3rem;">Nr.</th>
-            <th scope="col" style="width: 35rem;">Vraag</th>
-            <th scope="col" style="width: 5rem;">Ja</th>
-            <th scope="col" style="width: 5rem;">Soms/Beetje</th>
-            <th scope="col" style="width: 5rem;">Nee</th>
-        </tr>
-            
-            <?php foreach ($vragen as $item): ?>
-                <tr>
-                    <td><?= $item->volgnr ?></td>
-                    <td> <!-- <?= $item->vraag ?> -->
-                    <?php
-                        echo Html::a($item->vraag, ['/vraag/update', 'id' => $item->id ] );
-                    ?>
-                    </td>
-                    
-                    <td><input type="radio" id="1" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
+    <tr>
+        <th scope="col" style="width: 1px;"></th>
+        <th scope="col" style="width: 1px;" colspan=2>Vragen</th>
+        <th scope="col" style="width: 80px;">Ja</th>
+        <th scope="col" style="width: 80px;">Soms/Beetje</th>
+        <th scope="col" style="width: 80px;">Nee</th>
+    </tr>
+        
+        <?php foreach ($vragen as $item): ?>
+            <tr>
+                <td><?= $item->volgnr ?></td>
+                <td colspan=2><?= $item->vraag ?></td>
+                
+                <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
                     <?php if ( isset($item->soms) ) : ?>
-                        <td><input type="radio" id="2" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></td>
+                        <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></td>
                     <?php else: ?>
                         <td>nvt</td>
                     <?php endif; ?>
-                    <td><input type="radio" id="3" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
-                </tr>
-                <?php if ( $item->toelichting != "" ): ?>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td class="font-weight-light"><?= $item->toelichting ?></td>
-                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-                    </tr>
-                <?php endif; ?>
-            <?php endforeach; ?>
-            
+                <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
+            </tr>
+            <?php if ( $item->toelichting != "" ): ?>
+                <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td>
+                    <td><?= $item->toelichting ?></td>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                <tr>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        
 
-        </table>
+    </table>
 
         <b>Opmerkingen</b><br>
 
