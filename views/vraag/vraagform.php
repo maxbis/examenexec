@@ -71,7 +71,7 @@ use yii\widgets\LinkPager;
     </div>
     <br><br>
 
-    <form action=<?= $action ?> onsubmit="return result()" method="get" name="myForm">
+    <form action=<?= $action ?> onsubmit="return result()" method="get" id="myForm">
 
         <input type="hidden" id="totaalString" name="totaalString" value="-">
         <input type="hidden" id="statusString" name="statusString" value="-">
