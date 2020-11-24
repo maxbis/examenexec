@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Beoordeling;
 use app\models\BeoordelingSearch;
+use app\models\Vraag;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -150,7 +151,7 @@ class QueryController extends Controller
         $output .= "<pre>";
         foreach($result as $row) {
             $totVraag = $row['vraagnr'] + $row['aantal'] -1;
-            $score = intval( ($row['score']+5)/10 );
+            $score = max( intval( ($row['score']+5)/10 ), 0); // score is rounden and is minimal 0, this for crucial questions that have a coutn of -99
             $output .= "<br>### ".++$teller." student: ".$row['naam']." form ".$row['formnaam']." vraag ".$row['vraagnr']." - ".$totVraag." SPL score: ".$score."(".$row['score'].") ###<br>";
 
             $sql = "delete from ".$db_naam.".scorestudent where examenid=".$examenid." and studentnummer=".$row['studentnr']." and criteriumId=".$row['mappingid'].";";
@@ -289,6 +290,83 @@ class QueryController extends Controller
         return $this->render('output', [
             'data' => $data,
         ]);
+    }
+
+    public function actionRecalcScores() { // when scores are changed, you can recalc the socres for already finshed forms
+        $vragen=Vraag::find()->joinWith('form')->where(['actief'=>1])->orderBy('formid ASC, volgnr ASC')->all();
+
+        $output="<pre>";
+        $prevFormid='-1';
+        $teller=1;
+
+        foreach($vragen as $row) {
+
+            if ( $row['formid'] != $prevFormid ) {
+                $teller=1;
+            }
+            
+            if ( $row['volgnr'] != $teller ) {
+                $output .= "<br>WARNING: teller en volgnr out of sync ".$teller." : ".$row['volgnr'];
+                $output .= ", formid: ".$row['formid'].", vraag:".$row['vraag']."<br>";
+            }
+
+            if (isset( $row['ja']) ) {
+                $sql = "select * from results where formid=:formid and vraagnr=:vraagnr and antwoordnr=1 and score!=:score";
+                $params = array(':formid'=>$row['formid'], ':vraagnr'=>$teller, ':score'=>$row['ja']);
+                $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+                if (count($result)) {
+                    $output .= "<hr>(JA) Form: ".$row['formid'].", vraagnr: ".$row['volgnr'].", teller: ".$teller.", vraag: ".$row['vraag']."<br>ja: ".$row['ja'];
+                    $output .= "<br>";
+                    $line=$result[0];
+                    $output .= "Wrong number of results: ".count($result)."<br>";
+                    $output .= "Result: ".$line['id'].", vraagnr: ".$line['vraagnr'].", antwoordnr:".$line['antwoordnr'].", score: ".$line['score'];
+                    $output .= "<br>";
+                    $output .= "update results set score=".$row['ja']." where formid=".$row['formid']." and vraagnr=".$row['volgnr']." and antwoordnr=1";
+                    $output .= "<br>";
+                }
+            }
+            if (isset( $row['soms']) ) {
+                if (isset( $row['ja']) ) {
+                    $sql = "select * from results where formid=:formid and vraagnr=:vraagnr and antwoordnr=2 and score!=:score";
+                    $params = array(':formid'=>$row['formid'], ':vraagnr'=>$teller, ':score'=>$row['soms']);
+                    $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+                    if (count($result)) {
+                        $output .= "<hr>(SOMS) orm: ".$row['formid'].", vraagnr: ".$teller.", vraag: ".$row['vraag']."<br>soms: ".$row['soms'];
+                        $output .= "<br>";
+                        $line=$result[0];
+                        $output .= "Wrong number of results: ".count($result)."<br>";
+                        $output .= "Result: ".$line['id'].", vraagnr: ".$line['vraagnr'].", antwoordnr:".$line['antwoordnr'].", score: ".$line['score'];
+                        $output.="<br>";
+                        $output .= "update results set score=".$row['soms']." where formid=".$row['formid']." and vraagnr=".$row['volgnr']." and antwoordnr=2";
+                        $output .= "<br>";
+                    }
+                }
+            }
+            if (isset( $row['nee']) ) {
+                if (isset( $row['ja']) ) {
+                    $sql = "select * from results where formid=:formid and vraagnr=:vraagnr and antwoordnr=3 and score!=:score";
+                    $params = array(':formid'=>$row['formid'], ':vraagnr'=>$teller, ':score'=>$row['nee']);
+                    $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+                    if (count($result)) {
+                        $output .= "<hr>(NEE) Form: ".$row['formid'].", vraagnr: ".$teller.", vraag: ".$row['vraag']."<br>nee: ".$row['nee'];
+                        $output .= "<br>";
+                        $line=$result[0];
+                        $output .= "Wrong number of results: ".count($result)."<br>";
+                        $output .= "Result: ".$line['id'].", vraagnr: ".$line['vraagnr'].", antwoordnr:".$line['antwoordnr'].", score: ".$line['score'];
+                        $output.="<br>";
+                        $output .= "update results set score=".$row['nee']." where formid=".$row['formid']." and vraagnr=".$row['volgnr']." and antwoordnr=3";
+                        $output .= "<br>";
+                    }
+                }
+            }
+
+            $teller++;
+            $prevFormid = $row['formid'];
+        }
+        return $this->render('query', [
+            'output' => $output,
+        ]);
+
     }
 
 }
