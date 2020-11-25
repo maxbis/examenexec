@@ -119,9 +119,9 @@ class BeoordelingController extends Controller
                     'studentnr' => $studentnr,
                     'formid' => $formId,
                     'rolspelerid' => $rolspelerid,
-                    'answers' => explode("-",$statusString),
-                    'points' => explode("-",$totaalString),
-                    'totaalscore' => array_sum(explode("-",$totaalString))];
+                    'answers' => explode("|",$statusString),
+                    'points' => explode("|",$totaalString),
+                    'totaalscore' => array_sum(explode("|",$totaalString))];
         // ToDo hier moeten een mapping worden gemaakt tussen vragen en remote id
         // dus alle antwoorden moeten hier worden doorlopen om de punten per mapping te maken.
         // easiest is om alle foreign id's as hidden form variabele mee te sturen

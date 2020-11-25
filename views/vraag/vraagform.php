@@ -14,8 +14,8 @@ use yii\widgets\LinkPager;
         // loop through list of radio buttons
         for (var i=0; i < radios.length; i++) {
             if ( radios[i].checked ) { // radio checked?
-                totaalString += radios[i].value + "-";
-                statusString += radios[i].id.split("-",1) + "-";
+                totaalString += radios[i].value + "|";
+                statusString += radios[i].id.split("-",1) + "|";
             }
         }
         totaalString = totaalString.slice(0,-1);

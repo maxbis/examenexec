@@ -271,6 +271,21 @@ class QueryController extends Controller
     }
 
 
+// De resultaten worden opgslagen met formid en volgnummer, het volgnummer verwijst naar hetzelfde volgnummer van de vragen die aan het form hangen.
+// De numemring is darbij niet belangrijk, het gaat om de volgorde.
+// Als de volgorde of weging (punten) van de vragen wijzigt dan kan de results tabel worden ge-update. Dit script anayseert en resutlaart in een
+// aantal update statements die met de hand moeten worden uitgevoerd omeen nieuwe vragenlijst opnieuw in de reeds bestaande resutlaten te verwerken.
+// Dit is crappy en dit zou moeten worden opgelost door de antwoorden (ja, soms, nee) uit de vragen tabel te normaliseren en dan in de resultaten tabel de
+// vraagid mee te nemen.
+// Dit is (nog) niet gedaan omdat het formulier neit 'weet' wat de vraag id's zijn, het weet alleen de volgorde van de radi buttons.
+// Oplossing is om de vraagid's direct na het posten op basis van de (dan geldige) volgorde in te vullen. De id's moetne dan NULL mogen zijn.
+// Stap 1: vraag tabel krijgt FK naar antwoorden. Elke vraag krijg twee of drie antwoorden (id, vraagid, antwoord (1,2,3; ja, soms, nee) )
+// Stap 2: vraag kolommen ja, nee en soms verwijderen en alle queries en model in code aanpassen
+// Stap 3: in de post form, een query toevoegen die de id's in de restualten tabel opneemt
+// Stap 4: de resulaten kunnen in de results tabel blijven maar kunnen nu eenvoudig worden doorberekend
+// Veel werk, veel risco en het levert weinig op zeker als weging en dergelijke nieet vaak wordne aangepast tijdens het nakijken.
+
+
     public function actionRolspelerBelasting() {
 
         $sql="  select r.naam naam, count(*) aantal
