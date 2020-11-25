@@ -148,30 +148,6 @@ class StudentController extends Controller
         return $this->render('login');
     }
 
-    public function actionStatus()
-    {
-        $sql="
-            SELECT s.naam, s.id, s.nummer, count(*) cnt
-            FROM student s
-            INNER JOIN gesprek g
-            ON g.studentid=s.id
-            INNER JOIN form f
-            ON f.id=g.formid
-            INNER JOIN examen e
-            ON e.id=f.examenid
-            WHERE g.status=2
-            AND e.actief=1
-            GROUP BY s.naam, s.id, s.nummer
-            ORDER BY cnt, s.naam
-        ";
-
-        $result = Yii::$app->db->createCommand($sql)->queryAll();
-
-        return $this->render('status', [
-            'result' => $result,
-        ]);
-    }
-
 
     /**
      * Finds the Student model based on its primary key value.

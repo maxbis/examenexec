@@ -14,23 +14,30 @@ $nr=0;
                 <tr>
                     <td>#</td>
                     <?php
-                        for($i=0;$i<count($data['col']);$i++) {
-                            echo "<th>".$data['col'][$i]."</th>";
+                        if ( $data['row'] ) {
+                            for($i=0;$i<count($data['col']);$i++) {
+                                echo "<th>".$data['col'][$i]."</th>";
+                            }
+                        } else {
+                            echo "<td>Empty result set</td>";
                         }
                     ?>
             </thead>
             
             <?php
-                foreach($data['row'] as $item) {
-                    $nr++;
-                    echo "<tr>";
-                    echo "<td>".$nr."</td>";
-                    for($i=0;$i<count($data['col']);$i++) {
-                        echo "<td>".$item[$data['col'][$i]]."</td>";
-
+                if ( $data['row'] ) {
+                    foreach($data['row'] as $item) {
+                        $nr++;
+                        echo "<tr>";
+                        echo "<td>".$nr."</td>";
+                        for($i=0;$i<count($data['col']);$i++) {
+                            echo "<td>".$item[$data['col'][$i]]."</td>";
+    
+                        }
+                        echo "</tr>";
                     }
-                    echo "</tr>";
                 }
+
             ?>
 
         </table>

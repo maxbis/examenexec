@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\filters\AccessControl;
 
 /**
  * BeoordelingController implements the CRUD actions for Beoordeling model.
@@ -28,6 +29,20 @@ class QueryController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // when logged in, any user
+                    [ 'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         'matchCallback' => function ($rule, $action) {
+                            return (Yii::$app->user->identity->role == 'admin');
+                        }
+                    ],
+                ],
+            ],
+
         ];
     }
 
@@ -170,7 +185,6 @@ class QueryController extends Controller
         ]);
     }
 
-
     public function actionExportComments() {
         $db_naam="beoordeling";
 
@@ -249,65 +263,21 @@ class QueryController extends Controller
         ]);
     }
 
-    public function actionVrijeRolspelers() {
-        // Vrije Rolspers
-
-        $sql="  select *
-                from rolspeler r where
-                actief = 1 AND id  not in (
-                select rolspelerid from gesprek g
-                where r.id=g.rolspelerid
-                and status <2 )
-                order by r.naam
-            ";
-        $result = Yii::$app->db->createCommand($sql)->queryAll();
-        $data['title']="Vrije rolspelers";
-        $data['col']=['naam'];
-        $data['row']=$result;
-
-        return $this->render('output', [
-            'data' => $data,
-        ]);
-    }
-
-
-// De resultaten worden opgslagen met formid en volgnummer, het volgnummer verwijst naar hetzelfde volgnummer van de vragen die aan het form hangen.
-// De numemring is darbij niet belangrijk, het gaat om de volgorde.
-// Als de volgorde of weging (punten) van de vragen wijzigt dan kan de results tabel worden ge-update. Dit script anayseert en resutlaart in een
-// aantal update statements die met de hand moeten worden uitgevoerd omeen nieuwe vragenlijst opnieuw in de reeds bestaande resutlaten te verwerken.
-// Dit is crappy en dit zou moeten worden opgelost door de antwoorden (ja, soms, nee) uit de vragen tabel te normaliseren en dan in de resultaten tabel de
-// vraagid mee te nemen.
-// Dit is (nog) niet gedaan omdat het formulier neit 'weet' wat de vraag id's zijn, het weet alleen de volgorde van de radi buttons.
-// Oplossing is om de vraagid's direct na het posten op basis van de (dan geldige) volgorde in te vullen. De id's moetne dan NULL mogen zijn.
-// Stap 1: vraag tabel krijgt FK naar antwoorden. Elke vraag krijg twee of drie antwoorden (id, vraagid, antwoord (1,2,3; ja, soms, nee) )
-// Stap 2: vraag kolommen ja, nee en soms verwijderen en alle queries en model in code aanpassen
-// Stap 3: in de post form, een query toevoegen die de id's in de restualten tabel opneemt
-// Stap 4: de resulaten kunnen in de results tabel blijven maar kunnen nu eenvoudig worden doorberekend
-// Veel werk, veel risco en het levert weinig op zeker als weging en dergelijke nieet vaak wordne aangepast tijdens het nakijken.
-
-
-    public function actionRolspelerBelasting() {
-
-        $sql="  select r.naam naam, count(*) aantal
-                from gesprek g 
-                inner join rolspeler r on r.id=g.rolspelerid
-                inner join form f on f.id=g.formid
-                inner join examen e on e.id=f.examenid
-                where e.actief = 1 
-                group by 1
-                order by 1
-            ";
-        $result = Yii::$app->db->createCommand($sql)->queryAll();
-        $data['title']="Rolspelerbelasting";
-        $data['col']=['naam','aantal'];
-        $data['row']=$result;
- 
-        return $this->render('output', [
-            'data' => $data,
-        ]);
-    }
-
-    public function actionRecalcScores() { // when scores are changed, you can recalc the socres for already finshed forms
+    public function actionRecalcScores() {
+        // De resultaten worden opgslagen met formid en volgnummer, het volgnummer verwijst naar hetzelfde volgnummer van de vragen die aan het form hangen.
+        // De numemring is darbij niet belangrijk, het gaat om de volgorde.
+        // Als de volgorde of weging (punten) van de vragen wijzigt dan kan de results tabel worden ge-update. Dit script anayseert en resutlaart in een
+        // aantal update statements die met de hand moeten worden uitgevoerd omeen nieuwe vragenlijst opnieuw in de reeds bestaande resutlaten te verwerken.
+        // Dit is crappy en dit zou moeten worden opgelost door de antwoorden (ja, soms, nee) uit de vragen tabel te normaliseren en dan in de resultaten tabel de
+        // vraagid mee te nemen.
+        // Dit is (nog) niet gedaan omdat het formulier neit 'weet' wat de vraag id's zijn, het weet alleen de volgorde van de radi buttons.
+        // Oplossing is om de vraagid's direct na het posten op basis van de (dan geldige) volgorde in te vullen. De id's moetne dan NULL mogen zijn.
+        // Stap 1: vraag tabel krijgt FK naar antwoorden. Elke vraag krijg twee of drie antwoorden (id, vraagid, antwoord (1,2,3; ja, soms, nee) )
+        // Stap 2: vraag kolommen ja, nee en soms verwijderen en alle queries en model in code aanpassen
+        // Stap 3: in de post form, een query toevoegen die de id's in de restualten tabel opneemt
+        // Stap 4: de resulaten kunnen in de results tabel blijven maar kunnen nu eenvoudig worden doorberekend
+        // Veel werk, veel risco en het levert weinig op zeker als weging en dergelijke nieet vaak wordne aangepast tijdens het nakijken.
+        // when scores are changed, you can recalc the socres for already finshed forms
         $vragen=Vraag::find()->joinWith('form')->where(['actief'=>1])->orderBy('formid ASC, volgnr ASC')->all();
 
         $output="<pre>";
@@ -384,8 +354,55 @@ class QueryController extends Controller
 
     }
 
-    public function actionPunten()
-    {
+    private function executeQuery($sql, $title="no title") {
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $data['title']=$title;;
+
+        if ($result) { // column names are derived from query results
+            $data['col']=array_keys($result[0]);
+        }
+        $data['row']=$result;
+
+        return $data;
+
+    }
+
+    public function actionVrijeRolspelers() {
+        // Vrije Rolspers
+
+        $sql="  select naam
+                from rolspeler r where
+                actief = 1 AND id  not in (
+                select rolspelerid from gesprek g
+                where r.id=g.rolspelerid
+                and status <2 )
+                order by r.naam
+            ";
+
+        return $this->render('output', [
+            'data' => $this->executeQuery($sql, "Rolspelers zonder gesprek"),
+        ]);
+    }
+
+    public function actionRolspelerBelasting() {
+
+        $sql="  select r.naam naam, count(*) aantal
+                from gesprek g 
+                inner join rolspeler r on r.id=g.rolspelerid
+                inner join form f on f.id=g.formid
+                inner join examen e on e.id=f.examenid
+                where e.actief = 1 
+                group by 1
+                order by 1
+            ";
+
+        return $this->render('output', [
+            'data' => $this->executeQuery($sql,"Aantal beoordelingen per rolspeler"),
+        ]);
+    }
+
+    public function actionPunten() {
         $sql="
             SELECT s.naam naam, f.omschrijving onderdeel, greatest(sum(r.score),0) score
             FROM results r
@@ -397,19 +414,12 @@ class QueryController extends Controller
             ORDER BY 1,2
         ";
 
-        $result = Yii::$app->db->createCommand($sql)->queryAll();
-
-        $data['title']="Punten per student en onderdeel";
-        $data['col']=['naam','onderdeel', 'score'];
-        $data['row']=$result;
-
         return $this->render('output', [
-            'data' => $data,
+            'data' => $this->executeQuery($sql, "Socre per student per onderdeel"),
         ]);
     }
 
-    public function actionGezakt()
-    {
+    public function actionGezakt() {
         $sql="
             select naam, count(onderdeel) onderdelen from (
             SELECT s.naam naam, f.omschrijving onderdeel
@@ -419,21 +429,38 @@ class QueryController extends Controller
             INNER JOIN examen e ON e.id=f.examenid
             WHERE e.actief=1
             GROUP BY 1,2
-            HAVING greatest(sum(r.score),0)=0
+            HAVING greatest(sum(r.score),0)=1000
             ORDER BY 1,2
             ) as subquery
             group by 1
             ";
 
-        $result = Yii::$app->db->createCommand($sql)->queryAll();
-
-        $data['title']="Gezakt op cruciale criteria per student aantal onderdelen";
-        $data['col']=['naam', 'onderdelen'];
-        $data['row']=$result;
-
         return $this->render('output', [
-            'data' => $data,
+            'data' => $this->executeQuery($sql, "Gezakt op cruciale criteria per student aantal onderdelen"),
         ]);
     }
+
+    public function actionGesprekkenPerKandidaat()
+    {
+        $sql="
+            SELECT s.naam, s.id, s.nummer, count(*) gesprekken
+            FROM student s
+            INNER JOIN gesprek g
+            ON g.studentid=s.id
+            INNER JOIN form f
+            ON f.id=g.formid
+            INNER JOIN examen e
+            ON e.id=f.examenid
+            WHERE g.status=2
+            AND e.actief=1
+            GROUP BY s.naam, s.id, s.nummer
+            ORDER BY gesprekken, s.naam
+        ";
+
+        return $this->render('output', [
+            'data' => $this->executeQuery($sql, "Gesprekken per kandidaat"),
+        ]);
+    }
+
 
 }

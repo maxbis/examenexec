@@ -42,7 +42,7 @@ echo Nav::widget([
             'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'label' => 'Queries',
             'items' => [
-                ['label' => 'Gesprekken per kandidaat', 'url' => ['/student/status']],
+                ['label' => 'Gesprekken per kandidaat', 'url' => ['/query/gesprekken-per-kandidaat']],
                 ['label' => 'Vrije rolspelers', 'url' => ['/query/vrije-rolspelers']],
                 ['label' => 'Rolspelerbelasting', 'url' => ['/query/rolspeler-belasting']],
                 
