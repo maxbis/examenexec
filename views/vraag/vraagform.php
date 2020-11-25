@@ -14,8 +14,8 @@ use yii\widgets\LinkPager;
         // loop through list of radio buttons
         for (var i=0; i < radios.length; i++) {
             if ( radios[i].checked ) { // radio checked?
-                totaalString += radios[i].value + "-";
-                statusString += radios[i].id.split("-",1) + "-";
+                totaalString += radios[i].value + "|";
+                statusString += radios[i].id.split("-",1) + "|"; // value of radiobutton is answer-vraagnr
             }
         }
         totaalString = totaalString.slice(0,-1);
@@ -57,6 +57,28 @@ use yii\widgets\LinkPager;
     $action = Url::toRoute(['beoordeling/formpost']);
 ?>
 
+<!--
+<style>
+    input[type=radio] {
+        display: none;
+    }
+    input[type=radio] + label::before {
+        content: '';
+        display: inline-block;
+        border: 1px solid #000;
+        border-color: gray;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin: 0 0.5em;
+        width: 1.2em;
+        height: 1.20em;
+    }
+    input[type=radio]:checked + label::before {
+        background-color: #ff6060;
+    }
+</style>
+-->
+
 <!-- this is the real form that needs to be filled in -->
 
 <div class="Beoordelingsformulier">
@@ -81,6 +103,7 @@ use yii\widgets\LinkPager;
         <input type="hidden" id="gesprekid" name="gesprekid" value="<?= $gesprek->id ?>">
         <input type="hidden" id="formId" name="formId" value="<?= $form->id ?>">
 
+        <div class="custom-control custom-radio">
         <table class="table">
 
         <tr>
@@ -96,13 +119,13 @@ use yii\widgets\LinkPager;
                     <td><?= $item->volgnr ?></td>
                     <td colspan=2><?= $item->vraag ?></td>
                     
-                    <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
+                    <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required><label for="1-<?=$item->volgnr?>"></label></td>
                         <?php if ( isset($item->soms) ) : ?>
-                            <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></td>
+                            <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"><label for="2-<?=$item->volgnr?>"></label></td>
                         <?php else: ?>
                             <td>nvt</td>
                         <?php endif; ?>
-                    <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
+                    <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"><label for="3-<?=$item->volgnr?>"></label></td>
                 </tr>
                 <?php if ( $item->toelichting != "" ): ?>
                     <tr>
@@ -115,6 +138,7 @@ use yii\widgets\LinkPager;
             
 
         </table>
+        <div class="custom-control custom-radio">
 
         <b>Opmerkingen</b><br>
 
@@ -130,7 +154,7 @@ use yii\widgets\LinkPager;
             } else {    
                 echo Html::a('Cancel', ['gesprek/rolspeler' , 'id'=>$rolspeler->id, 'gesprekid'=>$gesprek->id], ['class'=>'btn btn-primary']);
                 echo " &nbsp;&nbsp;&nbsp;";
-                echo Html::submitButton('Save', ['class' => 'btn btn-success']);
+                echo Html::submitButton('&nbsp;Save&nbsp;', ['class' => 'btn btn-success']);
                
             }
         ?>

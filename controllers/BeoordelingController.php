@@ -113,15 +113,15 @@ class BeoordelingController extends Controller
 
     public function actionFormpost($totaalString, $statusString, $gesprekid, $formId, $studentid, $studentnr, $rolspelerid, $opmerking)
     {
-        // $totaalString contains the values of the answers 1-3-2 (1 point, 3 points, 2 points for question 1,2,and 3)
-        // $statusString contains the answers 1-3-2 (Yes, No, Sometimes, for question 1,2,and 3)
+        // $totaalString contains the values of the answers 1|3|2 (1 point, 3 points, 2 points for question 1,2,and 3)
+        // $statusString contains the answers 1|3|2 (Yes, No, Sometimes, for question 1,2,and 3)
         $result = [ 'studentid' => $studentid,
                     'studentnr' => $studentnr,
                     'formid' => $formId,
                     'rolspelerid' => $rolspelerid,
-                    'answers' => explode("-",$statusString),
-                    'points' => explode("-",$totaalString),
-                    'totaalscore' => array_sum(explode("-",$totaalString))];
+                    'answers' => explode("|",$statusString),
+                    'points' => explode("|",$totaalString),
+                    'totaalscore' => max( array_sum(explode("|",$totaalString)), 0) ]; // min score is 0
         // ToDo hier moeten een mapping worden gemaakt tussen vragen en remote id
         // dus alle antwoorden moeten hier worden doorlopen om de punten per mapping te maken.
         // easiest is om alle foreign id's as hidden form variabele mee te sturen
