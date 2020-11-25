@@ -172,6 +172,7 @@ class StudentController extends Controller
         ]);
     }
 
+
     /**
      * Finds the Student model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

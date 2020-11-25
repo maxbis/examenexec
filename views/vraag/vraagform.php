@@ -57,24 +57,12 @@ use yii\widgets\LinkPager;
     $action = Url::toRoute(['beoordeling/formpost']);
 ?>
 
-<!-- hightlighting for niet ingevulde radios werkt niet
+<!--
 <style>
     input[type=radio] {
-        display: none;
-    }
-    input[type=radio] + label::before {
-        content: '';
-        display: inline-block;
-        border: 1px solid #000;
-        border-color: gray;
-        border-radius: 50%;
         vertical-align: middle;
-        margin: 0 0.5em;
-        width: 1.2em;
-        height: 1.20em;
-    }
-    input[type=radio]:checked + label::before {
-        background-color: #ff6060;
+        width: 1.4em;
+        height: 1.4em;
     }
 </style>
 -->
@@ -119,13 +107,13 @@ use yii\widgets\LinkPager;
                     <td><?= $item->volgnr ?></td>
                     <td colspan=2><?= $item->vraag ?></td>
                     
-                    <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required><label for="1-<?=$item->volgnr?>"></label></td>
+                    <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
                         <?php if ( isset($item->soms) ) : ?>
-                            <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"><label for="2-<?=$item->volgnr?>"></label></td>
+                            <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></label></td>
                         <?php else: ?>
                             <td>nvt</td>
                         <?php endif; ?>
-                    <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"><label for="3-<?=$item->volgnr?>"></label></td>
+                    <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></label></td>
                 </tr>
                 <?php if ( $item->toelichting != "" ): ?>
                     <tr>

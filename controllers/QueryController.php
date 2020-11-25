@@ -384,4 +384,53 @@ class QueryController extends Controller
 
     }
 
+    public function actionPunten()
+    {
+        $sql="
+            SELECT s.naam naam, f.omschrijving onderdeel, greatest(sum(r.score),0) score
+            FROM results r
+            INNER JOIN student s ON s.id=r.studentid
+            INNER JOIN form f ON f.id=r.formid
+            INNER JOIN examen e ON e.id=f.examenid
+            WHERE e.actief=1
+            GROUP BY 1,2
+            ORDER BY 1,2
+        ";
+
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $data['title']="Punten per student en onderdeel";
+        $data['col']=['naam','onderdeel', 'score'];
+        $data['row']=$result;
+
+        return $this->render('output', [
+            'data' => $data,
+        ]);
+    }
+
+    public function actionGezakt()
+    {
+        $sql="
+            SELECT s.naam naam, f.omschrijving onderdeel, greatest(sum(r.score),0) score
+            FROM results r
+            INNER JOIN student s ON s.id=r.studentid
+            INNER JOIN form f ON f.id=r.formid
+            INNER JOIN examen e ON e.id=f.examenid
+            WHERE e.actief=1
+            GROUP BY 1,2
+            HAVING greatest(sum(r.score),0)=0
+            ORDER BY 1,2
+        ";
+
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $data['title']="Gezakt op cruciale criteria per student en onderdeel";
+        $data['col']=['naam', 'onderdeel'];
+        $data['row']=$result;
+
+        return $this->render('output', [
+            'data' => $data,
+        ]);
+    }
+
 }
