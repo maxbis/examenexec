@@ -57,7 +57,7 @@ use yii\widgets\LinkPager;
     $action = Url::toRoute(['beoordeling/formpost']);
 ?>
 
-<!--
+<!-- hightlighting for niet ingevulde radios werkt niet
 <style>
     input[type=radio] {
         display: none;
