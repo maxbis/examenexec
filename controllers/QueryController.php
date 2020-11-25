@@ -46,7 +46,6 @@ class QueryController extends Controller
         ];
     }
 
-
     public function actionExport()
     {
         //$beoordeling = Beoordeling::find()->all();
@@ -421,17 +420,17 @@ class QueryController extends Controller
 
     public function actionGezakt() {
         $sql="
-            select naam, count(onderdeel) onderdelen from (
-            SELECT s.naam naam, f.omschrijving onderdeel
-            FROM results r
-            INNER JOIN student s ON s.id=r.studentid
-            INNER JOIN form f ON f.id=r.formid
-            INNER JOIN examen e ON e.id=f.examenid
-            WHERE e.actief=1
-            GROUP BY 1,2
-            HAVING greatest(sum(r.score),0)=1000
-            ORDER BY 1,2
-            ) as subquery
+            SELECT naam, count(onderdeel) onderdelen from (
+                SELECT s.naam naam, f.omschrijving onderdeel
+                FROM results r
+                INNER JOIN student s ON s.id=r.studentid
+                INNER JOIN form f ON f.id=r.formid
+                INNER JOIN examen e ON e.id=f.examenid
+                WHERE e.actief=1
+                GROUP BY 1,2
+                HAVING greatest(sum(r.score),0)=0
+                ORDER BY 1,2
+            ) AS subquery
             group by 1
             ";
 
