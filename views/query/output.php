@@ -11,8 +11,8 @@ $nr=0;
     <div class="card-body">
         <table class="table">
             <thead>
-                <tr>#</tr>
                 <tr>
+                    <td>#</td>
                     <?php
                         for($i=0;$i<count($data['col']);$i++) {
                             echo "<th>".$data['col'][$i]."</th>";

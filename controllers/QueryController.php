@@ -411,7 +411,8 @@ class QueryController extends Controller
     public function actionGezakt()
     {
         $sql="
-            SELECT s.naam naam, f.omschrijving onderdeel, greatest(sum(r.score),0) score
+            select naam, count(onderdeel) onderdelen from (
+            SELECT s.naam naam, f.omschrijving onderdeel
             FROM results r
             INNER JOIN student s ON s.id=r.studentid
             INNER JOIN form f ON f.id=r.formid
@@ -420,12 +421,14 @@ class QueryController extends Controller
             GROUP BY 1,2
             HAVING greatest(sum(r.score),0)=0
             ORDER BY 1,2
-        ";
+            ) as subquery
+            group by 1
+            ";
 
         $result = Yii::$app->db->createCommand($sql)->queryAll();
 
-        $data['title']="Gezakt op cruciale criteria per student en onderdeel";
-        $data['col']=['naam', 'onderdeel'];
+        $data['title']="Gezakt op cruciale criteria per student aantal onderdelen";
+        $data['col']=['naam', 'onderdelen'];
         $data['row']=$result;
 
         return $this->render('output', [
