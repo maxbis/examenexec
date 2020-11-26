@@ -489,7 +489,7 @@ class QueryController extends Controller
     public function actionUitslag() {
         $sql="
         select naam, formnaam, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer
-            from (0
+            from (
                 SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
                 round(sum(r.score)/10,0) score
                 FROM results r
