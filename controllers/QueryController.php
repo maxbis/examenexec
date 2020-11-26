@@ -486,7 +486,7 @@ class QueryController extends Controller
         return "O";
     }
 
-    public function actionResults() {
+    public function actionUitslag() {
         $sql="
         select naam, formnaam, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer from (
             SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
@@ -505,6 +505,10 @@ class QueryController extends Controller
         group by 1,2
         order by 1,2
         ";
+
+        return $this->render('output', [
+            'data' => $this->executeQuery($sql, "Gesprekken per kandidaat"),
+        ]);
     }
 
 }
