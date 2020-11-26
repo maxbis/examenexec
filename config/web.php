@@ -57,6 +57,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'query/score' => 'query/punten',
             ],
         ],
     ],

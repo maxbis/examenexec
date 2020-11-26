@@ -148,7 +148,7 @@ class QueryController extends Controller
 
         $examenid=$this->getExamenId();
 
-        $sql="  SELECT s.naam naam, s.nummer studentnr, f.omschrijving formnaam, v.mappingid mappingid, min(v.volgnr) vraagnr, count(*) aantal, v.mappingid mappingid, sum(r.score) score
+        $sql="  SELECT s.naam naam, s.nummer studentnr, f.omschrijving formnaam, v.mappingid mappingid, min(v.volgnr) vraagnr, count(*) aantal,  sum(r.score) score
                 FROM results r
                 INNER JOIN student s on s.id=r.studentid
                 INNER JOIN vraag v on v.formid = r.formid
@@ -418,6 +418,23 @@ class QueryController extends Controller
         ]);
     }
 
+    public function actionPuntenPerWerkproces() {
+        $sql="
+            SELECT s.naam naam, f.werkproces werkproces, greatest(sum(r.score),0) score
+            FROM results r
+            INNER JOIN student s ON s.id=r.studentid
+            INNER JOIN form f ON f.id=r.formid
+            INNER JOIN examen e ON e.id=f.examenid
+            WHERE e.actief=1
+            GROUP BY 1,2
+            ORDER BY 1,2
+        ";
+
+        return $this->render('output', [
+            'data' => $this->executeQuery($sql, "Socre per student per onderdeel"),
+        ]);
+    }
+
     public function actionGezakt() {
         $sql="
             SELECT naam, count(onderdeel) onderdelen from (
@@ -461,5 +478,33 @@ class QueryController extends Controller
         ]);
     }
 
+    public function getScore($max, $punten) {
+        // K1-W1..W4 17, 10, 19, 6 max punten
+        $score=90*$punten/$max+10;
+        if ($score>=80) return "G";
+        if ($score>=55) return "V";
+        return "O";
+    }
+
+    public function actionResults() {
+        $sql="
+        select naam, formnaam, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer from (
+            SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
+                    round(sum(r.score)/10,0) score
+                FROM results r
+                INNER JOIN student s on s.id=r.studentid
+                INNER JOIN vraag v on v.formid = r.formid
+                INNER JOIN form f on f.id=v.formid
+                INNER JOIN examen e on e.id=f.examenid
+                WHERE v.volgnr = r.vraagnr
+                AND e.actief=1
+                GROUP BY 1,2,3
+                ORDER BY 1,2
+            ) as sub
+        INNER JOIN werkproces w ON w.id=formnaam
+        group by 1,2
+        order by 1,2
+        ";
+    }
 
 }
