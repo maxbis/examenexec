@@ -488,9 +488,10 @@ class QueryController extends Controller
 
     public function actionUitslag() {
         $sql="
-        select naam, formnaam, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer from (
-            SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
-                    round(sum(r.score)/10,0) score
+        select naam, formnaam, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer
+            from (
+                SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
+                round(sum(r.score)/10,0) score
                 FROM results r
                 INNER JOIN student s on s.id=r.studentid
                 INNER JOIN vraag v on v.formid = r.formid
@@ -505,7 +506,7 @@ class QueryController extends Controller
         group by naam, formnaam, maxscore
         order by 1,2
         ";
-
+        
         return $this->render('output', [
             'data' => $this->executeQuery($sql, "Gesprekken per kandidaat"),
         ]);
