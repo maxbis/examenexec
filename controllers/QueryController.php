@@ -498,7 +498,7 @@ class QueryController extends Controller
                 INNER JOIN examen e on e.id=f.examenid
                 WHERE v.volgnr = r.vraagnr
                 AND e.actief=1
-                GROUP BY 1,2,3
+                GROUP BY 1,2,3, maxscore
                 ORDER BY 1,2
             ) as sub
         INNER JOIN werkproces w ON w.id=formnaam
