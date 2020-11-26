@@ -517,7 +517,7 @@ class QueryController extends Controller
         $sql="
         select naam, formnaam, greatest(0,sum(score)) punten
             from (
-                SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
+                SELECT s.naam naam, f.werkproces werkproces, v.mappingid mappingid, 
                 round(sum(r.score)/10,0) score
                 FROM results r
                 INNER JOIN student s on s.id=r.studentid
@@ -532,15 +532,15 @@ class QueryController extends Controller
         group by naam, formnaam
         order by 1,2
         ";
-        
+
         return $this->render('output', [
-            'data' => $this->executeQuery($sql, "Gesprekken per kandidaat"),
+            'data' => $result,
         ]);
     }
 
     public function actionUitslagK1() {
         $sql="
-        select naam, formnaam, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer
+        select naam, formnaam werkproces, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer
             from (
                 SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
                 round(sum(r.score)/10,0) score
@@ -559,9 +559,28 @@ class QueryController extends Controller
         order by 1,2
         ";
         
+        $dataSet=[];
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+        foreach($result as $item) { // init
+            $dataSet[$item['naam']]['B1-K1-W1']=['', ''];
+            $dataSet[$item['naam']]['B1-K1-W2']=['', ''];
+            $dataSet[$item['naam']]['B1-K1-W3']=['', ''];
+            $dataSet[$item['naam']]['B1-K1-W4']=['', ''];
+        }
+        foreach($result as $item) {
+            $dataSet[$item['naam']][$item['werkproces']]=[ $item['cijfer'], $this->rating($item['cijfer']) ];
+        }
+        // dd($dataSet);
+
         return $this->render('kerntaak1', [
-            'data' => $this->executeQuery($sql, "Gesprekken per kandidaat"),
+            'data' => $dataSet,
         ]);
+    }
+
+    private function rating($cijfer) {
+        if ( $cijfer > 8 ) return "G"; 
+        if ( $cijfer >= 5.5 ) return "V";
+        return "O";
     }
 
 }
