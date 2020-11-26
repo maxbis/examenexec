@@ -512,6 +512,7 @@ class QueryController extends Controller
         ]);
     }
 
+    // https://www.student.ovh/examen/query/punten-per-werkproces2
     public function actionPuntenPerWerkproces2() {
         $sql="
         select naam, formnaam, greatest(0,sum(score)) punten
@@ -537,4 +538,31 @@ class QueryController extends Controller
         ]);
     }
 
+    public function actionUitslagK1() {
+        $sql="
+        select naam, formnaam, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer
+            from (
+                SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
+                round(sum(r.score)/10,0) score
+                FROM results r
+                INNER JOIN student s on s.id=r.studentid
+                INNER JOIN vraag v on v.formid = r.formid
+                INNER JOIN form f on f.id=v.formid
+                INNER JOIN examen e on e.id=f.examenid
+                WHERE v.volgnr = r.vraagnr
+                AND e.actief=1
+                GROUP BY 1,2,3
+                ORDER BY 1,2
+            ) as sub
+        INNER JOIN werkproces w ON w.id=formnaam
+        group by naam, formnaam, maxscore
+        order by 1,2
+        ";
+        
+        return $this->render('kerntaak1', [
+            'data' => $this->executeQuery($sql, "Gesprekken per kandidaat"),
+        ]);
+    }
+
 }
+
