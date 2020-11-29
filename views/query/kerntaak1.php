@@ -1,6 +1,15 @@
 <?php
 use yii\helpers\Url;
+
 $nr=0;
+$examenid=12;
+
+if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
+    $KTB="http://localhost/KerntaakBeoordelingen/werkproces.php";
+} else {
+    $KTB="http://vps789715.ovh.net/KerntaakBeoordelingen/werkproces.php";
+}
+
 ?>
 
 <style>
@@ -17,7 +26,7 @@ $nr=0;
 </style>
 
 <h1>Uitslagen Kerntaak-1</h1>
-<i>(Cijfers zijn berekend en kunnen maximaal 0.1 punt verschillen van de SPL cijfertabellen)</i>
+<i>(ijfers zijn berekend maar zouden overeen 100% moeten komen met SPL cijfertabellen</i>
 
 <p></p>
 
@@ -54,10 +63,10 @@ $nr=0;
                     echo "<tr>";
                     echo "<td>".$nr."</td>";
                     echo "<td>".$naam."</td>";
-                    echo "<td class=\"uneven\">".$value['B1-K1-W1'][0]."</td>";
-                    echo "<td class=\"even\">".$value['B1-K1-W2'][0]."</td>";
-                    echo "<td class=\"uneven\">".$value['B1-K1-W3'][0]."</td>";
-                    echo "<td class=\"even\">".$value['B1-K1-W4'][0]."</td>";
+                    echo "<td class=\"uneven\"><a href=".$KTB."?code=B1-K1-W1&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W1'][0]."</a></td>";
+                    echo "<td class=\"even\"><a href=".$KTB."?code=B1-K1-W2&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W2'][0]."</a></td>";
+                    echo "<td class=\"uneven\"><a href=".$KTB."?code=B1-K1-W3&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W3'][0]."</a></td>";
+                    echo "<td class=\"even\"><a href=".$KTB."?code=B1-K1-W4&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W4'][0]."</a></td>";
                     echo "<td>&nbsp;</td>";
                     echo "<td class=\"uneven\">".$value['B1-K1-W1'][1]."</td>";
                     echo "<td class=\"even\">".$value['B1-K1-W2'][1]."</td>";
@@ -70,3 +79,4 @@ $nr=0;
         </table>
     </div>
 </div>
+<small><hr><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>

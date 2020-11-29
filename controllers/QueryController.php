@@ -148,7 +148,8 @@ class QueryController extends Controller
 
         $examenid=$this->getExamenId();
 
-        $sql="  SELECT s.naam naam, s.nummer studentnr, f.omschrijving formnaam, v.mappingid mappingid, min(v.volgnr) vraagnr, count(*) aantal,  sum(r.score) score
+        $sql="  SELECT  s.naam naam, s.nummer studentnr, f.omschrijving formnaam, v.mappingid mappingid,
+                        min(v.volgnr) vraagnr, count(*) aantal,  sum(r.score) score
                 FROM results r
                 INNER JOIN student s on s.id=r.studentid
                 INNER JOIN vraag v on v.formid = r.formid
@@ -539,10 +540,11 @@ class QueryController extends Controller
     }
 
     public function actionUitslagK1() {
+        // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
         $sql="
-        select naam, formnaam werkproces, round( (greatest(0,sum(score))/maxscore*9+1),1) cijfer
+        select naam, nummer, formnaam werkproces,  round( ((greatest(0,sum(score))  /maxscore*9+1))+0.049 ,1)  cijfer
             from (
-                SELECT s.naam naam, f.werkproces formnaam, v.mappingid mappingid, 
+                SELECT s.naam naam, s.nummer nummer, f.werkproces formnaam, v.mappingid mappingid, 
                 round(sum(r.score)/10,0) score
                 FROM results r
                 INNER JOIN student s on s.id=r.studentid
@@ -551,11 +553,11 @@ class QueryController extends Controller
                 INNER JOIN examen e on e.id=f.examenid
                 WHERE v.volgnr = r.vraagnr
                 AND e.actief=1
-                GROUP BY 1,2,3
+                GROUP BY 1,2,3,4
                 ORDER BY 1,2
             ) as sub
         INNER JOIN werkproces w ON w.id=formnaam
-        group by naam, formnaam, maxscore
+        group by naam, nummer, formnaam, maxscore
         order by 1,2
         ";
         
@@ -566,11 +568,12 @@ class QueryController extends Controller
             $dataSet[$item['naam']]['B1-K1-W2']=['', ''];
             $dataSet[$item['naam']]['B1-K1-W3']=['', ''];
             $dataSet[$item['naam']]['B1-K1-W4']=['', ''];
+            $dataSet[$item['naam']]['studentnr']="";
         }
         foreach($result as $item) {
             $dataSet[$item['naam']][$item['werkproces']]=[ $item['cijfer'], $this->rating($item['cijfer']) ];
+            $dataSet[$item['naam']]['studentnr']=$item['nummer'];
         }
-        // dd($dataSet);
 
         return $this->render('kerntaak1', [
             'data' => $dataSet,

@@ -5,7 +5,7 @@ use yii\bootstrap4\NavBar;
 use yii\helpers\Html;
 
 NavBar::begin([
-    'brandLabel' => Html::img('@web/planner.jpg', ['alt' => 'My logo']) ,
+    'brandLabel' => Html::img('@web/exam.png', ['alt' => 'My logo', 'width' => '40px', 'height' => '40px']) ,
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
         //'class' => 'navbar-inverse navbar-fixed-top',
@@ -35,6 +35,8 @@ echo Nav::widget([
                 ['label' => 'Studenten', 'url' => ['/student']],
                 ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
                 ['label' => 'Alle Gesprekken/beoordelingen', 'url' => ['/gesprek'],],
+                ['label' => '-----------------------------------'],
+                ['label' => 'KT-1', 'url' => ['/query/uitslag-k1']],
             ],
             'options' => ['class' => 'nav-item']
         ],
@@ -45,7 +47,6 @@ echo Nav::widget([
                 ['label' => 'Gesprekken per kandidaat', 'url' => ['/query/gesprekken-per-kandidaat']],
                 ['label' => 'Vrije rolspelers', 'url' => ['/query/vrije-rolspelers']],
                 ['label' => 'Rolspelerbelasting', 'url' => ['/query/rolspeler-belasting']],
-                
             ],
         ],
         [
