@@ -26,7 +26,6 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
 </style>
 
 <h1>Uitslagen Kerntaak-1</h1>
-<i>(ijfers zijn berekend maar zouden overeen 100% moeten komen met SPL cijfertabellen</i>
 
 <p></p>
 
