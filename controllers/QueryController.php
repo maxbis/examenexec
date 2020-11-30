@@ -557,8 +557,8 @@ class QueryController extends Controller
                 ORDER BY 1,2
             ) as sub
         INNER JOIN werkproces w ON w.id=formnaam
-        group by naam, nummer, formnaam, maxscore
-        order by 1,2,3
+        group by naam, nummer, klas, formnaam, maxscore
+        order by 1
         ";
         
         $dataSet=[];
