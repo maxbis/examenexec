@@ -41,7 +41,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     <th colspan=4>Resultaten</th>
                     <th>&nbsp;</th>
                     <th colspan=4>Print Ready</th>
- 
+                    <th>&nbsp;</th>
                 </tr>    
                 <tr>
                     <th></th>
@@ -61,6 +61,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     <th class="even">W2</th>
                     <th class="uneven">W3</th>
                     <th class="even">W4</th>
+                    <th>&nbsp;</th>
                 </tr>    
             </thead>
             
@@ -92,6 +93,13 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     echo "</td>";
                     echo "<td class=\"even\">"; 
                     echo $value['B1-K1-W4']['status'] ? "<span class=\"glyphicon glyphicon-check\"></span>" : '-';
+                    echo "</td>";
+                    echo "<td>";
+                    if ( $value['B1-K1-W1']['status'] && $value['B1-K1-W2']['status'] && $value['B1-K1-W3']['status'] && $value['B1-K1-W4']['status'] ) {
+                        echo "<a href=\"http://vps789715.ovh.net/KerntaakBeoordelingen/print.php?print=print&studentnummer=".$value['studentnr']."\"><span class=\"glyphicon glyphicon-print\"></span></a>";
+                    } else {
+                        echo "<span title=\"Print beschikbaar als alle vier werkprocessen  print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";
+                    }
                     echo "</td>";
                     echo "</tr>";
                 }
