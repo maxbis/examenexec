@@ -573,10 +573,10 @@ class QueryController extends Controller
             $dataSet[$item['naam']]['B1-K1-W2']['result']=['', ''];
             $dataSet[$item['naam']]['B1-K1-W3']['result']=['', ''];
             $dataSet[$item['naam']]['B1-K1-W4']['result']=['',' '];
-            $dataSet[$item['naam']]['B1-K1-W1']['status']=0;
-            $dataSet[$item['naam']]['B1-K1-W2']['status']=0;
-            $dataSet[$item['naam']]['B1-K1-W3']['status']=0;
-            $dataSet[$item['naam']]['B1-K1-W4']['status']=0;
+            // $dataSet[$item['naam']]['B1-K1-W1']['status']=0;
+            // $dataSet[$item['naam']]['B1-K1-W2']['status']=0;
+            // $dataSet[$item['naam']]['B1-K1-W3']['status']=0;
+            // $dataSet[$item['naam']]['B1-K1-W4']['status']=0;
             $dataSet[$item['naam']]['studentnr']="";
         }
 
