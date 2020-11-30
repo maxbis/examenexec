@@ -579,14 +579,15 @@ class QueryController extends Controller
             $dataSet[$item['naam']]['B1-K1-W4']['status']=0;
             $dataSet[$item['naam']]['studentnr']="";
         }
-        
-        foreach($result2 as $item) {
-            if ($item['status']=="P") {
-                $dataset[$item['naam']][$item['werkproces']]['status']=1;
-            }  
+
+        foreach($result2 as $item) {   
+            if ($item['status'] == 'P') {
+                $dataSet[$item['naam']][$item['werkproces']]['status']=1;
+            }  else {
+                $dataSet[$item['naam']][$item['werkproces']]['status']=0;
+            }
         }
-        
-        //dd($dataSet);
+
         foreach($result as $item) {
             $dataSet[$item['naam']][$item['werkproces']]['result']=[ $item['cijfer'], $this->rating($item['cijfer']) ];
             $dataSet[$item['naam']]['studentnr']=$item['nummer'];

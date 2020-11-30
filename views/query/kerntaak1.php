@@ -90,7 +90,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     echo "<td class=\"uneven\">"; 
                     echo $value['B1-K1-W3']['status'] ? "<span class=\"glyphicon glyphicon-check\"></span>" : '-';
                     echo "</td>";
-                    echo "<td class=\neven\">"; 
+                    echo "<td class=\"even\">"; 
                     echo $value['B1-K1-W4']['status'] ? "<span class=\"glyphicon glyphicon-check\"></span>" : '-';
                     echo "</td>";
                     echo "</tr>";
