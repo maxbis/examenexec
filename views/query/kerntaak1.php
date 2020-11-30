@@ -29,11 +29,12 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
 
 <p></p>
 
-<div class="card" style="width: 700px">
+<div class="card" style="width: 800px">
     <div class="card-body">
         <table class="table">
             <thead>
                 <tr>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th colspan=4>Cijfers</th>
@@ -42,6 +43,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
  
                 </tr>    
                 <tr>
+                    <th></th>
                     <th></th>
                     <th>Kandidaat</th>
                     <th class="uneven">W1</th>
@@ -60,7 +62,8 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                 foreach($data as $naam => $value) {
                     $nr++;
                     echo "<tr>";
-                    echo "<td>".$nr."</td>";
+                    echo "<td class=\"text-muted\">".$nr."</td>";
+                    echo "<td>".$value['groep']."</td>";
                     echo "<td>".$naam."</td>";
                     echo "<td class=\"uneven\"><a href=".$KTB."?code=B1-K1-W1&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W1'][0]."</a></td>";
                     echo "<td class=\"even\"><a href=".$KTB."?code=B1-K1-W2&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W2'][0]."</a></td>";
