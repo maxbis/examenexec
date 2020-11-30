@@ -561,23 +561,40 @@ class QueryController extends Controller
         order by 1
         ";
         
-        $dataSet=[];
         $result = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $sql2="select s.naam naam, p.werkprocesId werkproces, p.status status from beoordeling.printwerkproces p
+                join student s on s.nummer=p.studentnummer";
+        $result2 = Yii::$app->db->createCommand($sql2)->queryAll();
+
+        $dataSet=[];
         foreach($result as $item) { // init
-            $dataSet[$item['naam']]['B1-K1-W1']=['', ''];
-            $dataSet[$item['naam']]['B1-K1-W2']=['', ''];
-            $dataSet[$item['naam']]['B1-K1-W3']=['', ''];
-            $dataSet[$item['naam']]['B1-K1-W4']=['', ''];
+            $dataSet[$item['naam']]['B1-K1-W1']['result']=['', ''];
+            $dataSet[$item['naam']]['B1-K1-W2']['result']=['', ''];
+            $dataSet[$item['naam']]['B1-K1-W3']['result']=['', ''];
+            $dataSet[$item['naam']]['B1-K1-W4']['result']=['',' '];
+            $dataSet[$item['naam']]['B1-K1-W1']['status']=0;
+            $dataSet[$item['naam']]['B1-K1-W2']['status']=0;
+            $dataSet[$item['naam']]['B1-K1-W3']['status']=0;
+            $dataSet[$item['naam']]['B1-K1-W4']['status']=0;
             $dataSet[$item['naam']]['studentnr']="";
         }
+        
+        foreach($result2 as $item) {
+            if ($item['status']=="P") {
+                $dataset[$item['naam']][$item['werkproces']]['status']=1;
+            }  
+        }
+        
+        //dd($dataSet);
         foreach($result as $item) {
-            $dataSet[$item['naam']][$item['werkproces']]=[ $item['cijfer'], $this->rating($item['cijfer']) ];
+            $dataSet[$item['naam']][$item['werkproces']]['result']=[ $item['cijfer'], $this->rating($item['cijfer']) ];
             $dataSet[$item['naam']]['studentnr']=$item['nummer'];
             $dataSet[$item['naam']]['groep']=$item['klas'];
         }
 
         return $this->render('kerntaak1', [
-            'data' => $dataSet,
+            'dataSet' => $dataSet,
         ]);
     }
 
