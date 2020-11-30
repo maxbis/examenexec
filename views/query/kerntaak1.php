@@ -98,7 +98,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     if ( $value['B1-K1-W1']['status'] && $value['B1-K1-W2']['status'] && $value['B1-K1-W3']['status'] && $value['B1-K1-W4']['status'] ) {
                         echo "<a href=\"http://vps789715.ovh.net/KerntaakBeoordelingen/print.php?print=print&studentnummer=".$value['studentnr']."\"><span class=\"glyphicon glyphicon-print\"></span></a>";
                     } else {
-                        echo "<span title=\"Print beschikbaar als alle vier werkprocessen  print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";
+                        echo "<span title=\"Print beschikbaar als alle vier de werkprocessen print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";
                     }
                     echo "</td>";
                     echo "</tr>";
