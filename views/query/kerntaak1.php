@@ -96,7 +96,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     echo "</td>";
                     echo "<td>";
                     if ( $value['B1-K1-W1']['status'] && $value['B1-K1-W2']['status'] && $value['B1-K1-W3']['status'] && $value['B1-K1-W4']['status'] ) {
-                        echo "<a href=\"http://vps789715.ovh.net/KerntaakBeoordelingen/print.php?print=print&studentnummer=".$value['studentnr']."\"><span class=\"glyphicon glyphicon-print\"></span></a>";
+                        echo "<a href=\"http://vps789715.ovh.net/KerntaakBeoordelingen/print.php?print=print&studentnummer=".$value['studentnr']."&toonStudent&examen=".$examenid."\"><span class=\"glyphicon glyphicon-print\"></span></a>";
                     } else {
                         echo "<span title=\"Print beschikbaar als alle vier de werkprocessen print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";
                     }
@@ -108,4 +108,4 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
         </table>
     </div>
 </div>
-<small><hr><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>
+<small><hr><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>php yii sodium_crypto_kx_server_session_keys
