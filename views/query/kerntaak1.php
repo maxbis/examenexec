@@ -71,7 +71,13 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     echo "<tr>";
                     echo "<td class=\"text-muted\">".$nr."</td>";
                     echo "<td>".$value['groep']."</td>";
-                    echo "<td>".$naam."</td>";
+                    if ( $value['B1-K1-W1']['result'][1] == 'O'|| $value['B1-K1-W1']['result'][1] == 'O'
+                        || $value['B1-K1-W3']['result'][1] == 'O' || $value['B1-K1-W4']['result'][1] == 'O') {
+                        echo "<td style=\"color:red\">";
+                    } else {
+                        echo "<td>";
+                    }
+                    echo $naam."</td>";
                     echo "<td class=\"uneven\"><a href=".$KTB."?code=B1-K1-W1&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W1']['result'][0]."</a></td>";
                     echo "<td class=\"even\"><a href=".$KTB."?code=B1-K1-W2&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W2']['result'][0]."</a></td>";
                     echo "<td class=\"uneven\"><a href=".$KTB."?code=B1-K1-W3&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W3']['result'][0]."</a></td>";
@@ -108,4 +114,4 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
         </table>
     </div>
 </div>
-<small><hr><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>php yii sodium_crypto_kx_server_session_keys
+<small><hr><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>
