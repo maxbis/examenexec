@@ -71,7 +71,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     echo "<tr>";
                     echo "<td class=\"text-muted\">".$nr."</td>";
                     echo "<td>".$value['groep']."</td>";
-                    if ( $value['B1-K1-W1']['result'][1] == 'O'|| $value['B1-K1-W1']['result'][1] == 'O'
+                    if ( $value['B1-K1-W1']['result'][1] == 'O'|| $value['B1-K1-W2']['result'][1] == 'O'
                         || $value['B1-K1-W3']['result'][1] == 'O' || $value['B1-K1-W4']['result'][1] == 'O') {
                         echo "<td style=\"color:red\">";
                     } else {
