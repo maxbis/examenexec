@@ -66,11 +66,13 @@ class Vraag extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getForm()
-    {
-        return $this->hasOne(Form::className(), ['id' => 'formid']);
+    public function getForm() {
+        return $this->hasOne(Form::className(), ['id' => 'formid']); // pk.relation => fk.model
     }
     public function getExamen() {
         return $this->hasOne(Examen::className(), ['id' => 'examenid'])->via('form');
+    }
+    public function getCriterium() {
+        return $this->hasOne(Criterium::className(), ['id' => 'mappingid']);
     }
 }

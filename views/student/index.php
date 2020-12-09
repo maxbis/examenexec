@@ -31,6 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [   'attribute'=>'klas',
             'contentOptions' => ['style' => 'width:60px;'],
             ],
+            [   'attribute'=>'locatie',
+            'contentOptions' => ['style' => 'width:60px;'],
+            ],
             [
                 'attribute'=>'naam',
                 'contentOptions' => ['style' => 'width:600px; white-space: normal;'],

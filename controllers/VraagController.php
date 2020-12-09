@@ -14,6 +14,7 @@ use app\models\Student;
 use app\models\Beoordeling;
 use app\models\Rolspeler;
 use app\models\Gesprek;
+use app\models\Criterium;
 
 use kartik\mpdf\Pdf;
 
@@ -94,7 +95,7 @@ class VraagController extends Controller
         ]);
     }
 
-    public function actionForm($gesprekid, $compleet=0)
+    public function actionForm($gesprekid, $compleet=0, $oldid='')
     {
         $gesprek = gesprek::find()->where(['id'=>$gesprekid])->one();
 
@@ -109,30 +110,34 @@ class VraagController extends Controller
         Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
 
         if ($compleet) { // antwoordform
-
+            $viewName = 'antwoordform'; // read-only
+            // get old answers and results
             $beoordeling = beoordeling::find()->where(['gesprekid' => $gesprekid])->one();
             $resultaat = json_decode($beoordeling->resultaat, true);
 
-            return $this->render('antwoordform', [
-                'vragen' => $vragen,
-                'student' => $student,
-                'form' => $form,
-                'rolspeler' => $rolspeler,
-                'resultaat' => $resultaat,
-                'beoordeling' => $beoordeling,
-            ]);
-
         } else { // vraag form
-
-            return $this->render('vraagform', [
-                'vragen' => $vragen,
-                'student' => $student,
-                'form' => $form,
-                'rolspeler' => $rolspeler,
-                'gesprek' => $gesprek,
-            ]);
+            $viewName = 'vraagform'; // editable
+            if ( $oldid ) { // do we have a corerction
+                // get previous answers and corrections
+                $beoordeling = Beoordeling::Find()->where(['gesprekid' => $oldid ])->one();
+                $resultaat = json_decode($beoordeling->resultaat, true)['answers'];
+            } else {
+                // no previous results
+                $resultaat = '';
+                $beoordeling = '';
+            }
 
         }
+
+        return $this->render($viewName, [
+            'vragen' => $vragen,
+            'student' => $student,
+            'form' => $form,
+            'rolspeler' => $rolspeler,
+            'gesprek' => $gesprek,
+            'resultaat' => $resultaat,
+            'beoordeling' => $beoordeling,
+        ]);
     }
 
     /**
@@ -166,6 +171,9 @@ class VraagController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        //dd($model->form->werkproces);
+        $criterium = Criterium::find()->select('id, omschrijving')->where([ 'werkprocesid' => $model->form->werkproces ])->asArray()->all();
+        // dd($criterium);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect('index?VraagSearch[formid]='.$model->formid );
@@ -176,6 +184,7 @@ class VraagController extends Controller
         return $this->render('update', [
             'model' => $model,
             'formModel' => $formModel,
+            'criterium' => $criterium,
         ]);
     }
 

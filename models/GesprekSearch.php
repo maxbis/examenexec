@@ -16,12 +16,13 @@ class GesprekSearch extends Gesprek
      */
 
     public $student;
+    public $locatie;
 
     public function rules()
     {
         return [
             [['formid', 'rolspelerid', 'status','statusstudent'], 'integer'],
-            [['opmerking', 'student'], 'safe'],
+            [['opmerking', 'student', 'locatie'], 'safe'],
         ];
     }
 
@@ -60,6 +61,10 @@ class GesprekSearch extends Gesprek
             'asc' => ['student.naam' => SORT_ASC],
             'desc' => ['student.naam' => SORT_DESC],
         ];
+        $dataProvider->sort->attributes['locatie'] = [
+            'asc' => ['student.locatie' => SORT_ASC],
+            'desc' => ['student.locatie' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -79,9 +84,9 @@ class GesprekSearch extends Gesprek
         ]);
         $query->andFilterWhere(['like', 'opmerking', $this->opmerking]);
         $query->andFilterWhere(['like', 'student.naam', $this->student]);
+        // $query->andFilterWhere(['like', 'student.klas', $this->student]);
+        $query->andFilterWhere(['like', 'student.locatie', $this->locatie]);
 
         return $dataProvider;
     }
 }
-
-http://localhost:8080/gesprek/index?GesprekSearch%5Bformid%5D=&GesprekSearch%5Bstudentid%5D=&GesprekSearch%5Bstudent%5D=&GesprekSearch%5Brolspelerid%5D=10&GesprekSearch%5Bopmerking%5D=o&GesprekSearch%5Bstatus%5D=&sort=student

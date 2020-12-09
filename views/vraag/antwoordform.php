@@ -56,7 +56,6 @@ use yii\widgets\LinkPager;
             <th scope="col" style="width: 80px;">Nee</th>
         </tr>
             
-        <?php $i=0; ?>
         <?php foreach ($vragen as $item): ?>
             <tr>
                 <td><?= $item->volgnr ?></td>
@@ -64,8 +63,10 @@ use yii\widgets\LinkPager;
                 
                 <td>
                     <?php 
-                        if ( $resultaat['answers'][$i] == 1){
-                            echo "&#128505; (".$resultaat['points'][$i].")";
+                        $thisAnswer = array_shift($resultaat['answers']);
+                        $thisPoints = array_shift($resultaat['points']);
+                        if ( $thisAnswer == 1){
+                            echo "&#128505; (".$thisPoints.")";
                         } else {
                             echo "&#128454;";
                         }
@@ -75,8 +76,8 @@ use yii\widgets\LinkPager;
                 <?php if ( isset($item->soms) ) : ?>
                     <td>
                         <?php
-                            if ( $resultaat['answers'][$i] == 2){
-                                echo "&#128505; (".$resultaat['points'][$i].")";
+                            if ( $thisAnswer == 2){
+                                echo "&#128505; (".$thisPoints.")";
                                 } else {
                                     echo "&#128454;";
                                 }
@@ -88,8 +89,8 @@ use yii\widgets\LinkPager;
 
                 <td>
                     <?php 
-                        if ( $resultaat['answers'][$i] == 3){
-                            echo "&#128505; (".$resultaat['points'][$i].")";
+                        if ( $thisAnswer == 3){
+                            echo "&#128505; (".$thisPoints.")";
                         } else {
                             echo "&#128454;";
                         }
@@ -103,13 +104,13 @@ use yii\widgets\LinkPager;
                         <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
                     </tr>
                 <?php endif; ?>
-            <?php $i++; ?>
         <?php endforeach; ?>
             
         <tr>
             <td></td>
             <td colspan=2><br>Totaal aantal punten</td>
-            <td colspan=3><br><?= $resultaat['totaalscore'] ?></td>
+            <?php // older version of the result json has element totalscore instead of total points ?>
+            <td colspan=3><br><?=  isset($resultaat['totaalpoints']) ? $resultaat['totaalpoints'] : $resultaat['totaalscore'] ?></td>
             <td></td>
         </tr>
 
@@ -130,9 +131,13 @@ use yii\widgets\LinkPager;
         $date = new DateTime($beoordeling->timestamp);
         echo $date->format('d-m-y - H:i').' uur, door '.$rolspeler->naam."<br><hr>";
 
-        if ( isset($_COOKIE['rolspeler']) ) {
-            echo Html::a('Cancel', ['gesprek/rolspeler',  'id'=>$rolspeler->id], ['class'=>'btn btn-primary']);
+        echo Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']);
+
+        if  (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin') {
+            echo "&nbsp;&nbsp;&nbsp;";
+            echo Html::a('Correct', ['gesprek/correct',  'id'=>$gesprek->id], ['class'=>'btn btn-warning']);
         }
+
     ?>
 
     <?php $bestandsNaam = 'F'.$form->nr.'_'.str_replace(' ', '_', rtrim($studentNaam)) ?>

@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                  'contentOptions' => ['style' => 'width:80px;'],
             ],
             [   'attribute' => 'mappingid',
-                'label' => 'mapping',
+                'label' => 'Rubic',
                 'contentOptions' => ['style' => 'width:80px;'],
             ],
             [

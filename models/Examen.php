@@ -32,9 +32,10 @@ class Examen extends \yii\db\ActiveRecord
     {
         return [
             [['naam'], 'required'],
-            [['actief', 'otherid'], 'integer'],
+            [['actief', 'otherid', 'examen_type'], 'integer'],
             [['datum_start', 'datum_eind'], 'safe'],
             [['naam'], 'string', 'max' => 100],
+            [['titel'], 'string', 'max' => 200],
         ];
     }
 
@@ -46,9 +47,11 @@ class Examen extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'naam' => 'Naam',
+            'titel' => 'Titel',
             'actief' => 'Actief',
             'datum_start' => 'Datum Start',
             'datum_eind' => 'Datum Eind',
+            'examen_type' => 'Examen Type',
             'otherid' => 'KTB Examen ID',
         ];
     }
@@ -61,5 +64,10 @@ class Examen extends \yii\db\ActiveRecord
     public function getGesprekssoorts()
     {
         return $this->hasMany(Gesprekssoort::className(), ['examenid' => 'id']);
+    }
+    
+    public function getForms()
+    {
+        return $this->hasMany(Form::className(), ['examenid' => 'id']);
     }
 }

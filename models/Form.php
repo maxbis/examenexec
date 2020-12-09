@@ -55,4 +55,8 @@ class Form extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Examen::className(), ['id' => 'examenid']);
     }
+    public function getCriterium()
+    {
+        return $this->hasOne(Criterium(), ['werkprocesid' => 'werkproces']);
+    }
 }

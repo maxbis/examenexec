@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\GesprekSearch */
+/* @var $model app\models\CriteriumSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="gesprek-search">
+<div class="criterium-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,11 +17,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'formid') ?>
+    <?= $form->field($model, 'omschrijving') ?>
 
-    <?= $form->field($model, 'rolspelerid') ?>
+    <?= $form->field($model, 'nul') ?>
 
-    <?= $form->field($model, 'studentid') ?>
+    <?= $form->field($model, 'een') ?>
+
+    <?= $form->field($model, 'twee') ?>
+
+    <?php // echo $form->field($model, 'drie') ?>
+
+    <?php // echo $form->field($model, 'werkprocesid') ?>
+
+    <?php // echo $form->field($model, 'cruciaal') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

@@ -128,6 +128,19 @@ class GesprekController extends Controller
         return $this->redirect(['gesprek/student']);
     }
 
+    public function actionCorrect($id) {
+        
+        $oldGesprek = Gesprek::Find()->where(['id'=>$id])->one();
+        $model = new Gesprek();
+        $model->formid=$oldGesprek->formid;
+        $model->rolspelerid=$oldGesprek->rolspelerid;
+        $model->studentid=$oldGesprek->studentid;
+        $model->opmerking=$oldGesprek->opmerking;
+        $model->rolspelerid=$oldGesprek->rolspelerid;
+        $model->save();
+        return $this->redirect(['vraag/form', 'gesprekid' => $model->id , 'oldid' => $id] );
+    }
+
     public function actionCreateAndGo()
     {
         $newGesprek = new Gesprek();

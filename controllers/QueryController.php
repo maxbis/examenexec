@@ -6,11 +6,14 @@ use Yii;
 use app\models\Beoordeling;
 use app\models\BeoordelingSearch;
 use app\models\Vraag;
+use app\models\Werkproces;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use yii\filters\AccessControl;
+
+use yii\helpers\ArrayHelper;
 
 /**
  * BeoordelingController implements the CRUD actions for Beoordeling model.
@@ -539,12 +542,12 @@ class QueryController extends Controller
         ]);
     }
 
-    public function actionUitslagK1() {
+    public function actionResultaat() {
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
         $sql="
-        select naam, nummer, klas, formnaam werkproces,  round( ((greatest(0,sum(score))  /maxscore*9+1))+0.049 ,1)  cijfer
+        select naam, studentid, klas, formnaam werkproces, round( ((greatest(0,sum(score))  /maxscore*9+1))+0.049 ,1)  cijfer
             from (
-                SELECT s.naam naam, s.nummer nummer, s.klas klas, f.werkproces formnaam, v.mappingid mappingid, 
+                SELECT s.naam naam, s.id studentid, s.klas klas, f.werkproces formnaam, v.mappingid mappingid, 
                 round(sum(r.score)/10,0) score
                 FROM results r
                 INNER JOIN student s on s.id=r.studentid
@@ -557,43 +560,66 @@ class QueryController extends Controller
                 ORDER BY 1,2
             ) as sub
         INNER JOIN werkproces w ON w.id=formnaam
-        group by naam, nummer, klas, formnaam, maxscore
+        group by naam, studentid, klas, formnaam, maxscore
         order by 1
         ";
         
         $result = Yii::$app->db->createCommand($sql)->queryAll();
 
-        $sql2="select s.naam naam, p.werkprocesId werkproces, p.status status from beoordeling.printwerkproces p
-                join student s on s.nummer=p.studentnummer";
-        $result2 = Yii::$app->db->createCommand($sql2)->queryAll();
+        // print status
+        //$sql2="select s.naam naam, p.werkprocesId werkproces, p.status status from beoordeling.printwerkproces p
+        //        join student s on s.nummer=p.studentnummer";
+        // $result2 = Yii::$app->db->createCommand($sql2)->queryAll();
 
-        $dataSet=[];
-        foreach($result as $item) { // init
-            $dataSet[$item['naam']]['B1-K1-W1']['result']=['', ''];
-            $dataSet[$item['naam']]['B1-K1-W2']['result']=['', ''];
-            $dataSet[$item['naam']]['B1-K1-W3']['result']=['', ''];
-            $dataSet[$item['naam']]['B1-K1-W4']['result']=['',' '];
-            $dataSet[$item['naam']]['B1-K1-W1']['status']=0;
-            $dataSet[$item['naam']]['B1-K1-W2']['status']=0;
-            $dataSet[$item['naam']]['B1-K1-W3']['status']=0;
-            $dataSet[$item['naam']]['B1-K1-W4']['status']=0;
-            $dataSet[$item['naam']]['studentnr']="";
+        
+        $sql="SELECT werkproces, COUNT(*) cnt FROM form f
+            INNER JOIN examen e ON f.examenid=e.id 
+            WHERE e.actief=1
+            GROUP BY 1";
+        $werkproces = Yii::$app->db->createCommand($sql)->queryAll();
+        $werkproces = Arrayhelper::map($werkproces,'werkproces','cnt'); // output [ 'B1-K1-W1' => '3', 'B1-K1-W2' => '2', ... ]
+        
+        $sql="SELECT  s.naam,  f.werkproces, COUNT(distinct g.formid) cnt FROM gesprek g
+            INNER JOIN student s ON s.id=g.studentid
+            INNER JOIN form f ON f.id = g.formid
+            INNER JOIN examen e ON e.id=f.examenid
+            WHERE e.actief=1
+            GROUP BY 1,2
+            ORDER BY 1,2";
+        $progres = Yii::$app->db->createCommand($sql)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
+
+       // dd($werkproces);
+        $wp=[];
+        foreach($werkproces as $key => $value) {
+            $wp[]=$key;
         }
 
-        foreach($result2 as $item) {   
-            if ($item['status'] == 'P') {
-                $dataSet[$item['naam']][$item['werkproces']]['status']=1;
+        $dataSet=[];
+        foreach($progres as $item) { // init
+            foreach($wp as $thisWp) {
+                $dataSet[$item['naam']][$thisWp]['result']=['', ''];
+                $dataSet[$item['naam']][$thisWp]['status']='';
             }
+            $dataSet[$item['naam']]['studentid']="";
+        }
+
+        foreach($progres as $item) {
+            $dataSet[$item['naam']][$item['werkproces']]['status']=$item['cnt'];
         }
 
         foreach($result as $item) {
             $dataSet[$item['naam']][$item['werkproces']]['result']=[ $item['cijfer'], $this->rating($item['cijfer']) ];
-            $dataSet[$item['naam']]['studentnr']=$item['nummer'];
+            $dataSet[$item['naam']]['studentid']=$item['studentid'];
             $dataSet[$item['naam']]['groep']=$item['klas'];
         }
+        //d($wp);
+        //d($werkproces);
+        //dd($dataSet);
 
-        return $this->render('kerntaak1', [
+        return $this->render('resultaat', [
             'dataSet' => $dataSet,
+            'werkproces' =>$werkproces,
+            'wp' => $wp,
         ]);
     }
 
@@ -601,6 +627,12 @@ class QueryController extends Controller
         if ( $cijfer > 8 ) return "G"; 
         if ( $cijfer >= 5.5 ) return "V";
         return "O";
+    }
+
+    function actionResult(){
+        d($id);
+        dd($wp);
+
     }
 
 }

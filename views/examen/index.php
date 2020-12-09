@@ -56,10 +56,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute'=>'otherid',
             'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
           ],
+          // /werkproces/index?WerkprocesSearch[examen_type]=1
+          [
+            'attribute'=>'examen_type',
+            'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
+            'format' => 'raw',
+            'value' => function ($data) {
+              return Html::a($data->examen_type, ['/werkproces/index'],['WerkprocesSearch[examen_type]='=> $data->examen_type,]);
+            },
+          ],
 
           [
             'class' => 'yii\grid\ActionColumn',
-            'contentOptions' => ['style' => 'width:60px;'],
+            'contentOptions' => ['style' => 'width:80px;'],
             'template' => '{view} {update}', 
             'visibleButtons'=>[
               'delete'=> function($model){

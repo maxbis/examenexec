@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Student;
+use app\models\Criterium;
 
 /**
- * StudentSearch represents the model behind the search form of `app\models\Student`.
+ * CriteriumSearch represents the model behind the search form of `app\models\Criterium`.
  */
-class StudentSearch extends Student
+class CriteriumSearch extends Criterium
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class StudentSearch extends Student
     public function rules()
     {
         return [
-            [['id', 'nummer'], 'integer'],
-            [['naam', 'klas', 'locatie'], 'safe'],
+            [['id', 'cruciaal'], 'integer'],
+            [['omschrijving', 'nul', 'een', 'twee', 'drie', 'werkprocesid'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class StudentSearch extends Student
      */
     public function search($params)
     {
-        $query = Student::find();
+        $query = Criterium::find();
 
         // add conditions that should always apply here
 
@@ -59,12 +59,15 @@ class StudentSearch extends Student
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'nummer' => $this->nummer,
+            'cruciaal' => $this->cruciaal,
         ]);
 
-        $query->andFilterWhere(['like', 'naam', $this->naam])
-            ->andFilterWhere(['like', 'klas', $this->klas])
-            ->andFilterWhere(['like', 'locatie', $this->locatie]);
+        $query->andFilterWhere(['like', 'omschrijving', $this->omschrijving])
+            ->andFilterWhere(['like', 'nul', $this->nul])
+            ->andFilterWhere(['like', 'een', $this->een])
+            ->andFilterWhere(['like', 'twee', $this->twee])
+            ->andFilterWhere(['like', 'drie', $this->drie])
+            ->andFilterWhere(['like', 'werkprocesid', $this->werkprocesid]);
 
         return $dataProvider;
     }

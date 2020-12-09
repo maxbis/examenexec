@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Student;
+use app\models\Werkproces;
 
 /**
- * StudentSearch represents the model behind the search form of `app\models\Student`.
+ * WerkprocesSearch represents the model behind the search form of `app\models\Werkproces`.
  */
-class StudentSearch extends Student
+class WerkprocesSearch extends Werkproces
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class StudentSearch extends Student
     public function rules()
     {
         return [
-            [['id', 'nummer'], 'integer'],
-            [['naam', 'klas', 'locatie'], 'safe'],
+            [['id'], 'safe'],
+            [['maxscore', 'examen_type'], 'integer'],
         ];
     }
 
@@ -40,7 +40,7 @@ class StudentSearch extends Student
      */
     public function search($params)
     {
-        $query = Student::find();
+        $query = Werkproces::find();
 
         // add conditions that should always apply here
 
@@ -58,13 +58,11 @@ class StudentSearch extends Student
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'nummer' => $this->nummer,
+            'maxscore' => $this->maxscore,
+            'examen_type' => $this->examen_type,
         ]);
 
-        $query->andFilterWhere(['like', 'naam', $this->naam])
-            ->andFilterWhere(['like', 'klas', $this->klas])
-            ->andFilterWhere(['like', 'locatie', $this->locatie]);
+        $query->andFilterWhere(['like', 'id', $this->id]);
 
         return $dataProvider;
     }

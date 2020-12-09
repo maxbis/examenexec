@@ -64,9 +64,7 @@ use yii\widgets\LinkPager;
         
         <div class="form-group">
         <br>
-        <?php
-            echo Html::a('Cancel', ['/form'], ['class'=>'btn btn-primary']);
-        ?>
+            <?= Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>
         </div>
     </form>
 

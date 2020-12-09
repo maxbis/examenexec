@@ -121,15 +121,6 @@ $barlen2 = max(5,$counts[1]*2);
                 }
             ],
             
-            //'form.nr',
-            //'beoordeling.id',
-            //[
-            //    'label' => 'cnt',
-            //    'value' => function($alleGesprekken) {
-            //        return $alleGesprekken->getBeoordeling()->count();
-            //    }
-            //],
-            
             [
                 'attribute' => 'formid',
                 'label' => 'Gespreksnaam',
@@ -153,12 +144,18 @@ $barlen2 = max(5,$counts[1]*2);
                 }
             ],
             [
+                'attribute' => 'locatie',
+                'contentOptions' => ['style' => 'width:20px;'],
+                'format' => 'raw',
+                'value' => 'student.locatie',
+            ],
+            [
                 'attribute' => 'rolspelerid',
                 'filter' => $rolspelerList,
                 'filterInputOptions' => [
                     'class' => 'form-control',
                     'prompt' => '...'
-                    ],
+                ],
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) use ($rolspelerList) {
                     if ($alleGesprekken->status==0) {

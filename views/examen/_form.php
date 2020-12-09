@@ -16,9 +16,14 @@ use nex\datepicker\DatePicker;
     <?php $form = ActiveForm::begin(); ?>
 
       <div class="row">
-
         <div class="col-sm-4">
           <?= $form->field($model, 'naam')->textInput(['maxlength' => true]) ?>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+            <?= $form->field($model, 'titel')->textInput(['maxlength' => true])->label('Kerntaaknaam (voor op examenbeoordelingsformulier)') ?>
         </div>
       </div>
 
@@ -53,6 +58,12 @@ use nex\datepicker\DatePicker;
       <div class="row">
         <div class="col-sm-4">
           <?= $form->field($model, 'otherid')->textInput(['maxlength' => true])->label('Examenid for export to KTB') ?>
+          </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-sm-4">
+          <?= $form->field($model, 'examen_type')->textInput(['maxlength' => true])->label('Examen Type') ?>
           </div>
       </div>
     

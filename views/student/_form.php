@@ -18,6 +18,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'klas')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Klas') ?>
 
+    <?= $form->field($model, 'locatie')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Locatie') ?>
+
     <?= HTMLInclude('formSave') ?>
     
     <?php ActiveForm::end(); ?>

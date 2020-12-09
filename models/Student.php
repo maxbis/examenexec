@@ -34,6 +34,7 @@ class Student extends \yii\db\ActiveRecord
             [['nummer'], 'integer', 'max' => 9999999 ],
             [['naam'], 'string', 'max' => 30],
             [['klas'], 'string', 'max' => 2],
+            [['locatie'], 'string', 'max' => 6],
         ];
     }
 
@@ -47,6 +48,7 @@ class Student extends \yii\db\ActiveRecord
             'nummer' => 'Nummer',
             'naam' => 'Naam',
             'klas' => 'Klas',
+            'locatie' => 'Locatie',
         ];
     }
 

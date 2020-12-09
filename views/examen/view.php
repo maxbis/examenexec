@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'naam',
+            'titel',
             'actief',
             'datum_start',
             'datum_eind',

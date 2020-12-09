@@ -111,20 +111,29 @@ class BeoordelingController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionFormpost($totaalString, $statusString, $gesprekid, $formId, $studentid, $studentnr, $rolspelerid, $opmerking)
+    public function actionFormpost($resultsString, $gesprekid, $formId, $studentid, $studentnr, $rolspelerid, $opmerking)
     {
-        // $totaalString contains the values of the answers 1|3|2 (1 point, 3 points, 2 points for question 1,2,and 3)
-        // $statusString contains the answers 1|3|2 (Yes, No, Sometimes, for question 1,2,and 3)
+        // answerString: 1-51-1-6|2-52-1-6|......
+
+        $answerStrings=explode("|",$resultsString); // [ 1-51-1-6, 2-52-1-6, ... ] 
+        $answer=[];
+        $points=[];
+        foreach($answerStrings as $answerString) {
+            $answerItem=explode("-",$answerString); // [ 1, 51, 1, 6] - antwoord teller, vraag id, antwoord (1,2, of 3), points
+            $number[$answerItem[0]]=$answerItem[1];
+            $answer[$answerItem[1]]=$answerItem[2];
+            $points[$answerItem[1]]=$answerItem[3];
+        }
+
         $result = [ 'studentid' => $studentid,
                     'studentnr' => $studentnr,
                     'formid' => $formId,
                     'rolspelerid' => $rolspelerid,
-                    'answers' => explode("|",$statusString),
-                    'points' => explode("|",$totaalString),
-                    'totaalscore' => max( array_sum(explode("|",$totaalString)), 0) ]; // min score is 0
-        // ToDo hier moeten een mapping worden gemaakt tussen vragen en remote id
-        // dus alle antwoorden moeten hier worden doorlopen om de punten per mapping te maken.
-        // easiest is om alle foreign id's as hidden form variabele mee te sturen
+                    'number' => $number,
+                    'answers' =>  $answer,
+                    'points' => $points,
+                    'totaalpoints' => max( array_sum($points), 0) // min 0
+                ]; 
 
         $model = new Beoordeling();
         $model->gesprekid = $gesprekid;
@@ -134,22 +143,36 @@ class BeoordelingController extends Controller
         $model->rolspelerid = $rolspelerid;
         $model->resultaat = json_encode($result);
 
-        // JSON example: {"studentid":"5","studentnr":"2081428","formid":"1","rolspelerid":"7","answers":["1","1","1","1","1","1","1","1","1"],"points":["10","5","5","5","5","5","5","10","0"],"totaalscore":50}
+        // JSON example: {"studentid":"5","studentnr":"2081428","formid":"1","rolspelerid":"7","answers":["51":"1",....],"points":["10",....],"totaalscore":50}
         $sql="delete from results where studentid=:studentid and formid=:formid";
         $params = [ ':studentid'=> $studentid,  ':formid'=> $formId, ];
         $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-
-        for($i=0; $i<count($result['answers']); $i++) {
-
-            $sql="insert into results (studentid, formid, vraagnr, antwoordnr, score)
-                    values(:studentid, :formid, :vraagnr, :antwoordnr, :score)";
+        
+        foreach ( $result['number'] as $key => $value ) {
+            $sql="insert into results (studentid, formid, vraagid, vraagnr, antwoordnr, score)
+                    values(:studentid, :formid, :vraagid, :vraagnr, :antwoordnr, :score)";
             $params = [ 'studentid'=> $studentid,
                         ':formid'=> $formId,
-                        ':vraagnr'=> $i+1,  // vraag starts counting at 1
-                        ':antwoordnr'=> $result['answers'][$i],
-                        ':score'=> $result['points'][$i] ];
+                        ':vraagid'=> $value,
+                        ':vraagnr'=> $key, 
+                        ':antwoordnr'=> $result['answers'][$value],
+                        ':score'=> $result['points'][$value],
+                    ];
             $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
         }
+        
+        //dd($result);
+        //for($i=0; $i<count($result['answers']); $i++) {
+
+        //    $sql="insert into results (studentid, formid, vraagid, antwoordnr, score)
+        //            values(:studentid, :formid, :vraagnr, :antwoordnr, :score)";
+        //    $params = [ 'studentid'=> $studentid,
+        //                ':formid'=> $formId,
+        //                ':vraagnr'=> $i+1,  // vraag starts counting at 1
+        //                ':antwoordnr'=> $result['answers'][$i],
+        //                ':score'=> $result['points'][$i] ];
+        //    $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+        //}
         // END update resutls in table
 
         // delete old beoordeling

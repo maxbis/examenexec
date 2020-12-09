@@ -32,7 +32,7 @@ class Gesprek extends \yii\db\ActiveRecord
         return [
             [['formid', 'studentid'], 'required'],
             [['formid', 'rolspelerid', 'studentid', 'status', 'statusstudent'], 'integer'],
-            [['created'], 'safe'],
+            [['created',   ], 'safe'],
             [['opmerking'], 'string', 'max' => 200],
             [['studentid'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['studentid' => 'id']],
             [['rolspelerid'], 'exist', 'skipOnError' => true, 'targetClass' => Rolspeler::className(), 'targetAttribute' => ['rolspelerid' => 'id']],

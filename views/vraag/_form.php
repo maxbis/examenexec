@@ -18,20 +18,37 @@ use yii\helpers\ArrayHelper;
         echo $form->field($model, 'formid')->dropDownList($itemList,['prompt'=>'Please select']);
     ?>
 
-    <?= $form->field($model, 'volgnr')->textInput() ?>
+    <?= $form->field($model, 'volgnr')->textInput(['style'=>'width:200px']) ?>
 
     <?= $form->field($model, 'vraag')->textInput() ?>
 
     <?= $form->field($model, 'toelichting')->textInput(['maxlength' => true])->textArea( ['style'=>'width:800px'] ) ?>
 
-    <?= $form->field($model, 'ja')->textInput()->label('Ja-punten') ?>
+    <!--
+    <div class="row">
+        <div class="col-sm-5">
+            <?= $form->field($model->criterium, 'omschrijving')->textInput(['readonly'=>true, 'style'=>'width:300px'])->label('Current Criterium Omschrijving') ?>
+        </div>
+        <div class="col-sm-5">
+            <?= $form->field($model, 'mappingid')->textInput(['readonly'=>true, 'style'=>'width:150px'])->label('current mappingid') ?>
+        </div>
+    </div>
+    -->
 
-    <?= $form->field($model, 'soms')->textInput()->label('Soms-punten') ?>
+    <?= $form->field($model, 'mappingid')->dropDownList(ArrayHelper::map($criterium,'id','omschrijving'), ['prompt'=>'...', 'style'=>'width:400px'])->label('Vraag hoort bij SPL Rubic'); ?>
 
-    <?= $form->field($model, 'nee')->textInput()->label('Nee-punten') ?>
-
-    <?= $form->field($model, 'mappingid')->textInput()->label('mappingid') ?>
-
+    <br>
+    <div class="row">
+        <div class="col-sm-2"> 
+            <?= $form->field($model, 'ja')->textInput(['style'=>'width:120px'])->label('Ja-punten') ?>
+        </div>
+        <div class="col-sm-2"> 
+            <?= $form->field($model, 'soms')->textInput(['style'=>'width:120px'])->label('Soms-punten') ?>
+        </div>
+        <div class="col-sm-2"> 
+            <?= $form->field($model, 'nee')->textInput(['style'=>'width:120px'])->label('Nee-punten') ?>
+        </div>
+    </div>
     <?= HTMLInclude('formSave') ?>
 
     <?php ActiveForm::end(); ?>

@@ -8,21 +8,21 @@ use yii\widgets\LinkPager;
     var val;
         // get list of radio buttons with specified name
         var radios = document.getElementById("myForm");
-        var totaalString = "";
-        var statusString = "";
+        var resultsString = "";
+        var answerString = "";
 
         // loop through list of radio buttons
         for (var i=0; i < radios.length; i++) {
             if ( radios[i].checked ) { // radio checked?
-                totaalString += radios[i].value + "|";
-                statusString += radios[i].id.split("-",1) + "|"; // value of radiobutton is answer-vraagnr
+                resultsString += radios[i].value + "|";
+                answerString += radios[i].id.split("-",1) + "|"; // value of radiobutton is answer-vraagnr
             }
         }
-        totaalString = totaalString.slice(0,-1);
-        statusString = statusString.slice(0,-1);
+        resultsString = resultsString.slice(0,-1);
+        answerString = answerString.slice(0,-1);
         //alert(statusString);
-        document.getElementById("totaalString").value = totaalString;
-        document.getElementById("statusString").value = statusString;
+        document.getElementById("resultsString").value = resultsString;
+        document.getElementById("answerString").value = answerString;
         return true; // don't submit the form
     }
 </script>
@@ -83,8 +83,8 @@ use yii\widgets\LinkPager;
 
     <form action=<?= $action ?> onsubmit="return result()" method="get" id="myForm">
 
-        <input type="hidden" id="totaalString" name="totaalString" value="-">
-        <input type="hidden" id="statusString" name="statusString" value="-">
+        <input type="hidden" id="resultsString" name="resultsString" value="-">
+        <input type="hidden" id="answerString" name="answerString" value="-">
         <input type="hidden" id="studentid" name="studentid" value=<?= $studentId ?> >
         <input type="hidden" id="studentnr" name="studentnr" value=<?= $studentNr ?> >
         <input type="hidden" id="rolspelerid" name="rolspelerid" value=<?= $rolspeler->id ?> >
@@ -101,19 +101,19 @@ use yii\widgets\LinkPager;
             <th scope="col" style="width: 80px;">Soms/Beetje</th>
             <th scope="col" style="width: 80px;">Nee</th>
         </tr>
-            
             <?php foreach ($vragen as $item): ?>
+                <?php $resultaat ? $thisAnswer=array_shift($resultaat) :  $thisAnswer=0;  ?>
                 <tr>
                     <td><?= $item->volgnr ?></td>
                     <td colspan=2><?= $item->vraag ?></td>
                     
-                    <td><input type="radio" id="1-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->ja ?>" required></td>
+                    <td><input type="radio" id="1-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-1-'.$item->ja ?>" required <?= ($thisAnswer==1) ? 'checked' : '' ?>></td>
                         <?php if ( isset($item->soms) ) : ?>
-                            <td><input type="radio" id="2-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->soms ?>"></label></td>
+                            <td><input type="radio" id="2-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-2-'.$item->soms ?>" <?= ($thisAnswer==2) ? 'checked' : '' ?> ></label></td>
                         <?php else: ?>
                             <td>nvt</td>
                         <?php endif; ?>
-                    <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></label></td>
+                    <td><input type="radio" id="3-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-3-'.$item->nee ?>" <?= ($thisAnswer==3) ? 'checked' : '' ?> ></label></td>
                 </tr>
                 <?php if ( $item->toelichting != "" ): ?>
                     <tr>
@@ -129,8 +129,7 @@ use yii\widgets\LinkPager;
         <div class="custom-control custom-radio">
 
         <b>Opmerkingen</b><br>
-
-        <textarea rows="4" cols="100" name="opmerking" form="myForm"></textarea>
+        <textarea rows="4" cols="100" name="opmerking" form="myForm"><?= isset($beoordeling->opmerking) ? $beoordeling->opmerking : '' ?></textarea>
 
         <br>
         
