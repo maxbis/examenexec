@@ -92,40 +92,32 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     echo $naam."</td>";
  
                     foreach($wp as $thisWp) {
-                        //echo "<td class=\"even\"><a href=".$KTB."?code=B1-K1-W1&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value[$thisWp]['result'][0]."</a></td>";
                         echo "<td class=\"even\">"; 
                         echo Html::a($value[$thisWp]['result'][0], ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
                         echo "</td>";
                     }
-                    //echo "<td class=\"uneven\"><a href=".$KTB."?code=B1-K1-W1&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W1']['result'][0]."</a></td>";
-                    //echo "<td class=\"even\"><a href=".$KTB."?code=B1-K1-W2&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W2']['result'][0]."</a></td>";
-                    //echo "<td class=\"uneven\"><a href=".$KTB."?code=B1-K1-W3&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W3']['result'][0]."</a></td>";
-                    //echo "<td class=\"even\"><a href=".$KTB."?code=B1-K1-W4&examen=".$examenid."&studentnr=".$value['studentnr'].">".$value['B1-K1-W4']['result'][0]."</a></td>";
                     echo "<td>&nbsp;</td>";
                     foreach($wp as $thisWp) {
                         echo "<td class=\"even\">".$value[$thisWp]['result'][1]."</td>";
                     }
-                    //echo "<td class=\"uneven\">".$value['B1-K1-W1']['result'][1]."</td>";
-                    //echo "<td class=\"even\">".$value['B1-K1-W2']['result'][1]."</td>";
-                    //echo "<td class=\"uneven\">".$value['B1-K1-W3']['result'][1]."</td>";
-                    //echo "<td class=\"even\">".$value['B1-K1-W4']['result'][1]."</td>";
                     echo "<td>&nbsp;</td>";
                     foreach($wp as $thisWp) {
                         echo "<td class=\"even\">"; 
-                        echo $value[$thisWp]['status']==$formWpCount[$thisWp] ? "<span class=\"glyphicon glyphicon-check\"></span>" : $value[$thisWp]['status'];
+                        if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>";
+                        elseif ( $value[$thisWp]['status']==99 ) echo "<span class=\"glyphicon glyphicon-check\"></span>";
+                        else echo "<div class=\"text-info\">".$value[$thisWp]['status']."</div>";
                     }
-                    //echo "</td>";
-                    //echo "<td class=\"even\">"; 
-                    //echo $value['B1-K1-W2']['status'] ? "<span class=\"glyphicon glyphicon-check\"></span>" : '-';
-                    //echo "</td>";
-                    //echo "<td class=\"uneven\">"; 
-                    //echo $value['B1-K1-W3']['status'] ? "<span class=\"glyphicon glyphicon-check\"></span>" : '-';
-                    //echo "</td>";
-                    //echo "<td class=\"even\">"; 
-                    //echo $value['B1-K1-W4']['status'] ? "<span class=\"glyphicon glyphicon-check\"></span>" : '-';
                     echo "</td>";
                     echo "<td>";
-                    if ( $value['B1-K1-W1']['status'] && $value['B1-K1-W2']['status'] && $value['B1-K1-W3']['status'] && $value['B1-K1-W4']['status'] ) {
+                    $print=true;
+                    foreach($wp as $thisWp) {
+                        if ( $value[$thisWp]['status'] != 99 ) {
+                            $print=false;
+                            break;
+                        }
+                    }
+
+                    if ( $print ) {
                         echo "<a href=\"http://vps789715.ovh.net/KerntaakBeoordelingen/print.php?print=print&studentnummer=".$value['studentid']."&toonStudent&examen=".$examenid."\"><span class=\"glyphicon glyphicon-print\"></span></a>";
                     } else {
                         echo "<span title=\"Print beschikbaar als alle vier de werkprocessen print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";

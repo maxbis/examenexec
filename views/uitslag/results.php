@@ -51,8 +51,8 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
                 <div class="col-sm-5">Beoordelaar 2</div>
             </li>
             <li class="list-group-item">
-                <div class="col-sm-5"><?= $form->field($model, 'beoordeelaar2id')->dropDownList($rolspelerList,['prompt'=>'Please select'])->label(false) ?></div>
                 <div class="col-sm-5"><?= $form->field($model, 'beoordeelaar1id')->dropDownList($rolspelerList,['prompt'=>'Please select'])->label(false) ?></div>
+                <div class="col-sm-5"><?= $form->field($model, 'beoordeelaar2id')->dropDownList($rolspelerList,['prompt'=>'Please select'])->label(false) ?></div>
             </li>
         </ul>
     </div>
@@ -63,50 +63,51 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
             <thead>
                 <tr>
                     <th></th>
-                    <th></th>
+                    <th>punten</th>
                     <th class="text-center">0</th>
                     <th class="text-center">1</th>
                     <th class="text-center">2</th>
-                    <th class="text-center">3</th
+                    <th class="text-center">3</th>
                 </tr> 
             </thead>
 
         <?php
+            $total=0;
+            $result=[];
+            foreach($results as $item) {
 
-        $total=0;
-        foreach($results as $item) {
+                $uitslag=round($item['score']/10);
+                $total+=$uitslag;
+                $uitslag=max(0,$uitslag);
+                $resultaat[ $item['mappingid'] ]=$uitslag;
 
-            $uitslag=round($item['score']/10);
-            $total+=$uitslag;
-            $uitslag=max(0,$uitslag);
+                if ($item['cruciaal']) {
+                    $bgcolor=['#F0F0F0','#F0F0F0','#F0F0F0','#F0F0F0','#F0F0F0'];
+                } else {
+                    $bgcolor=['#FFFFFF','#FFFFFF','#FFFFFF','#FFFFFF','#FFFFFF'];
+                }
+                if ($item['cruciaal'] && $uitslag==0 ) {
+                    $bgcolor[$uitslag]='#ff9e9e'; 
+                } else {
+                    $bgcolor[$uitslag]='#d5f7ba'; 
+                }
+            
 
-            if ($item['cruciaal']) {
-                $bgcolor=['#F0F0F0','#F0F0F0','#F0F0F0','#F0F0F0','#F0F0F0'];
-            } else {
-                $bgcolor=['#FFFFFF','#FFFFFF','#FFFFFF','#FFFFFF','#FFFFFF'];
+                echo "<tr>";
+                echo "<td width=30px class=\"text-muted\"><small>".$item['score']."</small></td>";
+                // echo "<td width=80px bgcolor=".$bgcolor[4].">".$item['cnaam']."<hr>".$item['fnaam'].$item['formid'].'-'.$item['studentid']."</td>";
+                echo "<td width=80px bgcolor=".$bgcolor[4].">".Html::a( $item['cnaam'], ['uitslag/get-form', 'studentid'=>$item['studentid'], 'formid'=>$item['formid'] ])."</td>";
+                echo "<td width=80px bgcolor=".$bgcolor[0]." >".$item['nul']."</td>";
+                echo "<td width=80px bgcolor=".$bgcolor[1]." >".$item['een']."</td>";
+                echo "<td width=80px bgcolor=".$bgcolor[2]." >".$item['twee']."</td>";
+                echo "<td width=80px bgcolor=".$bgcolor[3]." >".$item['drie']."</td>";
+                echo "</tr>";
             }
-            if ($item['cruciaal'] && $uitslag==0 ) {
-                $bgcolor[$uitslag]='#ff9e9e'; 
-            } else {
-                $bgcolor[$uitslag]='#d5f7ba'; 
-            }
-           
-
-            echo "<tr>";
-            echo "<td width=30px>".$item['score']."</td>";
-            // echo "<td width=80px bgcolor=".$bgcolor[4].">".$item['cnaam']."<hr>".$item['fnaam'].$item['formid'].'-'.$item['studentid']."</td>";
-            echo "<td width=80px bgcolor=".$bgcolor[4].">".Html::a( $item['cnaam'], ['uitslag/get-form', 'studentid'=>$item['studentid'], 'formid'=>$item['formid'] ])."</td>";
-            echo "<td width=80px bgcolor=".$bgcolor[0]." >".$item['nul']."</td>";
-            echo "<td width=80px bgcolor=".$bgcolor[1]." >".$item['een']."</td>";
-            echo "<td width=80px bgcolor=".$bgcolor[2]." >".$item['twee']."</td>";
-            echo "<td width=80px bgcolor=".$bgcolor[3]." >".$item['drie']."</td>";
-            echo "</tr>";
-        }
+            $resultaat_json=json_encode($resultaat);
         ?>
    </table>
 
     <hr>
-
     
     <div class="card" style="width: 18rem;"><div class="card-body">
     <h5 class="card-header"><u>Cijfertabel</u></h5>
@@ -140,8 +141,8 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
     </div></div>
 
     <br>
-
     <br>
+
     <div class="uitslag-form">
 
         <div class="row">

@@ -96,10 +96,12 @@ class UitslagController extends Controller
 
         $formWpCount = $this->formWpCount();
         
-        $sql="SELECT  s.naam,  f.werkproces, COUNT(distinct g.formid) cnt FROM gesprek g
+        $sql="SELECT  s.naam,  f.werkproces, COUNT(distinct g.formid) cnt, u.ready ready
+            FROM gesprek g
             INNER JOIN student s ON s.id=g.studentid
             INNER JOIN form f ON f.id = g.formid
             INNER JOIN examen e ON e.id=f.examenid
+            LEFT JOIN uitslag u ON u.studentid=g.studentid AND u.werkproces=f.werkproces
             WHERE e.actief=1
             GROUP BY 1,2
             ORDER BY 1,2";
@@ -121,7 +123,12 @@ class UitslagController extends Controller
         }
 
         foreach($progres as $item) {
-            $dataSet[$item['naam']][$item['werkproces']]['status']=$item['cnt'];
+            if ( $item['ready'] ) {
+                $dataSet[$item['naam']][$item['werkproces']]['status']=99;
+            } else {
+                $dataSet[$item['naam']][$item['werkproces']]['status']=$item['cnt'];
+            }
+           
         }
 
         foreach($result as $item) {
@@ -162,7 +169,7 @@ class UitslagController extends Controller
         $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
 
         $sql="
-            SELECT  v.mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,  c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
+            SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam, c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
             FROM results r
             INNER JOIN form f ON f.id=r.formid
             INNER JOIN vraag v ON v.id=r.vraagid
