@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\ActiveForm;
+
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\CriteriumSearch */
@@ -10,6 +13,10 @@ use yii\grid\GridView;
 $this->title = $werkproces['id'].' '.$werkproces['titel'];
 $this->params['breadcrumbs'][] = $this->title;
 //dd($student);
+
+$form = ActiveForm::begin(['action' => 'update',]);
+$rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
+
 ?>
 <div class="criterium-index">
 
@@ -18,17 +25,36 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <br>
 
-    <div class="card" style="width: 40rem;"><div class="card-body">
-    <h4 class="card-header">Persoonsgegevens</h4>
-        <table border=0 class="table">
-            <tr> <td>Datum</td ><td><?= $examen['datum_start'].' t/m '.$examen['datum_eind'] ?></td> </tr>
-            <tr> <td>Kandidaat</td> <td><?= $student['naam'] ?></td> </tr>
-            <tr> <td>Leerlingnummer</td> <td><?=$student['nummer'] ?></td> </tr>
-            <tr> <td>Klas</td> <td><?=$student['klas'] ?></td></tr>
-            <tr><td>Beoordelaar1</td><td></td></tr>
-            <tr><td>Beoordelaar2</td><td></td></tr>
-        </table>
-    </div>
+    <div class="card" style="width: 40rem;">
+        <div class="card-body">
+            <h4 class="card-header">Persoonsgegevens</h4>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="col-sm-5">Datum</div>
+                <div class="col-sm-5"><?= $examen['datum_start'].' t/m '.$examen['datum_eind'] ?></div>
+            </li>
+            <li class="list-group-item">
+                <div class="col-sm-5">Kandidaat</div>
+                <div class="col-sm-5"><?= $student['naam'] ?></div>
+            </li>
+            <li class="list-group-item">
+                <div class="col-sm-5">Leerlingnummer</div>
+                <div class="col-sm-5"><?= $student['nummer'] ?></div>
+            </li>
+            <li class="list-group-item">
+                <div class="col-sm-5">Klas</div>
+                <div class="col-sm-5"><?= $student['klas'] ?></div>
+            </li>
+            <li class="list-group-item">
+                <div class="col-sm-5">Beoordelaar 1</div>
+                <div class="col-sm-5">Beoordelaar 2</div>
+            </li>
+            <li class="list-group-item">
+                <div class="col-sm-5"><?= $form->field($model, 'beoordeelaar2id')->dropDownList($rolspelerList,['prompt'=>'Please select'])->label(false) ?></div>
+                <div class="col-sm-5"><?= $form->field($model, 'beoordeelaar1id')->dropDownList($rolspelerList,['prompt'=>'Please select'])->label(false) ?></div>
+            </li>
+        </ul>
     </div>
     
     <br><hr>
@@ -46,11 +72,6 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
 
         <?php
-
-        // klopt niet: count forms versus count SPL vragen!
-        //if ( $formWpCount[$werkproces['id']] != count($results) ) {
-        //    dd([ $formWpCount[$werkproces['id']], count($results) ]);
-        //}
 
         $total=0;
         foreach($results as $item) {
@@ -73,8 +94,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             echo "<tr>";
             echo "<td width=30px>".$item['score']."</td>";
-            echo "<td width=80px bgcolor=".$bgcolor[4].">".$item['cnaam']."<hr>".$item['fnaam']."</td>";
-
+            // echo "<td width=80px bgcolor=".$bgcolor[4].">".$item['cnaam']."<hr>".$item['fnaam'].$item['formid'].'-'.$item['studentid']."</td>";
+            echo "<td width=80px bgcolor=".$bgcolor[4].">".Html::a( $item['cnaam'], ['uitslag/get-form', 'studentid'=>$item['studentid'], 'formid'=>$item['formid'] ])."</td>";
             echo "<td width=80px bgcolor=".$bgcolor[0]." >".$item['nul']."</td>";
             echo "<td width=80px bgcolor=".$bgcolor[1]." >".$item['een']."</td>";
             echo "<td width=80px bgcolor=".$bgcolor[2]." >".$item['twee']."</td>";
@@ -85,11 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
    </table>
 
     <hr>
-    Totale score: <?= $total; ?>
-    <br>
-    Werkproces maximale score: <?= $werkproces['maxscore']; ?>
-    <br>
-    <hr>
+
     
     <div class="card" style="width: 18rem;"><div class="card-body">
     <h5 class="card-header"><u>Cijfertabel</u></h5>
@@ -123,12 +140,35 @@ $this->params['breadcrumbs'][] = $this->title;
     </div></div>
 
     <br>
+
     <br>
-    motivatie<br>
-    drop down Beoordelaar1<br>
-    drop down Beoordelaar2<br>
-    <br>
-    button ready for print<br>
+    <div class="uitslag-form">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <?= $form->field($model, 'commentaar')->textarea(['rows' => 6])->label('Motivatie') ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <?= $form->field($model, 'ready')->checkbox() ?>
+            </div>
+        </div>
+
+        <?= $form->field($model, 'resultaat')->hiddenInput()->label(false) ?>
+        <?= $form->field($model, 'studentid')->hiddenInput()->label(false) ?>
+        <?= $form->field($model, 'werkproces')->hiddenInput()->label(false) ?>
+        <?= $form->field($model, 'examenid')->hiddenInput()->label(false) ?>
+        <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
+
+        <div class="form-group">
+            <?= Html::submitButton('&nbsp;&nbsp;Save&nbsp;&nbsp;', ['class' => 'btn btn-success']) ?>
+        </div>
+
+    <?php ActiveForm::end(); ?>
+
+    </div>
 
 </div>
 

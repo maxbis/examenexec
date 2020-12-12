@@ -29,10 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width:60px;'],
             ],
             [   'attribute'=>'klas',
-            'contentOptions' => ['style' => 'width:60px;'],
+                'contentOptions' => ['style' => 'width:60px;'],
             ],
             [   'attribute'=>'locatie',
-            'contentOptions' => ['style' => 'width:60px;'],
+                'contentOptions' => ['style' => 'width:60px;'],
             ],
             [
                 'attribute'=>'naam',

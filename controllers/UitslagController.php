@@ -11,6 +11,9 @@ use app\models\Examen;
 use app\models\Werkproces;
 use app\models\Student;
 use app\models\Results;
+use app\models\Gesprek;
+use app\models\Uitslag;
+use app\models\Rolspeler;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -102,7 +105,7 @@ class UitslagController extends Controller
             ORDER BY 1,2";
         $progres = Yii::$app->db->createCommand($sql)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
 
-       // dd($werkproces);
+        //dd($progres);
         $wp=[];
         foreach($formWpCount as $key => $value) {
             $wp[]=$key;
@@ -159,7 +162,7 @@ class UitslagController extends Controller
         $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
 
         $sql="
-            SELECT  v.mappingid, r.formid, f.omschrijving fnaam,  c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
+            SELECT  v.mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,  c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
             FROM results r
             INNER JOIN form f ON f.id=r.formid
             INNER JOIN vraag v ON v.id=r.vraagid
@@ -168,34 +171,70 @@ class UitslagController extends Controller
             WHERE e.actief=1
             AND r.studentid=:studentid
             AND f.werkproces=:werkproces
-            GROUP BY 1,2,3,4,5,6,7,8,9
+            GROUP BY 1,2,3,4,5,6,7,8,9,10
             ORDER BY 1,2
         ";
-        $params = [':studentid'=> $studentid,'werkproces'=>$wp];
+        $params = [':studentid'=> $studentid,':werkproces'=>$wp];
         $results = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
 
         //dd($results);
 
+        $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp], ['examenid'=>$examen['id']] ])->one();
+
+        $rolspelers = Rolspeler::find()->where(['actief'=>1])->orderBy(['naam'=>SORT_ASC])->all();
+
+        if (! $uitslag ) { // if uitslag is not checked/ready or empty, get all remarks
+            $uitslag = new Uitslag();
+            $sql="
+                SELECT GROUP_CONCAT(CONCAT('[',f.omschrijving,']: ', opmerking, '\n')) opmerkingen
+                FROM beoordeling b
+                INNER JOIN form f ON f.id=b.formid
+                INNER JOIN examen e ON e.id = f.examenid
+                WHERE studentid=:studentid
+                AND f.werkproces=:werkproces
+                AND opmerking != '';
+            ";
+            $params = [':studentid'=> $studentid,':werkproces'=>$wp];
+            $commentaar = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll()[0]['opmerkingen'];
+            $uitslag->commentaar = str_replace(',[', '[', $commentaar);
+            $uitslag->studentid = $studentid;
+            $uitslag->werkproces = $wp;
+            $uitslag->examenid = $examen['id'];
+        }
+
         return $this->render('results', [
             'examen' => $examen,
             'werkproces' =>$werkproces,
-            'formWpCount' =>  $this->formWpCount(), // formcount per wp
             'student' => $student,
             'results' => $results, 
+            'model' => $uitslag,
+            'rolspelers' => $rolspelers,
         ]);
-
-        //$beoordeling=Beoordeling::find()->select('formid, opmerking')->joinWith('form')->where(['beoordeling.studentid'=>$student])->andWhere(['form.werkproces'=>$wp])->asArray()->all();
-
-        //foreach($beoordeling as $form) {
-            
-        //}
-
-        dd($beoordeling);
-
-        d($student);
-        dd($wp);
 
     }
 
+    // with studentid and formid get the most recent gesprek
+    function actionGetForm($studentid, $formid) {
+        $gesprek = Gesprek::find()->Where(['formid'=>$formid])->andWhere(['studentid'=>$studentid])->orderby(['id' => 'SORT_DESC'])->asArray()->one();
+        return $this->redirect(['/vraag/form', 'gesprekid'=>$gesprek['id'] , 'compleet'=>1]);
+    }
+
+    function actionUpdate() {
+        $postedModel = new Uitslag();
+
+        $postedModel->load(Yii::$app->request->post());
+        if ( $postedModel->id ) {
+            $model = Uitslag::findOne($postedModel->id);
+            $model->load(Yii::$app->request->post());
+        } else {
+            $model = $postedModel;
+        }
+
+        if ($model->save()) {
+            return $this->redirect(['index']);
+        } else {
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+    }
 }
 
