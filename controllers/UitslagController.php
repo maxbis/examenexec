@@ -204,6 +204,21 @@ class UitslagController extends Controller
             $params = [':studentid'=> $studentid,':werkproces'=>$wp];
             $commentaar = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll()[0]['opmerkingen'];
             $uitslag->commentaar = str_replace(',[', '[', $commentaar);
+
+            $sql="
+                SELECT rolspelerid
+                FROM gesprek g
+                INNER JOIN form f ON f.id=g.formid
+                WHERE studentid=:studentid
+                AND werkproces=:werkproces
+                ORDER BY g.id DESC
+                LIMIT 1
+            ";
+            $params = [':studentid'=> $studentid,':werkproces'=>$wp];
+            $rolspeler1 = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll()[0]['rolspelerid'];
+            $uitslag->beoordeelaar1id = $rolspeler1;
+            //dd($rolspeler1);
+           
             $uitslag->studentid = $studentid;
             $uitslag->werkproces = $wp;
             $uitslag->examenid = $examen['id'];
