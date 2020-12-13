@@ -103,7 +103,8 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
                 echo "<td width=80px bgcolor=".$bgcolor[3]." >".$item['drie']."</td>";
                 echo "</tr>";
             }
-            $resultaat_json=json_encode($resultaat);
+
+            $model->resultaat=json_encode($resultaat);
         ?>
    </table>
 

@@ -163,6 +163,7 @@ class UitslagController extends Controller
         return "O";
     }
 
+    // show filled in (SPL) form for 2nd beoordeelaar (form is HTML variant of the fial PDF version)
     function actionResult($studentid, $wp){
         $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
         $werkproces=Werkproces::find()->where(['id'=>$wp])->asArray()->one();

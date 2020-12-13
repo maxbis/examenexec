@@ -3,13 +3,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 $nr=0;
-$examenid=12;
 
-if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
-    $KTB="http://localhost/KerntaakBeoordelingen/werkproces.php";
-} else {
-    $KTB="http://vps789715.ovh.net/KerntaakBeoordelingen/werkproces.php";
-}
 ?>
 
 <style>
@@ -90,7 +84,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                         echo "<td>";
                     }
                     echo $naam."</td>";
- 
+
                     foreach($wp as $thisWp) {
                         echo "<td class=\"even\">"; 
                         echo Html::a($value[$thisWp]['result'][0], ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
@@ -118,7 +112,7 @@ if ( $_SERVER['REMOTE_ADDR'] == '::1' ){
                     }
 
                     if ( $print ) {
-                        echo "<a href=\"http://vps789715.ovh.net/KerntaakBeoordelingen/print.php?print=print&studentnummer=".$value['studentid']."&toonStudent&examen=".$examenid."\"><span class=\"glyphicon glyphicon-print\"></span></a>";
+                        echo Html::a("<span class=\"glyphicon glyphicon-print\"></span>", ['/print/index', 'id'=>$dataSet[$naam]['studentid'] ]);
                     } else {
                         echo "<span title=\"Print beschikbaar als alle vier de werkprocessen print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";
                     }

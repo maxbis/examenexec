@@ -9,7 +9,11 @@ use yii\filters\VerbFilter;
 
 use yii\filters\AccessControl;
 
-
+use app\models\Examen;
+use app\models\Werkproces;
+use app\models\Student;
+use app\models\Uitslag;
+use app\models\Criterium;
 
 class PrintController extends Controller
 {
@@ -42,13 +46,75 @@ class PrintController extends Controller
         ];
     }
 
-    public function actionIndex() {
+    public function actionIndex($id) {
         //dd('');
         $pdf = new PDF();
+        
         $pdf->SetAutoPageBreak(true, 10);
         $pdf->AddPage(); //maak een lege pagina
         $pdf->Ln(10);
-        $pdf->pdfHeader();
+
+        if ($id==-99) { // secret code to print all, to be tested
+            $sql="
+                SELECT studentid FROM uitslag
+                WHERE ready=1
+                GROUP BY studentid HAVING COUNT(*)=(
+                    SELECT COUNT(*) FROM werkproces w
+                    INNER JOIN examen e ON e.examen_type=w.examen_type
+                    WHERE e.actief=1
+                    )
+            ";
+            $studentenids=Yii::$app->db->createCommand($sql)->queryAll();
+        } else {
+            $studentenids[]=$id;  
+        }
+
+        foreach($studentenids as $studentid) {
+            $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
+            $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
+            $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
+        
+
+            foreach ($werkproces as $wp) {
+                $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->one();
+                $criterium=Criterium::find()->where(['werkprocesid'=>$wp['id']])->orderBy(['id'=>'ASC'])->asArray()->all();
+                // dd($criterium);
+                $resultaat=json_decode($uitslag->resultaat, true);
+                
+                // Header - 2 regels
+                $pdf->pdfHeader( substr($wp['id'],0,5).' '.$examen['titel'], $wp['id'].' '.$wp['titel'] );
+                
+                // Persoongegevens - table
+                $pdf->persoonsgegevens($student, [$uitslag->rolspeler1->naam, $uitslag->rolspeler2->naam], $examen);
+                
+                // Beoodelingscriteria matrix - TODO return value weg
+                $score=$pdf->beoordelingOpdracht($criterium, $resultaat);
+
+                // Beslissing - text regel
+                $pdf->Ln(10);
+                $pdf->SetFont('Arial','',20);
+                $pdf->Cell(80);
+                $pdf->Cell(20,10,"Beslissing " . $wp['id'],0,0,"C");
+
+                //cruciale criteria
+                $pdf->Ln(10);
+                $pdf->SetFont('Arial','',10);
+                $gezakt = $pdf->cruciaal($criterium, $resultaat);
+
+                $pdf->cijferTabel($score, $wp['maxscore']);
+
+                $pdf->motivatie($uitslag['commentaar']);
+
+                $pdf->handtekening($uitslag->rolspeler1->naam, $uitslag->rolspeler2->naam);
+
+                $pdf->AddPage();
+                $pdf->Ln(10);
+
+            } // end all workpocesse for one id
+        } // end all id's
+
+        $pdf->Output();
+        exit;
     }
 
 }
@@ -57,7 +123,7 @@ class PrintController extends Controller
 class PDF extends FPDF
 {
 
-    function pdfHeader($examenNaam="Examennaam", $werkprocesNaam="Werkprocesnaam") {
+    function pdfHeader($examenNaam, $werkprocesNaam) {
         $this->SetFont('Arial','B',20);
         $this->Cell(80);
         $this->Cell(20,0, $examenNaam,0,0,'C');
@@ -68,6 +134,262 @@ class PDF extends FPDF
         //Line break
         $this->Ln(10);
     }
+
+    function persoonsgegevens($student, $beoordelaar, $examen) {
+
+        $this->SetFont('Arial','',10);
+        $this->SetFillColor(142,169,219);
+
+        $this->Cell(190, 7, "Persoonsgegevens", 1,0,'C',1);
+        $this->Ln();
+        $this->SetFillColor(237,237,237);
+        $this->Cell(40, 6, "Datum",1,0, "C", 1);
+        $this->Cell(150, 6, $examen["datum_start"].' t/m '.$examen["datum_eind"], 1);
+        $this->Ln();
+        $this->SetFillColor(237,237,237);
+        $this->Cell(40, 6, "Kandidaat",1,0, "C",1);
+        $this->Cell(150, 6, $student['naam'], 1);
+        $this->Ln();
+        $this->SetFillColor(237,237,237);
+        $this->Cell(40, 6, "Leerlingnummer",1,0, "C",1);
+        $this->Cell(150, 6, $student['nummer'], 1);
+        $this->Ln();
+        $this->SetFillColor(237,237,237);
+        $this->Cell(40, 6, "Klas",1,0, "C",1);
+        $this->Cell(150, 6, $student['klas'], 1);
+        $this->Ln();
+        $this->SetFillColor(237,237,237);
+        $this->Cell(40, 6, "Beoordelaar 1",1,0, "C",1);
+        $this->Cell(150, 6, $beoordelaar[0], 1);
+        $this->Ln();
+        $this->SetFillColor(237,237,237);
+        $this->Cell(40, 6, "Beoordelaar 2",1,0, "C",1);
+        $this->Cell(150, 6, $beoordelaar[1], 1);
+        $this->Ln();
+        $this->Ln(10);
+
+    }
+
+    // $data array of $row
+    // - nul, een, twee, die -> criterium omschrijvingen
+    // - omschrijving -> criterium omschrijving
+    // - score
+    // return number of crucial failures 
+    function beoordelingOpdracht($criterium, $resultaat) {
+        // Header
+        $this->SetFont("Courier",'',8);
+        $this->SetFillColor(142,169,219);
+
+        $this->Cell(190, 7, "Beoordeling Opdracht", 1,0,'C',1);
+        $this->Ln();
+        $this->SetFillColor(237,237,237);
+        $this->Cell(30, 6, "Criterium",1,0, "C",1);
+        $this->Cell(40, 6, "0",1,0, "C",1);
+        $this->Cell(40, 6, "1",1,0, "C",1);
+        $this->Cell(40, 6, "2",1,0, "C",1);
+        $this->Cell(40, 6, "3",1,0, "C",1);
+        $this->Ln();
+        $cruciaalFactor=1;
+        $score=0;
+        foreach ($criterium as $row) {
+            $len = array(strlen($row["nul"]), strlen($row["een"]), strlen($row["twee"]), strlen($row["drie"]));
+            $maxLen = max($len);
+            $hoogte = ($maxLen/12) *3;
+            $this->SetFillColor(255);
+            $y = $this->GetY();
+            $this->Cell(1,$hoogte,"", "L",0);
+            $this->MultiCell(30, 3, str_pad($row["omschrijving"],$maxLen),0, "",0);
+            $x = $this->GetX();
+            if ($resultaat[$row['id']]==0) {
+                $waarde="X";
+            } else {
+                $waarde = "O";
+            }
+            $x = $x+30;
+            $this->SetXY($x, $y);
+            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
+            $x = $x+5;
+            $this->SetXY($x, $y);
+            $this->MultiCell(35, 3, str_pad(trim($row["nul"]),$maxLen),"", "L",0);
+            $x = $x+35;
+            $this->SetXY($x, $y);
+            if ($resultaat[$row['id']]==1) {
+                $waarde="X";
+            } else {
+                $waarde = "O";
+            }
+            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
+            $x = $x+5;
+            $this->SetXY($x, $y);
+            $this->MultiCell(35, 3, str_pad(trim($row["een"]),$maxLen),"", "L",0);
+            $x = $x+35;
+            $this->SetXY($x, $y);
+            if ($resultaat[$row['id']]==2) {
+                $waarde="X";
+            } else {
+                $waarde = "O";
+            }
+            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
+            $x = $x+5;
+            $this->SetXY($x, $y);
+            $this->MultiCell(35, 3, str_pad(trim($row["twee"]),$maxLen),"", "L",0);
+            $x = $x+35;
+            $this->SetXY($x, $y);
+            if ($resultaat[$row['id']]==3) {
+                $waarde="X";
+            } else {
+                $waarde = "O";
+            }
+            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
+            $x = $x+5;
+            $this->SetXY($x, $y);
+            $this->MultiCell(35, 3, str_pad(trim($row["drie"]),300),"", "L",0);
+            $x = $x+35;
+            $this->SetXY($x, $y);
+            $this->Cell(1,$hoogte,"", "L",0);
+            $this->Ln();
+            $this->SetY($y+$hoogte);
+            $this->Cell(190,1,"", "T",0);
+            $this->Ln();
+            $y = $this->GetY();
+            if ($y>200) {
+                $this->AddPage();
+                $this->Ln(10);
+                $this->Cell(190,1,"", "T",0);
+                $this->Ln();
+            }
+            $score+=$resultaat[$row['id']];
+            if ( $row['cruciaal'] && $resultaat[$row['id']]==0) {
+                $cruciaalFactor=0;
+            }
+        }
+        return($cruciaalFactor*$score);
+    }
+
+    function cruciaal ($criterium, $resultaat) {
+        $this->Ln();
+        $this->SetFont('Arial','U',14);
+        $this->Cell(20, 6, "Cruciaal criteria",0,0, "L",1);
+        $this->Ln();
+        $this->SetFont('Arial','',10);
+        $this->SetFillColor(142,169,219);
+        $this->Cell(60, 6, "Cruciaal criterium",1,0, "C",1);
+        $this->Cell(80, 6, "Behaald in kolom 1 of hoger",1,0, "C",1);
+        $this->Ln();
+        $this->SetFillColor(255);
+        $nietgehaald = false;
+        foreach ($criterium as $row) {
+            if ( ! $row['cruciaal'] ) continue; 
+            $this->SetFillColor(255);
+            $this->Cell(60, 6, $row['omschrijving'],1,0, "C",1);
+            if ($resultaat[$row['id']] > 0) {
+                $this->SetFillColor(142,169,219);
+                $this->Cell(40, 6, "Ja",1,0, "C",1);
+                $this->SetFillColor(255);
+                $this->Cell(40, 6, "Nee",1,0, "C",1);
+            } else {
+                $this->SetFillColor(255);
+                $this->Cell(40, 6, "Ja",1,0, "C",1);
+                $this->SetFillColor(142,169,219);
+                $this->Cell(40, 6, "Nee",1,0, "C",1);
+                $nietgehaald = true;
+            }
+            $this->Ln();
+        }
+        $this->Ln();
+        $this->Ln();
+        $this->Cell(20,6,'Zijn alle cruciale criteria behaald?',0,0,'');
+        $this->Ln();
+        if (!$nietgehaald) {
+            $this->SetFillColor(142,169,219);
+            $this->Cell(20, 6, "Ja",1,0, "L",1);
+            $this->Cell(60, 6, "Reik cijfer uit volgens cijfertabel",1,0, "L",1);
+
+            $this->Ln();
+            $this->SetFillColor(255);
+            $this->Cell(20, 6, "Nee",1,0, "L",1);
+            $this->Cell(60, 6, "Onvoldoende",1,0, "L",1);
+
+        } else {
+            $this->SetFillColor(255);
+            $this->Cell(20, 6, "Ja",1,0, "L",1);
+            $this->Cell(60, 6, "Reik cijfer uit volgens cijfertabel",1,0, "L",1);
+            $this->Ln();
+            $this->SetFillColor(142,169,219);
+            $this->Cell(20, 6, "Nee",1,0, "L",1);
+            $this->Cell(60, 6, "Onvoldoende",1,0, "L",1);
+            $this->SetFillColor(255);
+
+        }
+        return $nietgehaald;
+    }
+
+    function cijferTabel($score, $maxscore) {
+        $this->Ln();
+        $this->Ln();
+        $this->SetFont('Arial','U',14);
+        $this->Cell(20, 6, "Cijfertabel",0,0, "L",1);
+        $this->Ln();
+        $this->Ln();
+        $this->SetFont('Arial','',10);
+        $this->SetFillColor(142,169,219);
+        $this->Cell(20, 6, "Punten",1,0, "C",1);
+        $this->Cell(20, 6, "Cijfer",1,0, "C",1);
+        $this->Ln();
+        $i=0;
+        for($i=0; $i<=$maxscore; $i++) {
+            $cijfer=number_format(intval(10.99+90*$i/$maxscore)/10,1);
+            $this->Cell(20, 6, $i,1,0, "L",0);
+            if ($score == $i) {
+                $this->SetFillColor(142,169,219);
+            } else {
+                $this->SetFillColor(255);
+            }
+            $this->Cell(20, 6, $cijfer,1,0, "L",1);
+            $this->Ln();
+        }
+        $this->Ln(10);
+    }
+
+    function motivatie($opmerkingen) {
+        $this->SetFont('Arial','U',14);
+        $this->Cell(20,0,'Motivatie',0,0,'L');
+        $this->Ln(10);
+
+        $this->SetFont('Arial','',10);
+        $this->Cell(20,0,'Motiveer de beslissing',0,0,'L');
+        $this->Ln(5);
+        $this->Cell(20,0,'Onderbouw altijd het beoordelingsresultaat.',0,0,'L');
+        $this->Ln(5);
+        $this->Cell(20,0,'Bij de onderbouwing kan gebruik gemaakt worden van de beschrijvingen in de beoordelingstabel.',0,0,'L');
+        $this->Ln(5);
+        $this->MultiCell(180,5, str_pad($opmerkingen,1500), 1, "L",0);
+    }
+
+    function handtekening($beoordeelaar1, $beoordeelaar2) {
+        $this->Ln();
+        $this->SetFont('Arial','U',14);
+        $this->Cell(20, 6, "Handtekening",0,0, "L",1);
+        $this->Ln();
+        $this->SetFont('Arial','',10);
+        $this->Cell(20, 6, "Zet uw handtekening",0,0, "L",1);
+        $this->Ln();
+        $this->SetFillColor(142,169,219);
+        $this->Cell(30, 30,'Beoordelaar 1', 1,0, "C",1);
+        $this->SetFillColor(255);
+        $this->SetTextColor(220,220,220);
+        $this->Cell(80, 30,$beoordeelaar1, 1,0, "C",1);
+        $this->SetTextColor(0);
+        $this->Ln();
+        $this->SetFillColor(142,169,219);
+        $this->Cell(30, 30, 'Beoordelaar 2', 1,0, "C",1);
+        $this->SetFillColor(255);
+        $this->SetTextColor(220,220,220);
+        $this->Cell(80, 30, $beoordeelaar2, 1,0, "C",1);
+        $this->SetTextColor(0);
+        $this->Ln();
+    }
+
 }
 
 /*******************************************************************************
