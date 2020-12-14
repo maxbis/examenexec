@@ -96,14 +96,14 @@ class UitslagController extends Controller
 
         $formWpCount = $this->formWpCount();
         
-        $sql="SELECT  s.naam,  f.werkproces, COUNT(distinct g.formid) cnt, u.ready ready
+        $sql="SELECT  s.naam,  f.werkproces, u.ready ready, COUNT(distinct g.formid) cnt
             FROM gesprek g
             INNER JOIN student s ON s.id=g.studentid
             INNER JOIN form f ON f.id = g.formid
             INNER JOIN examen e ON e.id=f.examenid
             LEFT JOIN uitslag u ON u.studentid=g.studentid AND u.werkproces=f.werkproces
             WHERE e.actief=1
-            GROUP BY 1,2
+            GROUP BY 1,2,3
             ORDER BY 1,2";
         $progres = Yii::$app->db->createCommand($sql)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
 
