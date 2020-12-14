@@ -62,7 +62,7 @@ echo Nav::widget([
         ],
 
         [   'label' => 'Export',
-            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
+            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'xxx'),
             'items' => [
                 ['label' => 'Export Results to File', 'url' => ['/query/export']],
                 [  'label' => 'Export (active) Results to KTB',

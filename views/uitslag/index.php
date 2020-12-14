@@ -36,7 +36,7 @@ $nr=0;
                     <th colspan=4>Resultaten</th>
                     <th>&nbsp;</th>
                     <th colspan=4>Print Ready</th>
-                    <th>&nbsp;</th>
+                    <th>&nbsp;</span></th>
                 </tr>    
                 <tr>
                 <?php
@@ -59,7 +59,16 @@ $nr=0;
                     foreach($wp as $thisWp) {
                         echo "<th class=\"even\">W".$teller++."</th>";
                     }
-                    echo "<th>&nbsp;</th>";
+                    echo "<th>";
+                    echo Html::a("<span style=\"color:#D0D0F0\" class=\"glyphicon glyphicon-print\"></span>",
+                        ['print/index', 'id'=>-99],
+                        [   'title' => 'Print ALL',
+                            'data' => [
+                            'confirm' => 'Let op ALLE examens worden in één PDF gezet. Dit kan even duren. Weet je het zeker?',
+                            'method' => 'post',
+                            ],
+                        ] );
+                    echo "</th>";
                 ?>
                 </tr>    
             </thead>

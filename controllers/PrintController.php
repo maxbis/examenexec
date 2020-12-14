@@ -175,7 +175,7 @@ class PDF extends FPDF
 
     // $data array of $row
     //
-     - nul, een, twee, die -> criterium omschrijvingen
+    // - nul, een, twee, die -> criterium omschrijvingen
     // - omschrijving -> criterium omschrijving
     // - score
     // return number of crucial failures 
