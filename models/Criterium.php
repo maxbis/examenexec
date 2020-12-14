@@ -23,7 +23,7 @@ class Criterium extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'Criterium';
+        return 'criterium';
     }
 
     /**
