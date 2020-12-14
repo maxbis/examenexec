@@ -65,7 +65,6 @@ $nr=0;
             </thead>
             
             <?php
-               
                 foreach($dataSet as $naam => $value) {
                     $nr++;
                     echo "<tr>";
@@ -97,7 +96,8 @@ $nr=0;
                     echo "<td>&nbsp;</td>";
                     foreach($wp as $thisWp) {
                         echo "<td class=\"even\">"; 
-                        if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>";
+                        //if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>";
+                        if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo  Html::a( "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>" , ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
                         elseif ( $value[$thisWp]['status']==99 ) echo "<span class=\"glyphicon glyphicon-check\"></span>";
                         else echo "<div class=\"text-info\">".$value[$thisWp]['status']."</div>";
                     }

@@ -58,6 +58,9 @@ class PrintController extends Controller
             $sql="
                 SELECT studentid FROM uitslag
                 WHERE ready=1
+                AND resultaat IS NOT null
+                AND beoordeelaar1id IS NOT null
+                AND beoordeelaar2id IS NOT null
                 GROUP BY studentid HAVING COUNT(*)=(
                     SELECT COUNT(*) FROM werkproces w
                     INNER JOIN examen e ON e.examen_type=w.examen_type
@@ -70,6 +73,7 @@ class PrintController extends Controller
         }
 
         foreach($studentenids as $studentid) {
+            // d($studentid);
             $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
             $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
@@ -78,7 +82,6 @@ class PrintController extends Controller
             foreach ($werkproces as $wp) {
                 $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->one();
                 $criterium=Criterium::find()->where(['werkprocesid'=>$wp['id']])->orderBy(['id'=>'ASC'])->asArray()->all();
-                // dd($criterium);
                 $resultaat=json_decode($uitslag->resultaat, true);
                 
                 // Header - 2 regels
@@ -88,7 +91,7 @@ class PrintController extends Controller
                 $pdf->persoonsgegevens($student, [$uitslag->rolspeler1->naam, $uitslag->rolspeler2->naam], $examen);
                 
                 // Beoodelingscriteria matrix - TODO return value weg
-                $score=$pdf->beoordelingOpdracht($criterium, $resultaat);
+                $score=$pdf->beoordelingOpdracht($criterium, $resultaat, $student['naam']);
 
                 // Beslissing - text regel
                 $pdf->Ln(10);
@@ -171,11 +174,13 @@ class PDF extends FPDF
     }
 
     // $data array of $row
-    // - nul, een, twee, die -> criterium omschrijvingen
+    //
+     - nul, een, twee, die -> criterium omschrijvingen
     // - omschrijving -> criterium omschrijving
     // - score
     // return number of crucial failures 
-    function beoordelingOpdracht($criterium, $resultaat) {
+    // student is only needed to get sensible error message when the results are not complete
+    function beoordelingOpdracht($criterium, $resultaat, $student="") {
         // Header
         $this->SetFont("Courier",'',8);
         $this->SetFillColor(142,169,219);
@@ -200,6 +205,7 @@ class PDF extends FPDF
             $this->Cell(1,$hoogte,"", "L",0);
             $this->MultiCell(30, 3, str_pad($row["omschrijving"],$maxLen),0, "",0);
             $x = $this->GetX();
+            if ( ! isset($resultaat[$row['id']]) ) dd(['Error: Niet alle onderliggende antwoorden zijn ingevuld', $student, $row['id'], $resultaat]);
             if ($resultaat[$row['id']]==0) {
                 $waarde="X";
             } else {

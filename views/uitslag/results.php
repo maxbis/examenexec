@@ -18,6 +18,7 @@ $form = ActiveForm::begin(['action' => 'update',]);
 $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
 
 ?>
+
 <div class="criterium-index">
 
     <h1><?= substr($werkproces['id'],0,5).' '.$examen['titel']; ; ?></h1>
@@ -86,13 +87,14 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
                 } else {
                     $bgcolor=['#FFFFFF','#FFFFFF','#FFFFFF','#FFFFFF','#FFFFFF'];
                 }
-                if ($item['cruciaal'] && $uitslag==0 ) {
-                    $bgcolor[$uitslag]='#ff9e9e'; 
-                } else {
-                    $bgcolor[$uitslag]='#d5f7ba'; 
+                if ( $item['score'] != null ) {
+                    if ($item['cruciaal'] && $uitslag==0 ) {
+                        $bgcolor[$uitslag]='#ff9e9e'; 
+                    } else {
+                        $bgcolor[$uitslag]='#d5f7ba'; 
+                    }
                 }
-            
-
+             
                 echo "<tr>";
                 echo "<td width=30px class=\"text-muted\"><small>".$item['score']."</small></td>";
                 // echo "<td width=80px bgcolor=".$bgcolor[4].">".$item['cnaam']."<hr>".$item['fnaam'].$item['formid'].'-'.$item['studentid']."</td>";
@@ -103,7 +105,6 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
                 echo "<td width=80px bgcolor=".$bgcolor[3]." >".$item['drie']."</td>";
                 echo "</tr>";
             }
-
             $model->resultaat=json_encode($resultaat);
         ?>
    </table>

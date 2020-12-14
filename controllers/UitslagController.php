@@ -117,7 +117,7 @@ class UitslagController extends Controller
         foreach($progres as $item) { // init
             foreach($wp as $thisWp) {
                 $dataSet[$item['naam']][$thisWp]['result']=['', ''];
-                $dataSet[$item['naam']][$thisWp]['status']='';
+                $dataSet[$item['naam']][$thisWp]['status']=0;
             }
             $dataSet[$item['naam']]['studentid']="";
         }
@@ -130,7 +130,7 @@ class UitslagController extends Controller
             }
            
         }
-
+        
         foreach($result as $item) {
             $dataSet[$item['naam']][$item['werkproces']]['result']=[ $item['cijfer'], $this->rating($item['cijfer']) ];
             $dataSet[$item['naam']]['studentid']=$item['studentid'];
@@ -169,8 +169,10 @@ class UitslagController extends Controller
         $werkproces=Werkproces::find()->where(['id'=>$wp])->asArray()->one();
         $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
 
+        // This query does not work if not all underlying forms are present, we'll keep this for debugging
         $sql="
-            SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam, c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
+            SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,
+                    c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
             FROM results r
             INNER JOIN form f ON f.id=r.formid
             INNER JOIN vraag v ON v.id=r.vraagid
@@ -179,6 +181,19 @@ class UitslagController extends Controller
             WHERE e.actief=1
             AND r.studentid=:studentid
             AND f.werkproces=:werkproces
+            GROUP BY 1,2,3,4,5,6,7,8,9,10
+            ORDER BY 1,2
+        ";
+        $sql="
+            SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,
+                    c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
+            FROM criterium c
+            INNER JOIN vraag v ON v.mappingid=c.id
+            INNER JOIN form f ON f.id=v.formid
+            INNER JOIN examen e ON e.id = f.examenid
+            LEFT OUTER JOIN results r ON r.formid=f.id AND r.vraagid=v.id AND r.studentid=:studentid
+            WHERE f.werkproces=:werkproces
+            AND e.actief=1
             GROUP BY 1,2,3,4,5,6,7,8,9,10
             ORDER BY 1,2
         ";
