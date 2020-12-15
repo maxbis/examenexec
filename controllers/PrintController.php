@@ -47,7 +47,7 @@ class PrintController extends Controller
     }
 
     public function actionIndex($id) {
-        //dd('');
+
         $pdf = new PDF();
         
         $pdf->SetAutoPageBreak(true, 10);
@@ -69,15 +69,14 @@ class PrintController extends Controller
             ";
             $studentenids=Yii::$app->db->createCommand($sql)->queryAll();
         } else {
-            $studentenids[]=$id;  
+            $studentenids[]=$id;
         }
 
+        $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
+
         foreach($studentenids as $studentid) {
-            // d($studentid);
-            $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
             $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
-        
 
             foreach ($werkproces as $wp) {
                 $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->one();
@@ -120,7 +119,13 @@ class PrintController extends Controller
             } // end all workpocesse for one id
         } // end all id's
 
-        $pdf->Output();
+        if (count($studentenids)==1) {
+            $filename=$student['naam'];
+        } else {
+            $filename=count($studentenids).'-formulieren';
+        }
+
+        $pdf->Output('I',substr($wp['id'],0,5).' '.$filename);
         exit;
     }
 
