@@ -253,7 +253,7 @@ class UitslagController extends Controller
 
     // with studentid and formid get the most recent gesprek
     function actionGetForm($studentid, $formid) {
-        $gesprek = Gesprek::find()->Where(['formid'=>$formid])->andWhere(['studentid'=>$studentid])->orderby(['id' => 'SORT_DESC'])->asArray()->one();
+        $gesprek = Gesprek::find()->Where(['formid'=>$formid])->andWhere(['studentid'=>$studentid])->orderBy(['created' => SORT_DESC])->asArray()->one();
         return $this->redirect(['/vraag/form', 'gesprekid'=>$gesprek['id'] , 'compleet'=>1]);
     }
 
