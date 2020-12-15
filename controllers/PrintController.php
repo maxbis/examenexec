@@ -85,7 +85,11 @@ class PrintController extends Controller
                 $resultaat=json_decode($uitslag->resultaat, true);
                 
                 // Header - 2 regels
-                $pdf->pdfHeader( substr($wp['id'],0,5).' '.$examen['titel'], $wp['id'].' '.$wp['titel'] );
+                // dd($pdf->PageNo());
+                if ( ($pdf->PageNo() % 2) == 0 ) {
+                    $pdf->addPage();
+                } 
+                $pdf->pdfHeader( $pdf->PageNo().' '.substr($wp['id'],0,5).' '.$examen['titel'], $wp['id'].' '.$wp['titel'] );
                 
                 // Persoongegevens - table
                 $pdf->persoonsgegevens($student, [$uitslag->rolspeler1->naam, $uitslag->rolspeler2->naam], $examen);
@@ -136,7 +140,7 @@ class PDF extends FPDF
         $this->Cell(30,0, $werkprocesNaam, 0,0,'C');
         //Line break
         $this->Ln(10);
-    }
+    }  
 
     function persoonsgegevens($student, $beoordelaar, $examen) {
 

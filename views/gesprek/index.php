@@ -145,12 +145,19 @@ $barlen2 = max(5,$counts[1]*2);
             ],
             [
                 'attribute' => 'locatie',
-                'contentOptions' => ['style' => 'width:20px;'],
+                'contentOptions' => ['style' => 'width:40px;'],
                 'format' => 'raw',
-                'value' => 'student.locatie',
+                'value' => function ($alleGesprekken) {
+                    if (  $alleGesprekken->student->locatie == '') {
+                        return '-';
+                    } else {
+                        return $alleGesprekken->student->locatie;
+                    }
+                }
             ],
             [
                 'attribute' => 'rolspelerid',
+                'contentOptions' => ['style' => 'width:200px;'],
                 'filter' => $rolspelerList,
                 'filterInputOptions' => [
                     'class' => 'form-control',
