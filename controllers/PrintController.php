@@ -78,17 +78,18 @@ class PrintController extends Controller
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
             $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
 
+            // when printed double sided each person will start on an odd page.
+            if ( ($pdf->PageNo() % 2) == 0 ) {
+                $pdf->addPage();
+            } 
+
             foreach ($werkproces as $wp) {
                 $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->one();
                 $criterium=Criterium::find()->where(['werkprocesid'=>$wp['id']])->orderBy(['id'=>'ASC'])->asArray()->all();
                 $resultaat=json_decode($uitslag->resultaat, true);
                 
                 // Header - 2 regels
-                // dd($pdf->PageNo());
-                if ( ($pdf->PageNo() % 2) == 0 ) {
-                    $pdf->addPage();
-                } 
-                $pdf->pdfHeader( $pdf->PageNo().' '.substr($wp['id'],0,5).' '.$examen['titel'], $wp['id'].' '.$wp['titel'] );
+                $pdf->pdfHeader( substr($wp['id'],0,5).' '.$examen['titel'], $wp['id'].' '.$wp['titel'] );
                 
                 // Persoongegevens - table
                 $pdf->persoonsgegevens($student, [$uitslag->rolspeler1->naam, $uitslag->rolspeler2->naam], $examen);
@@ -134,7 +135,6 @@ class PrintController extends Controller
 
 class PDF extends FPDF
 {
-
     function pdfHeader($examenNaam, $werkprocesNaam) {
         $this->SetFont('Arial','B',20);
         $this->Cell(80);
@@ -160,7 +160,8 @@ class PDF extends FPDF
         $this->Ln();
         $this->SetFillColor(237,237,237);
         $this->Cell(40, 6, "Kandidaat",1,0, "C",1);
-        $this->Cell(150, 6, $student['naam'], 1);
+        $naam=$this->transliterateTurkishChars($student['naam']);
+        $this->Cell(150, 6,$naam, 1);
         $this->Ln();
         $this->SetFillColor(237,237,237);
         $this->Cell(40, 6, "Leerlingnummer",1,0, "C",1);
@@ -194,90 +195,78 @@ class PDF extends FPDF
         $this->SetFont("Courier",'',8);
         $this->SetFillColor(142,169,219);
 
-        $this->Cell(190, 7, "Beoordeling Opdracht", 1,0,'C',1);
+        $this->Cell(190, 7, "Beoordeling Opdracht", 1, 0, 'C', 1);
         $this->Ln();
         $this->SetFillColor(237,237,237);
-        $this->Cell(30, 6, "Criterium",1,0, "C",1);
-        $this->Cell(40, 6, "0",1,0, "C",1);
-        $this->Cell(40, 6, "1",1,0, "C",1);
-        $this->Cell(40, 6, "2",1,0, "C",1);
-        $this->Cell(40, 6, "3",1,0, "C",1);
+        $this->Cell(30, 6, "Criterium", 1, 0, "C", 1);
+
+        foreach([0,1,2,3] as $item) { // column headings 0,1,2,3
+            $this->Cell(40, 6, $item, 1, 0, "C", 1);
+        }
+
         $this->Ln();
+        $this->SetFont("Courier",'',7);
         $cruciaalFactor=1;
         $score=0;
         foreach ($criterium as $row) {
-            $len = array(strlen($row["nul"]), strlen($row["een"]), strlen($row["twee"]), strlen($row["drie"]));
-            $maxLen = max($len);
-            $hoogte = ($maxLen/12) *3;
+            $maxLen = max( array(strlen($row["nul"]), strlen($row["een"]), strlen($row["twee"]), strlen($row["drie"])) );
+            $hoogte = ($maxLen/14) *3;
+            $y = $this->GetY();
+            if ( $y>(255-$hoogte) ) {
+                $this->AddPage();
+                $this->Ln(10);
+                $this->Cell(190,0,"", "T",0);
+                $this->Ln();
+            }
+            
             $this->SetFillColor(255);
             $y = $this->GetY();
             $this->Cell(1,$hoogte,"", "L",0);
             $this->MultiCell(30, 3, str_pad($row["omschrijving"],$maxLen),0, "",0);
             $x = $this->GetX();
-            if ( ! isset($resultaat[$row['id']]) ) dd(['Error: Niet alle onderliggende antwoorden zijn ingevuld', $student, $row['id'], $resultaat]);
-            if ($resultaat[$row['id']]==0) {
-                $waarde="X";
-            } else {
-                $waarde = "O";
-            }
             $x = $x+30;
-            $this->SetXY($x, $y);
-            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
-            $x = $x+5;
-            $this->SetXY($x, $y);
-            $this->MultiCell(35, 3, str_pad(trim($row["nul"]),$maxLen),"", "L",0);
-            $x = $x+35;
-            $this->SetXY($x, $y);
-            if ($resultaat[$row['id']]==1) {
-                $waarde="X";
-            } else {
-                $waarde = "O";
-            }
-            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
-            $x = $x+5;
-            $this->SetXY($x, $y);
-            $this->MultiCell(35, 3, str_pad(trim($row["een"]),$maxLen),"", "L",0);
-            $x = $x+35;
-            $this->SetXY($x, $y);
-            if ($resultaat[$row['id']]==2) {
-                $waarde="X";
-            } else {
-                $waarde = "O";
-            }
-            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
-            $x = $x+5;
-            $this->SetXY($x, $y);
-            $this->MultiCell(35, 3, str_pad(trim($row["twee"]),$maxLen),"", "L",0);
-            $x = $x+35;
-            $this->SetXY($x, $y);
-            if ($resultaat[$row['id']]==3) {
-                $waarde="X";
-            } else {
-                $waarde = "O";
-            }
-            $this->MultiCell(5,$hoogte,$waarde,"LR", "C",0);
-            $x = $x+5;
-            $this->SetXY($x, $y);
-            $this->MultiCell(35, 3, str_pad(trim($row["drie"]),300),"", "L",0);
-            $x = $x+35;
+            $this->SetXY( $x, $y);
+            $kolom=0;
+
+            foreach([$row["nul"], $row["een"], $row["twee"], $row["drie"]] as $item) {
+                $this->SetXY( $x, $y);
+                if ( ! isset($resultaat[$row['id']]) ) dd(['Error: Niet alle onderliggende antwoorden zijn ingevuld', $student, $row['id'], $resultaat]);
+                if ( $item == '' ) {                               // rubic text empty
+                    $this->MultiCell(5,$hoogte,'',"LR", "C",0);
+                 }  elseif ($resultaat[$row['id']]==$kolom) {   // did we score this column, print bold X
+                    $this->SetFont("Courier",'B',7);
+                    $this->MultiCell(5,$hoogte,'X',"LR", "C",0);
+                    $this->SetFont("Courier",'',7);
+                } else {                                        // otherwise print O
+                    $this->MultiCell(5,$hoogte,'0',"LR", "C",0);
+                }
+                
+                $x = $x+5;
+                $this->SetXY($x, $y);
+                $this->MultiCell(35, 3, $item,"", "L",0);
+                $x = $x+35;
+                $kolom++;
+            }   
+            
             $this->SetXY($x, $y);
             $this->Cell(1,$hoogte,"", "L",0);
             $this->Ln();
             $this->SetY($y+$hoogte);
-            $this->Cell(190,1,"", "T",0);
+            $this->Cell(190,0,"", "T",1); // Horizontal line at bottom of rubic
             $this->Ln();
-            $y = $this->GetY();
-            if ($y>200) {
-                $this->AddPage();
-                $this->Ln(10);
-                $this->Cell(190,1,"", "T",0);
-                $this->Ln();
-            }
+
             $score+=$resultaat[$row['id']];
             if ( $row['cruciaal'] && $resultaat[$row['id']]==0) {
-                $cruciaalFactor=0;
+                $cruciaalFactor=0; // return 0 if cruciaal items score =0
             }
         }
+
+        $y = $this->GetY();
+        if ($y>200) {
+            $this->AddPage();
+            $this->Ln(10);
+        }
+
         return($cruciaalFactor*$score);
     }
 
@@ -340,6 +329,7 @@ class PDF extends FPDF
     }
 
     function cijferTabel($score, $maxscore) {
+        $this->whiteSpace(25);
         $this->Ln();
         $this->Ln();
         $this->SetFont('Arial','U',14);
@@ -367,6 +357,7 @@ class PDF extends FPDF
     }
 
     function motivatie($opmerkingen) {
+        $this->whiteSpace(55);
         $this->SetFont('Arial','U',14);
         $this->Cell(20,0,'Motivatie',0,0,'L');
         $this->Ln(10);
@@ -382,6 +373,7 @@ class PDF extends FPDF
     }
 
     function handtekening($beoordeelaar1, $beoordeelaar2) {
+        $this->whiteSpace(25);
         $this->Ln();
         $this->SetFont('Arial','U',14);
         $this->Cell(20, 6, "Handtekening",0,0, "L",1);
@@ -403,6 +395,21 @@ class PDF extends FPDF
         $this->Cell(80, 30, $beoordeelaar2, 1,0, "C",1);
         $this->SetTextColor(0);
         $this->Ln();
+    }
+
+    function whiteSpace($minSpace) {
+        $y = $this->GetY();
+        if ( $y>(255-$minSpace) ) {
+            $this->AddPage();
+            $this->Ln(10);
+        }
+    }
+
+    function transliterateTurkishChars($inputText) {
+        $search  = array('ç', 'Ç', 'ğ', 'Ğ', 'ı', 'İ', 'ö', 'Ö', 'ş', 'Ş', 'š', 'ć');
+        $replace = array('ç', 'Ç', 'g', 'G', 'i', 'I', 'ö', 'Ö', 's', 'S', 's', 'c');
+        $outputText=str_replace($search, $replace, $inputText);
+        return iconv("UTF-8", "ISO-8859-1//IGNORE", $outputText);
     }
 
 }
