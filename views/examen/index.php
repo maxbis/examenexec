@@ -43,7 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute'=>'datum_eind',
             'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
           ],
-
           [
             'attribute'=>'naam',
             'contentOptions' => ['style' => 'width:600px; white-space: normal;'],
@@ -53,18 +52,23 @@ $this->params['breadcrumbs'][] = $this->title;
             },
           ],
           [
-            'attribute'=>'otherid',
-            'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
-          ],
-          // /werkproces/index?WerkprocesSearch[examen_type]=1
-          [
-            'attribute'=>'examen_type',
-            'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
+            'attribute'=>'',
+            'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
             'format' => 'raw',
             'value' => function ($data) {
-              return Html::a($data->examen_type, ['/werkproces/index'],['WerkprocesSearch[examen_type]='=> $data->examen_type,]);
+              return Html::a('<span class="glyphicon glyphicon-play"></span>',
+              ['/uitslag/index', 'examenid'=>$data->id], ['title'=> 'Naar Examenuitslag' ]);
             },
           ],
+          // /werkproces/index?WerkprocesSearch[examen_type]=1
+          // [
+          //   'attribute'=>'examen_type',
+          //   'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
+          //   'format' => 'raw',
+          //   'value' => function ($data) {
+          //     return Html::a($data->examen_type, ['/werkproces/index'],['WerkprocesSearch[examen_type]='=> $data->examen_type,]);
+          //   },
+          // ],
 
           [
             'class' => 'yii\grid\ActionColumn',

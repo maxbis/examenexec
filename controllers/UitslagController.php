@@ -65,8 +65,16 @@ class UitslagController extends Controller
         return "O";
     }
 
-    public function actionIndex() {
+    public function actionIndex($examenid="") {
+        // if no parameter is specified then taken the active exam (examen.actief=1)
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
+
+        if ( $examenid ) {
+            $criterium='e.id='.$examenid;
+        } else {
+            $criterium='e.actief=1';
+        }
+        
         $sql="
         select naam, studentid, klas, formnaam werkproces, round( ((greatest(0,sum(score))  /maxscore*9+1))+0.049 ,1)  cijfer
             from (
@@ -78,7 +86,7 @@ class UitslagController extends Controller
                 INNER JOIN form f on f.id=v.formid
                 INNER JOIN examen e on e.id=f.examenid
                 WHERE v.volgnr = r.vraagnr
-                AND e.actief=1
+                AND ".$criterium."
                 GROUP BY 1,2,3,4,5
                 ORDER BY 1,2
             ) as sub
@@ -102,7 +110,7 @@ class UitslagController extends Controller
             INNER JOIN form f ON f.id = g.formid
             INNER JOIN examen e ON e.id=f.examenid
             LEFT JOIN uitslag u ON u.studentid=g.studentid AND u.werkproces=f.werkproces
-            WHERE e.actief=1
+            WHERE ".$criterium."
             GROUP BY 1,2,3
             ORDER BY 1,2";
         $progres = Yii::$app->db->createCommand($sql)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
@@ -165,6 +173,7 @@ class UitslagController extends Controller
 
     // show filled in (SPL) form for 2nd beoordeelaar (form is HTML variant of the fial PDF version)
     function actionResult($studentid, $wp){
+
         $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
         $werkproces=Werkproces::find()->where(['id'=>$wp])->asArray()->one();
         $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
@@ -176,10 +185,8 @@ class UitslagController extends Controller
             FROM results r
             INNER JOIN form f ON f.id=r.formid
             INNER JOIN vraag v ON v.id=r.vraagid
-            INNER JOIN examen e ON e.id = f.examenid
             INNER JOIN criterium c ON c.id=v.mappingid
-            WHERE e.actief=1
-            AND r.studentid=:studentid
+            WHERE r.studentid=:studentid
             AND f.werkproces=:werkproces
             GROUP BY 1,2,3,4,5,6,7,8,9,10
             ORDER BY 1,2
