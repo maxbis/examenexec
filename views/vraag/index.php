@@ -83,5 +83,5 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <p>
-    <?= Html::a('Create Vraag', ['/vraag/create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::a('Create Vraag', ['/vraag/create', 'formid'=>$formid], ['class' => 'btn btn-success']) ?>
 </p>

@@ -79,6 +79,7 @@ class VraagController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'formModel' => $formModel,
+            'formid' => Yii::$app->request->get()['VraagSearch']['formid'],
         ]);
     }
 
