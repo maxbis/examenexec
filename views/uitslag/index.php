@@ -61,7 +61,7 @@ $nr=0;
                     }
                     echo "<th>";
                     echo Html::a("<span style=\"color:#D0D0F0\" class=\"glyphicon glyphicon-print\"></span>",
-                        ['print/index', 'id'=>-99],
+                        ['print/index', 'id'=>-99, 'examenid'=>$examenid ],
                         [   'title' => 'Print ALL',
                             'data' => [
                             'confirm' => 'Let op ALLE examens worden in één PDF gezet. Dit kan even duren. Weet je het zeker?',
@@ -121,7 +121,7 @@ $nr=0;
                     }
 
                     if ( $print ) {
-                        echo Html::a("<span class=\"glyphicon glyphicon-print\"></span>", ['/print/index', 'id'=>$dataSet[$naam]['studentid'] ]);
+                        echo Html::a("<span class=\"glyphicon glyphicon-print\"></span>", ['/print/index', 'id'=>$dataSet[$naam]['studentid'], 'examenid'=>$examenid ]);
                     } else {
                         echo "<span title=\"Print beschikbaar als alle vier de werkprocessen print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";
                     }

@@ -102,7 +102,7 @@ class UitslagController extends Controller
         //        join student s on s.nummer=p.studentnummer";
         // $result2 = Yii::$app->db->createCommand($sql2)->queryAll();
 
-        $formWpCount = $this->formWpCount();
+        $formWpCount = $this->formWpCount($criterium);
         
         $sql="SELECT  s.naam,  f.werkproces, u.ready ready, COUNT(distinct g.formid) cnt
             FROM gesprek g
@@ -144,21 +144,22 @@ class UitslagController extends Controller
             $dataSet[$item['naam']]['studentid']=$item['studentid'];
             $dataSet[$item['naam']]['groep']=$item['klas'];
         }
-        //d($wp);
-        //d($werkproces);
-        //dd($dataSet);
+        // d($wp);
+        // d($werkproces);
+        // dd($dataSet);
 
         return $this->render('index', [
             'dataSet' => $dataSet,
             'formWpCount' =>$formWpCount, // formcount per wp
             'wp' => $wp,
+            'examenid' => $examenid,
         ]);
     }
 
-    private function formWpCount() {
+    private function formWpCount($criterium='e.actief=1') {
         $sql="  SELECT werkproces, COUNT(*) cnt FROM form f
                 INNER JOIN examen e ON f.examenid=e.id 
-                WHERE e.actief=1
+                WHERE ".$criterium."
                 GROUP BY 1";
         $formWpCount = Yii::$app->db->createCommand($sql)->queryAll();
         $formWpCount = Arrayhelper::map($formWpCount,'werkproces','cnt'); // output [ 'B1-K1-W1' => '3', 'B1-K1-W2' => '2', ... ]

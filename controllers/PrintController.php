@@ -46,7 +46,7 @@ class PrintController extends Controller
         ];
     }
 
-    public function actionIndex($id) {
+    public function actionIndex($id, $examenid) {
 
         $pdf = new PDF();
         
@@ -55,7 +55,7 @@ class PrintController extends Controller
         $pdf->Ln(10);
 
         if ($id==-99) { // secret code to print all, to be tested
-            $sql="
+            $sql='
                 SELECT studentid FROM uitslag
                 WHERE ready=1
                 AND resultaat IS NOT null
@@ -64,15 +64,19 @@ class PrintController extends Controller
                 GROUP BY studentid HAVING COUNT(*)=(
                     SELECT COUNT(*) FROM werkproces w
                     INNER JOIN examen e ON e.examen_type=w.examen_type
-                    WHERE e.actief=1
+                    WHERE e.id='.$examenid.'
                     )
-            ";
+            ';
             $studentenids=Yii::$app->db->createCommand($sql)->queryAll();
         } else {
             $studentenids[]=$id;
         }
 
-        $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
+        if ($examenid) {
+            $examen=Examen::find()->where(['id'=>$examenid])->asArray()->one();
+        } else {
+            $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
+        }
 
         foreach($studentenids as $studentid) {
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
@@ -234,7 +238,7 @@ class PDF extends FPDF
                 if ( $item == '' ) {                               // rubic text empty
                     $this->MultiCell(5,$hoogte,'',"LR", "C",0);
                  }  elseif ($resultaat[$row['id']]==$kolom) {   // did we score this column, print bold X
-                    $this->SetFont("Courier",'B',7);
+                    $this->SetFont("Courier",'B',8);
                     $this->MultiCell(5,$hoogte,'X',"LR", "C",0);
                     $this->SetFont("Courier",'',7);
                 } else {                                        // otherwise print O
