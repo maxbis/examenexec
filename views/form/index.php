@@ -52,6 +52,15 @@ $this->title = 'Formulieren';
                 'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
+                  return Html::a('<span class="glyphicon glyphicon-plus"></span>',
+                  ['/vraag/create', 'formid'=>$data->id ],['title'=> 'Nieuwe vraag maken',]);
+                },
+            ],
+            [
+                'attribute'=>'',
+                'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
+                'format' => 'raw',
+                'value' => function ($data) {
                   return Html::a('<span class="glyphicon glyphicon-play"></span>',
                   ['/vraag/index?VraagSearch[formid]='.$data->id],['title'=> 'Naar vragen',]);
                 },

@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        &nbsp; &nbsp;
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -24,6 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        &nbsp; &nbsp;
+        <?= Html::a('Create Vraag', ['/vraag/create', 'wp'=>$model->id], [ 'class' => 'btn btn-success']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -37,3 +40,4 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
+

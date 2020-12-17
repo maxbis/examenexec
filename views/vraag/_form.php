@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\vraag */
 /* @var $form yii\widgets\ActiveForm */
@@ -24,18 +26,14 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'toelichting')->textInput(['maxlength' => true])->textArea( ['style'=>'width:800px'] ) ?>
 
-    <!--
     <div class="row">
         <div class="col-sm-5">
-            <?= $form->field($model->criterium, 'omschrijving')->textInput(['readonly'=>true, 'style'=>'width:300px'])->label('Current Criterium Omschrijving') ?>
+            <?= $form->field($model, 'mappingid')->dropDownList(ArrayHelper::map($criterium,'id','omschrijving'), ['prompt'=>'...', 'style'=>'width:300px'])->label('Vraag hoort bij SPL Rubic'); ?>
         </div>
         <div class="col-sm-5">
             <?= $form->field($model, 'mappingid')->textInput(['readonly'=>true, 'style'=>'width:150px'])->label('current mappingid') ?>
         </div>
     </div>
-    -->
-
-    <?= $form->field($model, 'mappingid')->dropDownList(ArrayHelper::map($criterium,'id','omschrijving'), ['prompt'=>'...', 'style'=>'width:400px'])->label('Vraag hoort bij SPL Rubic'); ?>
 
     <br>
     <div class="row">

@@ -145,9 +145,16 @@ class VraagController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($formid="")
     {
         $model = new vraag();
+        $model->formid=$formid;
+
+        if ($formid) {
+            $criterium = Criterium::find()->select('id, omschrijving')->where([ 'werkprocesid' => $model->form->werkproces ])->asArray()->all();
+        } else {
+            $criterium = Criterium::find()->select('id, omschrijving')->asArray()->all();
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect('index?VraagSearch[formid]='.$model->formid );
@@ -158,8 +165,10 @@ class VraagController extends Controller
         return $this->render('create', [
             'model' => $model,
             'formModel' => $formModel,
+            'criterium' => $criterium,
         ]);
     }
+
 
     /**
      * Updates an existing vraag model.

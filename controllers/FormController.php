@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 
 use app\models\Vraag;
 use app\models\Examen;
+use app\models\Werkproces;
+
 use yii\filters\AccessControl;
 
 class FormController extends Controller
@@ -81,6 +83,7 @@ class FormController extends Controller
     {
         $model = new Form();
         $examenModel = examen::find()->all();
+        $werkprocesModel = werkproces::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -89,6 +92,7 @@ class FormController extends Controller
         return $this->render('create', [
             'model' => $model,
             'examenModel' => $examenModel,
+            'werkprocesModel' => $werkprocesModel
         ]);
     }
 

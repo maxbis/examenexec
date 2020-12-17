@@ -24,7 +24,10 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'instructie')->textInput(['maxlength' => true])->textArea( ['style'=>'width:800px; height:200px'] ) ?>
 
-    <?= $form->field($model, 'werkproces')->textInput(['style'=>'width:250px'])->label('werkprocesid for export KTB db') ?> 
+    <?php
+        $itemList=ArrayHelper::map($werkprocesModel,'id','id');
+        echo $form->field($model, 'werkproces')->dropDownList($itemList,['prompt'=>'Please select', 'style'=>'width:250px'])->label('Werkproces');
+    ?>
 
     <?= HTMLInclude('formSave') ?>
 
