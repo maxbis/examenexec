@@ -179,6 +179,28 @@ class VraagController extends Controller
         ]);
     }
 
+    public function actionCopy($id, $prefix='')
+    {
+        $model = $this->findModel($id);
+
+        $model->id = null;
+        $model->vraag = $prefix.$model->vraag;
+        $model->isNewRecord = true;
+        $model->save();
+
+        $criterium = Criterium::find()->select('id, omschrijving')->where([ 'werkprocesid' => $model->form->werkproces ])->asArray()->all();
+        $formModel = form::find()->all();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect('index?VraagSearch[formid]='.$model->formid );
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'formModel' => $formModel,
+            'criterium' => $criterium,
+        ]);
+    }
 
     /**
      * Updates an existing vraag model.
@@ -190,15 +212,13 @@ class VraagController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        //dd($model->form->werkproces);
+
         $criterium = Criterium::find()->select('id, omschrijving')->where([ 'werkprocesid' => $model->form->werkproces ])->asArray()->all();
-        // dd($criterium);
+        $formModel = form::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect('index?VraagSearch[formid]='.$model->formid );
         }
-
-        $formModel = form::find()->all();
 
         return $this->render('update', [
             'model' => $model,

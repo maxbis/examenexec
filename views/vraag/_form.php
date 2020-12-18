@@ -47,7 +47,16 @@ use yii\helpers\Url;
             <?= $form->field($model, 'standaardwaarde')->dropDownList([0=>'geen',1=>'nee'], ['style'=>'width:80px']); ?>
         </div>
     </div>
-    <?= HTMLInclude('formSave') ?>
+
+    <br>
+    <?php $back = (Yii::$app->request->referrer); ?>
+    <div class="form-group">
+        <?= Html::a( 'Cancel', strstr($back, 'update') ? '/vraag/index' : Yii::$app->request->referrer, ['class'=>'btn btn-primary']); ?>
+        &nbsp;&nbsp;&nbsp;
+        <?= Html::submitButton('&nbsp;Save&nbsp;', ['class' => 'btn btn-success']) ?>
+        &nbsp;&nbsp;&nbsp;
+        <?= Html::a( '&nbsp;Copy&nbsp;', ['/vraag/copy', 'id'=>$model->id, 'prefix'=>'COPY '], ['class'=>'btn btn-warning']); ?>
+    </div>
 
     <?php ActiveForm::end(); ?>
  

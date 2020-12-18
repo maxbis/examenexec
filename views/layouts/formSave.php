@@ -5,5 +5,5 @@ use yii\helpers\Html;
 <div class="form-group">
       <?= Html::a( 'Cancel', Yii::$app->request->referrer, ['class'=>'btn btn-primary']); ?>
       &nbsp;&nbsp;&nbsp;
-      <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+      <?= Html::submitButton('&nbsp;Save&nbsp;', ['class' => 'btn btn-success']) ?>
 </div>
