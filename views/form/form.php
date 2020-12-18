@@ -42,7 +42,7 @@ use yii\widgets\LinkPager;
                     <?php else: ?>
                         <td>nvt</td>
                     <?php endif; ?>
-                <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>"></td>
+                <td><input type="radio" id="3-<?=$item->volgnr?>" name="<?= $item->volgnr ?>" value="<?= $item->nee ?>" <?= $item->standaardwaarde ? 'checked' : '' ?> ></td>
             </tr>
             <?php if ( $item->toelichting != "" ): ?>
                 <tr>

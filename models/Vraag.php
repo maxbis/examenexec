@@ -36,7 +36,7 @@ class Vraag extends \yii\db\ActiveRecord
     {
         return [
             [['formid', 'volgnr', 'vraag'], 'required'],
-            [['formid', 'volgnr', 'ja', 'soms', 'nee', 'mappingid'], 'integer'],
+            [['formid', 'volgnr', 'ja', 'soms', 'nee', 'mappingid','standaardwaarde'], 'integer'],
             [['vraag'], 'string', 'max' => 200],
             [['toelichting'], 'string', 'max' => 500],
             [['formid'], 'exist', 'skipOnError' => true, 'targetClass' => Form::className(), 'targetAttribute' => ['formid' => 'id']],
@@ -58,6 +58,7 @@ class Vraag extends \yii\db\ActiveRecord
             'soms' => 'Soms',
             'nee' => 'Nee',
             'mappingid' => 'Mappingid',
+            'standaardwaarde' => 'default'
         ];
     }
 

@@ -43,6 +43,9 @@ use yii\helpers\Url;
         <div class="col-sm-2"> 
             <?= $form->field($model, 'nee')->textInput(['style'=>'width:120px'])->label('Nee-punten') ?>
         </div>
+        <div class="col-sm-5">
+            <?= $form->field($model, 'standaardwaarde')->dropDownList([0=>'geen',1=>'nee'], ['style'=>'width:80px']); ?>
+        </div>
     </div>
     <?= HTMLInclude('formSave') ?>
 
