@@ -75,11 +75,18 @@ class VraagController extends Controller
 
         $dataProvider->setSort(['defaultOrder' => ['formid'=>SORT_ASC, 'volgnr'=>SORT_ASC]]);
 
+        $get= Yii::$app->request->get();
+        if ( $get && array_key_exists('VraagSearch', $get) && array_key_exists('formid', $get['VraagSearch']) ) {
+            $formid=Yii::$app->request->get()['VraagSearch']['formid'];
+        } else {
+            $formid="";
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'formModel' => $formModel,
-            'formid' => Yii::$app->request->get() ? Yii::$app->request->get() : '',
+            'formid' => $formid,
         ]);
     }
 
