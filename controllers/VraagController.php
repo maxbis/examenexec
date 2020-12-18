@@ -158,6 +158,8 @@ class VraagController extends Controller
         $model = new vraag();
         $model->formid=$formid;
 
+        $model->volgnr = Vraag::find()->where(['formid'=>$formid])->max('volgnr') + 1;
+
         if ($formid) {
             $criterium = Criterium::find()->select('id, omschrijving')->where([ 'werkprocesid' => $model->form->werkproces ])->asArray()->all();
         } else {
