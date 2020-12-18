@@ -107,6 +107,7 @@ class FormController extends Controller
     {
         $model = $this->findModel($id);
         $examenModel = examen::find()->all();
+        $werkprocesModel = werkproces::find()->all();
  
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -115,6 +116,7 @@ class FormController extends Controller
         return $this->render('update', [
             'model' => $model,
             'examenModel' => $examenModel,
+            'werkprocesModel' => $werkprocesModel
         ]);
     }
 
