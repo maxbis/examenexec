@@ -30,9 +30,6 @@ use yii\helpers\Url;
         <div class="col-sm-5">
             <?= $form->field($model, 'mappingid')->dropDownList(ArrayHelper::map($criterium,'id','omschrijving'), ['prompt'=>'...', 'style'=>'width:300px'])->label('Vraag hoort bij SPL Rubic'); ?>
         </div>
-        <div class="col-sm-5">
-            <?= $form->field($model, 'mappingid')->textInput(['readonly'=>true, 'style'=>'width:150px'])->label('current mappingid') ?>
-        </div>
     </div>
 
     <br>
