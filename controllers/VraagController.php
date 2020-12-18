@@ -185,7 +185,7 @@ class VraagController extends Controller
 
         $model->id = null;
         $model->vraag = $prefix.$model->vraag;
-        $model->volgnr = Vraag::find()->where(['formid'=>$formid])->max('volgnr') + 1;
+        $model->volgnr = '';
         $model->isNewRecord = true;
         $model->save();
 
