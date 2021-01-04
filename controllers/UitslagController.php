@@ -69,6 +69,11 @@ class UitslagController extends Controller
         // if no parameter is specified then taken the active exam (examen.actief=1)
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
 
+        $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
+        if ( $examen['id'] == $examenid ) { // if explicitly asked for examenid and it is the active examen, remove explicit tag to inform the view that we are in edit mode.
+            $examenid="";
+        }
+
         if ( $examenid ) {
             $criterium='e.id='.$examenid;
         } else {

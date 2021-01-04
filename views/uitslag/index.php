@@ -20,6 +20,7 @@ $nr=0;
 </style>
 
 <h1>Uitslagen</h1>
+<small>Alleen wanneer een examen op actief staat, kan er worden gewijzigd door op de cijfers te klikken</small>
 
 <p></p>
 
@@ -95,7 +96,11 @@ $nr=0;
 
                     foreach($wp as $thisWp) {
                         echo "<td class=\"even\">"; 
-                        echo Html::a($value[$thisWp]['result'][0], ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
+                        if ( $examenid) {
+                            echo $value[$thisWp]['result'][0];
+                        } else {
+                            echo Html::a($value[$thisWp]['result'][0], ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
+                        }
                         echo "</td>";
                     }
                     echo "<td>&nbsp;</td>";
