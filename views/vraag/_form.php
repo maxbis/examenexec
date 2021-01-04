@@ -51,11 +51,13 @@ use yii\helpers\Url;
     <br>
     <?php $back = (Yii::$app->request->referrer); ?>
     <div class="form-group">
-        <?= Html::a( 'Cancel', strstr($back, 'update') ? '/vraag/index' : Yii::$app->request->referrer, ['class'=>'btn btn-primary']); ?>
+    &nbsp;&nbsp;&nbsp;
+        <?= Html::a( '&nbsp;Lijst&nbsp;', ['/vraag/index', 'VraagSearch[formid]'=>$formModel[0]['id'] ], ['class'=>'btn btn-primary']); ?>
         &nbsp;&nbsp;&nbsp;
         <?= Html::submitButton('&nbsp;Save&nbsp;', ['class' => 'btn btn-success']) ?>
         &nbsp;&nbsp;&nbsp;
         <?= Html::a( '&nbsp;Copy&nbsp;', ['/vraag/copy', 'id'=>$model->id, 'prefix'=>'COPY '], ['class'=>'btn btn-warning']); ?>
+      
     </div>
 
     <?php ActiveForm::end(); ?>

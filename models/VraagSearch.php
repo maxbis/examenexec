@@ -56,6 +56,9 @@ class VraagSearch extends Vraag
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 40,
+            ],
         ]);
         
         // added for N:1 relation vraag:form

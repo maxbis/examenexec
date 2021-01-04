@@ -17,7 +17,7 @@ $this->title = 'Formulieren';
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             [
                 'attribute'=>'nr',
@@ -43,6 +43,10 @@ $this->title = 'Formulieren';
             [
                 'attribute'=>'examen.naam',
                 'label' => 'Examen',
+                'format' => 'raw',
+                'value' => function ($data) {
+                    return Html::a($data->examen->naam, ['/exmen/form?id='.$data->id],['title' => 'Show Form',]);
+                  },  
             ],
             [
                 'attribute'=>'werkproces',

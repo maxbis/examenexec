@@ -57,15 +57,13 @@ use yii\widgets\LinkPager;
     $action = Url::toRoute(['beoordeling/formpost']);
 ?>
 
-<!--
 <style>
     input[type=radio] {
         vertical-align: middle;
-        width: 1.4em;
-        height: 1.4em;
+        width: 1.5em;
+        height: 1.5em;
     }
 </style>
--->
 
 <!-- this is the real form that needs to be filled in -->
 
@@ -113,7 +111,7 @@ use yii\widgets\LinkPager;
                         <?php else: ?>
                             <td>nvt</td>
                         <?php endif; ?>
-                    <td><input type="radio" id="3-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-3-'.$item->nee ?>" <?= ($thisAnswer==3) ? 'checked' : '' ?> ></label></td>
+                    <td><input type="radio" id="3-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-3-'.$item->nee ?>" <?= ($thisAnswer==3) ? 'checked' : '' ?> <?= $item->standaardwaarde && ! $thisAnswer ? 'checked' : '' ?> ></label></td>
                 </tr>
                 <?php if ( $item->toelichting != "" ): ?>
                     <tr>

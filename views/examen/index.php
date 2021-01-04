@@ -51,24 +51,26 @@ $this->params['breadcrumbs'][] = $this->title;
               return Html::a($data->naam, ['/examen/update?id='.$data->id],['title'=> 'Edit',]);
             },
           ],
+
           [
             'attribute'=>'',
             'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
             'format' => 'raw',
             'value' => function ($data) {
               return Html::a('<span class="glyphicon glyphicon-play"></span>',
+              ['/werkproces/index', 'WerkprocesSearch[examen_type]'=>$data->examen_type], ['title'=> 'Naar Werkprocessen' ]);
+            },
+          ],
+
+          [
+            'attribute'=>'',
+            'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
+            'format' => 'raw',
+            'value' => function ($data) {
+              return Html::a('<span class="glyphicon glyphicon-check"></span>',
               ['/uitslag/index', 'examenid'=>$data->id], ['title'=> 'Naar Examenuitslag' ]);
             },
           ],
-          // /werkproces/index?WerkprocesSearch[examen_type]=1
-          // [
-          //   'attribute'=>'examen_type',
-          //   'contentOptions' => ['style' => 'width:100px; white-space: normal;'],
-          //   'format' => 'raw',
-          //   'value' => function ($data) {
-          //     return Html::a($data->examen_type, ['/werkproces/index'],['WerkprocesSearch[examen_type]='=> $data->examen_type,]);
-          //   },
-          // ],
 
           [
             'class' => 'yii\grid\ActionColumn',

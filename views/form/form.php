@@ -6,6 +6,13 @@ use yii\widgets\LinkPager;
 
 <!-- preview form -->
 
+<style>
+    input[type=radio] {
+        width: 1.5em;
+        height: 1.5em;
+    }
+</style>
+
 <div class="Beoordelingsformulier">
     <h1>
     Beoordelingsformulier
@@ -60,11 +67,15 @@ use yii\widgets\LinkPager;
 
         <textarea rows="4" cols="100" name="opmerking" form="myForm"></textarea>
 
-        <br>
+        <br><br>
         
         <div class="form-group">
         <br>
-            <?= Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>
+             <?= Html::a( '&nbsp;&nbsp;Lijst&nbsp;&nbsp;', ['/vraag/index', 'VraagSearch[formid]'=>$form->id ], ['class'=>'btn btn-primary']); ?>
+            &nbsp;&nbsp;&nbsp;
+            <?= Html::a( 'Terug', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>
+            &nbsp;&nbsp;&nbsp;
+            <?= Html::a( 'Nieuwe Vraag', ['/vraag/create', 'formid'=>$form->id] , ['class'=>'btn btn-warning']); ?>
         </div>
     </form>
 

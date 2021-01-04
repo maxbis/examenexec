@@ -32,6 +32,13 @@ use yii\widgets\LinkPager;
     }
 </script>
 
+<style>
+    input[type=radio] {
+        width: 1.5em;
+        height: 1.5em;
+    }
+</style>
+
 <!-- Toont ingevulde formulier (statisch) -->
 
 <div class="Beoordelingsformulier">
