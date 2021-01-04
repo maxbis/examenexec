@@ -3,6 +3,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 $nr=0;
+$colspan = count($wp)+1;
 
 ?>
 
@@ -26,18 +27,16 @@ $nr=0;
 
 <div class="card" style="width: 1000px">
     <div class="card-body">
-        <table class="table">
+        <table class="table" border=0>
             <thead>
                 <tr>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th colspan=4>Cijfers</th>
+                    <th colspan=<?=$colspan?>>Cijfers</th>
+                    <th colspan=<?=$colspan?>>Resultaten</th>
+                    <th colspan=<?=$colspan?>>Print Ready</th>
                     <th>&nbsp;</th>
-                    <th colspan=4>Resultaten</th>
-                    <th>&nbsp;</th>
-                    <th colspan=4>Print Ready</th>
-                    <th>&nbsp;</span></th>
                 </tr>    
                 <tr>
                 <?php
@@ -60,6 +59,7 @@ $nr=0;
                     foreach($wp as $thisWp) {
                         echo "<th class=\"even\">W".$teller++."</th>";
                     }
+                    echo "<th>&nbsp;</th>";
                     echo "<th>";
                     echo Html::a("<span style=\"color:#D0D0F0\" class=\"glyphicon glyphicon-print\"></span>",
                         ['print/index', 'id'=>-99, 'examenid'=>$examenid ],
@@ -116,6 +116,7 @@ $nr=0;
                         else echo "<div class=\"text-info\">".$value[$thisWp]['status']."</div>";
                     }
                     echo "</td>";
+                    echo "<td>&nbsp;</td>";
                     echo "<td>";
                     $print=true;
                     foreach($wp as $thisWp) {
