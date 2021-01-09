@@ -298,27 +298,27 @@ class GesprekController extends Controller
 
         // this query replaces the otehr two. In this statement a student is assigned to a rolspeler in one go
         // in order to avoid concurrency issues
-        $sql="update gesprek set rolspelerid=:rolspelerid where id=
-                (   select id
-                    from gesprek
-                    where status =0 and (rolspelerid='' or rolspelerid is null)
-                    and created =
-                    (   select min(created)
-                        from gesprek
-                        where status =0 and (rolspelerid='' or rolspelerid is null)
-                    )
-                )";
-        $params = array(':rolspelerid'=>$id);
-        $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+        //$sql="update gesprek set rolspelerid=:rolspelerid where id=
+        //        (   select id
+        //           from gesprek
+        //            where status =0 and (rolspelerid='' or rolspelerid is null)
+        //            and created =
+        //            (   select min(created)
+        //                from gesprek
+        //                where status =0 and (rolspelerid='' or rolspelerid is null)
+        //            )
+        //        )";
+        //$params = array(':rolspelerid'=>$id);
+        //$result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
 
-        //$sql = "select * from gesprek where status =0 and (rolspelerid='' or rolspelerid is null) order by created ASC";
-        //$student = Yii::$app->db->createCommand($sql)->queryOne();
+        $sql = "select * from gesprek where status =0 and (rolspelerid='' or rolspelerid is null) order by created ASC";
+        $student = Yii::$app->db->createCommand($sql)->queryOne();
 
-        //if ($student) { // doi we have a waiting student
-        //    $sql = "update gesprek set rolspelerid=:rolspelerid where id=:id";
-        //    $params = array(':rolspelerid'=>$id,':id'=>$student['id']);
-        //    $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-        //}
+        if ($student) { // doi we have a waiting student
+            $sql = "update gesprek set rolspelerid=:rolspelerid where id=:id";
+            $params = array(':rolspelerid'=>$id,':id'=>$student['id']);
+            $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+        }
 
 
         return $this->actionRolspeler($id);
