@@ -198,10 +198,19 @@ class GesprekController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // Delete gesprek, beoordeling en results
 
-        // delete all beoordelingen belonging to this gesprek
-        Yii::$app->db->createCommand()->delete('beoordeling', 'gesprekid = '.$id)->execute();
+        // delete results
+        $gesprek=$this->findModel($id);
+        $sql="delete from results where studentid=:studentid and formid=:formid";
+        $params = [ ':studentid'=> $gesprek->studentid,  ':formid'=> $gesprek->formid, ];
+        $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+         // delete all beoordelingen belonging to this gesprek
+         Yii::$app->db->createCommand()->delete('beoordeling', 'gesprekid = '.$id)->execute();
+
+        // delete gesprek
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
