@@ -40,7 +40,7 @@ class GesprekController extends Controller
                     [ 'actions' => ['student','create', 'update-status'],
                         'allow' => true,
                     ],
-                    [ 'actions' => [ 'rolspeler', 'update' ],
+                    [ 'actions' => [ 'rolspeler', 'update', 'call-student' ],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
@@ -327,6 +327,7 @@ class GesprekController extends Controller
 
     public function actionRolspeler($id=0,$token="",$gesprekid=0)
     {
+
         // only if not admin, becasue admin needs easy access via GET token=ABC
         if ( Yii::$app->user->identity->role == 'rolspeler') {
             if ( isset($_COOKIE['rolspeler']) ) $id = $_COOKIE['rolspeler'];
@@ -337,7 +338,8 @@ class GesprekController extends Controller
         } elseif($token) {
             $rolspeler = Rolspeler::find()->where(['token' => $token])->andWhere(['not', ['token' => null]])->one();
         } else {
-            return $this->render('rolspeler');
+            dd('A,Wrong, no id and no token recieved');
+            // return $this->render('rolspeler');
         }
 
         if ($gesprekid) { // we came here via a cancelled gesprek
@@ -348,8 +350,9 @@ class GesprekController extends Controller
         }
         
         if (!empty($rolspeler)) {
-            $gesprekken = Gesprek::find()->where(['rolspelerid' => $rolspeler->id])->orderBy(['status' => 'SORT_ASC', 'id' => SORT_DESC])->all();
-            $alleGesprekken = Gesprek::find()->all();
+            
+            $gesprekken = Gesprek::find()->joinWith('examen')->where('examen.actief=1')->andwhere(['rolspelerid' => $rolspeler->id])->orderBy(['status' => 'SORT_ASC', 'id' => SORT_DESC])->all();
+            $alleGesprekken = Gesprek::find()->joinWith('examen')->where('examen.actief=1')->all();
             $unassigned = Gesprek::find()->where('rolspelerid=0 OR rolspelerid is null')->count();
             setcookie("rolspeler", $rolspeler->id, time()+7200, "/");
 
@@ -361,6 +364,7 @@ class GesprekController extends Controller
             ]);
         }
         
-        return $this->render('rolspeler');
+        dd('B,Wrong, no id and no token recieved');
+        // return $this->render('rolspeler')
     }
 }

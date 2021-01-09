@@ -48,7 +48,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
 
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width:20px;'],
