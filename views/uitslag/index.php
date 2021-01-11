@@ -76,6 +76,7 @@ $colspan = count($wp)+1;
             
             <?php
                 foreach($dataSet as $naam => $value) {
+                    if ($value['studentid']=='') continue; // if beoordeling is not yet specified skip this record
                     $nr++;
                     echo "<tr>";
                     echo "<td class=\"text-muted\">".$nr."</td>";

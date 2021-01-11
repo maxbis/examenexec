@@ -120,7 +120,8 @@ class UitslagController extends Controller
             ORDER BY 1,2";
         $progres = Yii::$app->db->createCommand($sql)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
 
-        //dd($progres);
+        // d($progres);
+        // d($result);
         $wp=[];
         foreach($formWpCount as $key => $value) {
             $wp[]=$key;
