@@ -329,9 +329,7 @@ class GesprekController extends Controller
             $result = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
         }
 
-
-        return $this->actionRolspeler($id);
-
+        return $this->redirect(array('gesprek/rolspeler'));
     }
 
     public function actionRolspeler($id=0,$token="",$gesprekid=0)
