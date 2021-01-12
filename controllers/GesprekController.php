@@ -200,11 +200,11 @@ class GesprekController extends Controller
     {
         // Delete gesprek, beoordeling en results
 
-        // delete results
-        $gesprek=$this->findModel($id);
-        $sql="delete from results where studentid=:studentid and formid=:formid";
-        $params = [ ':studentid'=> $gesprek->studentid,  ':formid'=> $gesprek->formid, ];
-        $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+        // delete results; als het goed is staan er nooit dubelle results in
+        // $gesprek=$this->findModel($id);
+        // $sql="delete from results where studentid=:studentid and formid=:formid";
+        // $params = [ ':studentid'=> $gesprek->studentid,  ':formid'=> $gesprek->formid, ];
+        // $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
 
          // delete all beoordelingen belonging to this gesprek
          Yii::$app->db->createCommand()->delete('beoordeling', 'gesprekid = '.$id)->execute();
