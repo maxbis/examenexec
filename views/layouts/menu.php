@@ -49,6 +49,7 @@ echo Nav::widget([
                 ['label' => 'Gesprekken per kandidaat', 'url' => ['/query/gesprekken-per-kandidaat']],
                 ['label' => 'Vrije rolspelers', 'url' => ['/query/vrije-rolspelers']],
                 ['label' => 'Rolspelerbelasting', 'url' => ['/query/rolspeler-belasting']],
+                ['label' => 'Recalc Scores', 'url' => ['/query/recalc']],
             ],
         ],
         [

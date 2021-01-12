@@ -27,9 +27,11 @@ $nr=0;
             <?php
                 if ( $data['row'] ) {
                     foreach($data['row'] as $item) {
-                        $nr++;
-                        echo "<tr>";
-                        echo "<td>".$nr."</td>";
+                        if ( ! isset($nocount) ) {
+                            $nr++;
+                            echo "<tr>";
+                            echo "<td>".$nr."</td>";
+                        }
                         for($i=0;$i<count($data['col']);$i++) {
                             echo "<td>".$item[$data['col'][$i]]."</td>";
     

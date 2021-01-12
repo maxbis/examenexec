@@ -145,6 +145,8 @@ class QueryController extends Controller
         }
     }
 
+
+
     public function actionExportResults() {
 
         $db_naam="beoordeling";
@@ -439,24 +441,19 @@ class QueryController extends Controller
         ]);
     }
 
-    public function actionGezakt() {
+    public function actionRecalc() {
+        // r.id, r.vraagid, r.vraagnr, r.score oldscore, case antwoordnr when 1 then ja when 2 then soms when 3 then nee end newscore,
         $sql="
-            SELECT naam, count(onderdeel) onderdelen from (
-                SELECT s.naam naam, f.omschrijving onderdeel
-                FROM results r
-                INNER JOIN student s ON s.id=r.studentid
-                INNER JOIN form f ON f.id=r.formid
-                INNER JOIN examen e ON e.id=f.examenid
-                WHERE e.actief=1
-                GROUP BY 1,2
-                HAVING greatest(sum(r.score),0)=0
-                ORDER BY 1,2
-            ) AS subquery
-            group by 1
-            ";
+           SELECT 
+            concat ('update results set score = ', case antwoordnr when 1 then ja when 2 then soms when 3 then nee end, ' where id = ', r.id,';') Results
+            FROM results r
+            inner join vraag v on r.vraagid=v.id
+            and case antwoordnr when 1 then ja when 2 then soms when 3 then nee end <> r.score
+        ";
 
         return $this->render('output', [
-            'data' => $this->executeQuery($sql, "Gezakt op cruciale criteria per student aantal onderdelen"),
+            'data' => $this->executeQuery($sql, "Recalc"),
+            'nocount' => true, 
         ]);
     }
 
