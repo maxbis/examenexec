@@ -75,4 +75,4 @@ $this->params['breadcrumbs'][] = $this->title;
  
 ?>
 
-<br><br><i>(delete verwijdert <b>Gespreksaanvraag</b> en indien aanwezig de <b>Beoordeling</b>)</i>
+<br><br><i>(delete verwijdert <b>Gespreksaanvraag</b> en indien aanwezig de <b>Beoordeling</b>, het resultaat/score wordt niet verwijderd!)</i>

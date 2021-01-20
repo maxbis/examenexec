@@ -271,6 +271,23 @@ class QueryController extends Controller
         ]);
     }
 
+    public function actionBeoordelaars() {
+        $sql="
+            select s.klas klas, s.naam student, u.werkproces werkproces, r1.naam beoordelaar1, r2.naam beoordelaar2
+            from uitslag u
+            INNER JOIN student s on s.id=u.studentid
+            LEFT JOIN rolspeler r1 on r1.id=beoordeelaar1id
+            LEFT JOIN rolspeler r2 on r2.id=beoordeelaar2id
+            INNER JOIN examen e on e.id=u.examenid
+            where e.actief=1
+            order by 1,2,3
+        ";
+
+        return $this->render('output', [
+            'data' => $this->executeQuery($sql, "Overzicht Beoordelaars per klas en werkproces")
+        ]);
+    }
+
 
     public function actionResultaat() {
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
