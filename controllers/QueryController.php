@@ -252,7 +252,7 @@ class QueryController extends Controller
 
         return $this->render('output', [
             'data' => $this->executeQuery($sql, "Results Deleted"),
-            'descr' => 'Show gesprekken without results, threre should be none.'
+            'descr' => 'Show gesprekken without results, there should be none. Fix by update a gesprek or create new.'
         ]);
     }
 
