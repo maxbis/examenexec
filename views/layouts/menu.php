@@ -47,13 +47,17 @@ echo Nav::widget([
             'label' => 'Queries',
             'items' => [
                 ['label' => 'Gesprekken per kandidaat', 'url' => ['/query/gesprekken-per-kandidaat']],
+                ['label' => 'Gesprekken per rolspeler/beoordelaar', 'url' => ['/query/rolspeler-belasting']],
                 ['label' => 'Vrije rolspelers', 'url' => ['/query/vrije-rolspelers']],
-                ['label' => 'Rolspelerbelasting', 'url' => ['/query/rolspeler-belasting']],
+                ['label' => '-----------------------------------'],
                 ['label' => 'Recalc Scores', 'url' => ['/query/recalc']],
+                ['label' => 'Orphan gesprekken', 'url' => ['/query/no-result']],
+                ['label' => 'Double Results', 'url' => ['/query/no-doubles']],
+                //['label' => 'Punten per onderdeel', 'url' => ['/query/punten']],
             ],
         ],
         [
-            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
+            'visible' => false && (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'label' => 'Login as...',
             'items' => [
                  ['label' => 'Student Log in', 'url' => ['/student/login']],
@@ -62,43 +66,8 @@ echo Nav::widget([
             ],
         ],
 
-        [   'label' => 'Export',
-            'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'xxx'),
-            'items' => [
-                ['label' => 'Export Results to File', 'url' => ['/query/export']],
-                [  'label' => 'Export (active) Results to KTB',
-                    'url' => ['/query/export-results'],
-                    'linkOptions' => array('onclick'=>'return confirm("Export all results for active exam and active forms? ")'),
-                ],
-                [  'label' => 'Export (all) Comments to KTB',
-                    'url' => ['/query/export-comments'],
-                    'linkOptions' => array('onclick'=>'return confirm("All empty comments for the active exam will be overwitten in KTB, are you sure?")'),
-                ],
-
-                ['label' => '-----------------------------------'],
-                [
-                    'label' => 'Open KTB (Kentaak Beoordelingen)',
-                    'url' => 'http://vps789715.ovh.net/KerntaakBeoordelingen/',
-                    'template'=> '<a href="{url}" target="_blank">{label}</a>',
-                    'linkOptions' => ['target' => '_blank'],
-                ],
-            ],
-            'options' => ['class' => 'nav-item']
-        ],
-
     ],
 
-]);
-
-echo Nav::widget([
-    'options' => ['class' => 'navbar-nav ml-auto'],
-    'items' => [
-        Yii::$app->user->isGuest ? (
-            ['label' => 'Login', 'url' => ['/site/login'], 'options' => ['class' => 'nav-item']]
-        ) : (
-            ['label' => 'Logout', 'url' => ['/site/logout'], 'options' => ['class' => 'nav-item'],]
-        )
-    ],
 ]);
 
 NavBar::end();

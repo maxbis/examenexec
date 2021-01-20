@@ -105,11 +105,11 @@ $colspan = count($wp)+1;
                         echo "</td>";
                     }
                     echo "<td>&nbsp;</td>";
-                    foreach($wp as $thisWp) {
+                    foreach($wp as $thisWp) { // Resultaten
                         echo "<td class=\"even\">".$value[$thisWp]['result'][1]."</td>";
                     }
                     echo "<td>&nbsp;</td>";
-                    foreach($wp as $thisWp) {
+                    foreach($wp as $thisWp) { // Print Ready
                         echo "<td class=\"even\">"; 
                         //if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>";
                         if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo  Html::a( "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>" , ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );

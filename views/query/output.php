@@ -5,6 +5,12 @@ $nr=0;
 
 <h1><?= $data['title'] ?></h1>
 
+<?php
+    if (isset($descr)) {
+        echo "<small>".$descr."</small>";
+    }
+?>
+
 <p></p>
 
 <div class="card"  style="width: 600px">
@@ -12,8 +18,8 @@ $nr=0;
         <table class="table">
             <thead>
                 <tr>
-                    <td>#</td>
                     <?php
+                        if ( ! isset($nocount) ) echo "<td>#</td>";
                         if ( $data['row'] ) {
                             for($i=0;$i<count($data['col']);$i++) {
                                 echo "<th>".$data['col'][$i]."</th>";

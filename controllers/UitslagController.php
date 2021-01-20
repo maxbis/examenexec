@@ -173,7 +173,7 @@ class UitslagController extends Controller
     }
 
     private function rating($cijfer) {
-        if ( $cijfer > 8 ) return "G"; 
+        if ( $cijfer >= 8 ) return "G"; 
         if ( $cijfer >= 5.5 ) return "V";
         return "O";
     }
@@ -220,7 +220,7 @@ class UitslagController extends Controller
 
         $rolspelers = Rolspeler::find()->where(['actief'=>1])->orderBy(['naam'=>SORT_ASC])->all();
 
-        if (! $uitslag ) { // if uitslag is not checked/ready or empty, get all remarks
+        if (! $uitslag ) { // if uitslag is not empty, get all remarks
             $uitslag = new Uitslag();
             $sql="
                 SELECT GROUP_CONCAT(CONCAT('[',f.omschrijving,']: ', opmerking, '\n')) opmerkingen

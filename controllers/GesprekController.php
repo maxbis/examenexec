@@ -113,7 +113,7 @@ class GesprekController extends Controller
             if (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin') { 
                 if ( $model->rolspelerid ) {
                     // if rolspeler defined, then go to fill in form
-                    return $this->redirect(['vraag/form', 'gesprekid' => $model->id], );
+                    return $this->redirect(['vraag/form', 'gesprekid' => $model->id]);
                 } else { // if logged on as admin 
                     // else just init a new gesprek and put it in the list wating for a rolspeler
                     return $this->redirect(['gesprek/index']);

@@ -100,7 +100,7 @@ $waar=Yii::$app->params['studentStatus']; // defined in config/params.php
         <td><?php if ($item->status == 2) { //TODO klaar, show filled in form....?
                     echo Html::a('Klaar', ['/vraag/form', 'gesprekid' => $item->id,
                     'formid' => $item->form->id, 'studentid' => $item->student->id,
-                    'rolspelerid' => $rolspeler->id, 'compleet' => 1], );
+                    'rolspelerid' => $rolspeler->id, 'compleet' => 1]);
                 } else {
                     echo $status[$item->status];
                 }
@@ -125,7 +125,7 @@ $waar=Yii::$app->params['studentStatus']; // defined in config/params.php
         <td><?php if ($item->status != 2): ?>
                 <?= Html::a($text[$item->status], ['/vraag/form', 'gesprekid' => $item->id,
                     'formid' => $item->form->id, 'studentid' => $item->student->id,
-                    'rolspelerid' => $rolspeler->id, 'compleet' => 0],) ?>
+                    'rolspelerid' => $rolspeler->id, 'compleet' => 0]) ?>
             <?php else: ?>
                 &#128504;
             <?php endif; ?> </td>
