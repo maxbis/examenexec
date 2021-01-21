@@ -75,6 +75,9 @@ $colspan = count($wp)+1;
             </thead>
             
             <?php
+                $gezakt=0;
+                $geslaagd=0;
+                $gemaakt=0;
                 foreach($dataSet as $naam => $value) {
                     if ($value['studentid']=='') continue; // if beoordeling is not yet specified skip this record
                     $nr++;
@@ -90,25 +93,34 @@ $colspan = count($wp)+1;
                     }
                     if ($onvoldoende) {
                         echo "<td style=\"color:red\">";
+                        $gezakt++;
                     } else {
                         echo "<td>";
+                        $geslaagd++;
                     }
                     echo $naam."</td>";
 
-                    foreach($wp as $thisWp) {
+                    $dezeGemaakt=false;
+                    foreach($wp as $thisWp) { // cijfers afdrukken
                         echo "<td class=\"even\">"; 
                         if ( $examenid) {
                             echo $value[$thisWp]['result'][0];
                         } else {
                             echo Html::a($value[$thisWp]['result'][0], ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
+                        }  
+                        if ( $value[$thisWp]['result'][0] >= 1.05 ) {
+                            $dezeGemaakt=true;
                         }
                         echo "</td>";
                     }
                     echo "<td>&nbsp;</td>";
-                    foreach($wp as $thisWp) { // Resultaten
+                    if ( $dezeGemaakt ) $gemaakt++;
+
+                    foreach($wp as $thisWp) { // Resultaten (O, V, G)
                         echo "<td class=\"even\">".$value[$thisWp]['result'][1]."</td>";
                     }
                     echo "<td>&nbsp;</td>";
+
                     foreach($wp as $thisWp) { // Print Ready
                         echo "<td class=\"even\">"; 
                         //if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>";
@@ -138,6 +150,76 @@ $colspan = count($wp)+1;
             ?>
 
         </table>
+
+        <?php if ( $gemaakt != 0 && ($geslaagd+$gezakt) != 0 ): ?>
+            <hr>
+            
+            <div class="card" style="width: 450px;">
+                <div class="card-header">
+                    <h3>Summary</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                             Totaal aantal kandidaten
+                        </div>
+                        <div class="col-lg-3">
+                            <?=$geslaagd+$gezakt?>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            Thuisblijvers
+                        </div>
+                        <div class="col-lg-3">
+                            <?=$geslaagd+$gezakt-$gemaakt?>
+                        </div>
+                        <div class="col-lg-2">
+                            <?=round(($geslaagd+$gezakt-$gemaakt)*100/($geslaagd+$gezakt),1)?>%
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            Actieve kandidaten
+                        </div>
+                        <div class="col-lg-3">
+                            <?=$gemaakt?>
+                        </div>
+                        <div class="col-lg-2">
+                            <?=round(($gemaakt)*100/($geslaagd+$gezakt),1)?>%
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            Geslaagd (van actieve)
+                        </div>
+                        <div class="col-lg-3">
+                            <?=$geslaagd?> / <?=$gemaakt?>
+                        </div>
+                        <div class="col-lg-2">
+                            <?=round($geslaagd*100/($gemaakt),1)?>%
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            Geslaagd (op totaal)
+                        </div>
+                        <div class="col-lg-3">
+                            <?=$geslaagd?> / <?=$geslaagd+$gezakt?>
+                        </div>
+                        <div class="col-lg-2">
+                            <?=round($geslaagd*100/($geslaagd+$gezakt),1)?>%
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        <?php endif; ?>
+
     </div>
 </div>
-<small><hr><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>
+<br><br>
+<small><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>
