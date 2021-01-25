@@ -6,3 +6,6 @@ je dus een orphan result voor en dit levert een foutmelding op in het examen res
 
 Je kunt geen studenten weghalen, er zou een 'deleted' flag moeten komen.
 
+Crucial criteria zie je niet in resultatenscherm
+
+Correctei maken en openlaten staan, dan openieuw beoordeling openen vanuit resulstatescherm -> fout!

@@ -128,7 +128,7 @@ class UitslagController extends Controller
         }
 
         $dataSet=[];
-        foreach($progres as $item) { // init
+        foreach($progres as $item) { // init datastructure
             foreach($wp as $thisWp) {
                 $dataSet[$item['naam']][$thisWp]['result']=['', ''];
                 $dataSet[$item['naam']][$thisWp]['status']=0;
@@ -136,7 +136,7 @@ class UitslagController extends Controller
             $dataSet[$item['naam']]['studentid']="";
         }
 
-        foreach($progres as $item) {
+        foreach($progres as $item) { // count forms per werproces
             if ( $item['ready'] ) {
                 $dataSet[$item['naam']][$item['werkproces']]['status']=99;
             } else {
@@ -145,7 +145,9 @@ class UitslagController extends Controller
            
         }
         
-        foreach($result as $item) {
+        foreach($result as $item) { // Result [ cijfer, result(O, V, G) ]
+            // if cruciaal item niet gehaald, cijfer = 1.0 and result = O
+            // ToDo
             $dataSet[$item['naam']][$item['werkproces']]['result']=[ $item['cijfer'], $this->rating($item['cijfer']) ];
             $dataSet[$item['naam']]['studentid']=$item['studentid'];
             $dataSet[$item['naam']]['groep']=$item['klas'];
@@ -154,11 +156,40 @@ class UitslagController extends Controller
         // d($werkproces);
         // dd($dataSet);
 
+        // create cruciaalList, ass. array with key studentid.werkprocess to indicate that thsi student for this wp has failed becasue of crucial item
+        $sql="
+        SELECT distinct studentid, wp FROM (
+            SELECT s.naam naam, s.id studentid, f.werkproces wp, v.mappingid mappingid,
+                    MAX(c.cruciaal),
+                        SUM(r.score)
+            FROM results r
+            INNER JOIN student s on s.id=r.studentid
+            INNER JOIN vraag v on v.formid = r.formid
+            INNER JOIN criterium c on c.id = v.mappingid
+            INNER JOIN form f on f.id=v.formid
+            INNER JOIN examen e on e.id=f.examenid
+            WHERE v.volgnr = r.vraagnr
+            AND ".$criterium."
+            GROUP BY 1,2,3,4
+            HAVING MAX(cruciaal)=1 AND SUM(score)<5
+        ) AS sub
+        ORDER BY 1
+        ";
+
+        $cruciaal = Yii::$app->db->createCommand($sql)->queryAll();
+        $cruciaalList=[];
+        foreach($cruciaal as $item) {
+            $cruciaalList[$item['studentid'].$item['wp']]=1;
+        }
+
+       //dd($cruciaalList);
+
         return $this->render('index', [
             'dataSet' => $dataSet,
             'formWpCount' =>$formWpCount, // formcount per wp
             'wp' => $wp,
             'examenid' => $examenid,
+            'cruciaalList' => $cruciaalList,
         ]);
     }
 

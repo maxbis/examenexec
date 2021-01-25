@@ -64,7 +64,7 @@ class PrintController extends Controller
                 GROUP BY studentid HAVING COUNT(*)=(
                     SELECT COUNT(*) FROM werkproces w
                     INNER JOIN examen e ON e.examen_type=w.examen_type
-                    WHERE e.id='.$examenid.'
+                    WHERE e.actief=1
                     )
             ';
             $studentenids=Yii::$app->db->createCommand($sql)->queryAll();

@@ -86,12 +86,12 @@ $colspan = count($wp)+1;
                     echo "<td>".$value['groep']."</td>";
                     $onvoldoende=false;
                     foreach($wp as $thisWp) {
-                        if ( $value[$thisWp]['result'][1] == 'O' ) {
+                        if ( $value[$thisWp]['result'][1] == 'O' || isset($cruciaalList[$value['studentid'].$thisWp]) ) {
                             $onvoldoende=true;
                             break;
                         }
                     }
-                    if ($onvoldoende) {
+                    if ($onvoldoende ) {
                         echo "<td style=\"color:red\">";
                         $gezakt++;
                     } else {
@@ -117,7 +117,12 @@ $colspan = count($wp)+1;
                     if ( $dezeGemaakt ) $gemaakt++;
 
                     foreach($wp as $thisWp) { // Resultaten (O, V, G)
-                        echo "<td class=\"even\">".$value[$thisWp]['result'][1]."</td>";
+                        // $cruciaalList[studentid.werkprocess]=1 if crucial criteria is not met (crucial criteria en 0 punten op dit mappingid)
+                        if ( isset($cruciaalList[$value['studentid'].$thisWp]) && $value[$thisWp]['result'][1]!='O' ) {
+                            echo "<td class=\"even\" style=\"color:red;\">O</td>";
+                        } else {
+                            echo "<td class=\"even\">".$value[$thisWp]['result'][1]."</td>";
+                        } 
                     }
                     echo "<td>&nbsp;</td>";
 
