@@ -49,7 +49,7 @@ class PrintController extends Controller
     public function actionIndex($id, $examenid) {
 
         $pdf = new PDF();
-        
+
         $pdf->SetAutoPageBreak(true, 10);
         $pdf->AddPage(); //maak een lege pagina
         $pdf->Ln(10);
@@ -78,6 +78,8 @@ class PrintController extends Controller
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
             $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
 
+            $pdf->setFooterName($pdf->transliterateTurkishChars($student['naam']));
+
             // when printed double sided each person will start on an odd page.
             if ( ($pdf->PageNo() % 2) == 0 ) {
                 $pdf->addPage();
@@ -90,7 +92,7 @@ class PrintController extends Controller
                 }
                 $criterium=Criterium::find()->where(['werkprocesid'=>$wp['id']])->orderBy(['id'=>'ASC'])->asArray()->all();
                 $resultaat=json_decode($uitslag->resultaat, true);
-                
+
                 // Header - 2 regels
                 $pdf->pdfHeader( substr($wp['id'],0,5).' '.$examen['titel'], $wp['id'].' '.$wp['titel'] );
                 
@@ -387,17 +389,21 @@ class PDF extends FPDF
         $this->SetFillColor(142,169,219);
         $this->Cell(30, 30,'Beoordelaar 1', 1,0, "C",1);
         $this->SetFillColor(255);
-        $this->SetTextColor(220,220,220);
+        $this->SetTextColor(200,200,200);
         $this->Cell(80, 30,$beoordeelaar1, 1,0, "C",1);
         $this->SetTextColor(0);
         $this->Ln();
         $this->SetFillColor(142,169,219);
         $this->Cell(30, 30, 'Beoordelaar 2', 1,0, "C",1);
         $this->SetFillColor(255);
-        $this->SetTextColor(220,220,220);
+        $this->SetTextColor(200,200,200);
         $this->Cell(80, 30, $beoordeelaar2, 1,0, "C",1);
         $this->SetTextColor(0);
         $this->Ln();
+    }
+
+    function setFooterName($naam) {
+        $this->footerName=$naam;
     }
 
     function whiteSpace($minSpace) {
@@ -429,7 +435,7 @@ define('FPDF_VERSION','1.82');
 define('FPDF_FONTPATH','../common/font');
 
 class FPDF
-{
+{   
     protected $page;               // current page number
     protected $n;                  // current object number
     protected $offsets;            // array of object offsets
@@ -486,9 +492,12 @@ class FPDF
     protected $metadata;           // document properties
     protected $PDFVersion;         // PDF version number
 
+    protected $footerName;          // extra footer text (my MB)
+
     /*******************************************************************************
     *                               Public methods                                 *
     *******************************************************************************/
+
 
     function __construct($orientation='P', $unit='mm', $size='A4')
     {
@@ -784,6 +793,14 @@ class FPDF
     function Footer()
     {
         // To be implemented in your own inherited class
+        // Go to 1.5 cm from bottom
+        $this->SetY(-15);
+        // Select Arial italic 8
+        $this->SetFont('Arial','I',8);
+        $this->SetTextColor(160,160,160);
+        // Print centered page number
+        $this->Cell(0,10,'Page '.$this->PageNo().' '.$this->footerName,0,0,'C');
+        $this->SetTextColor(0);
     }
 
     function PageNo()
