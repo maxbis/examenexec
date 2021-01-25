@@ -56,16 +56,12 @@ class PrintController extends Controller
 
         if ($id==-99) { // secret code to print all, to be tested
             $sql='
-                SELECT studentid FROM uitslag
+                SELECT distinct studentid
+                FROM uitslag
                 WHERE ready=1
                 AND resultaat IS NOT null
                 AND beoordeelaar1id IS NOT null
                 AND beoordeelaar2id IS NOT null
-                GROUP BY studentid HAVING COUNT(*)=(
-                    SELECT COUNT(*) FROM werkproces w
-                    INNER JOIN examen e ON e.examen_type=w.examen_type
-                    WHERE e.actief=1
-                    )
             ';
             $studentenids=Yii::$app->db->createCommand($sql)->queryAll();
         } else {
@@ -78,6 +74,7 @@ class PrintController extends Controller
             $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
         }
 
+        dd($studentenids);
         foreach($studentenids as $studentid) {
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
             $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
