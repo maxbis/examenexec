@@ -74,7 +74,6 @@ class PrintController extends Controller
             $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
         }
 
-        dd($studentenids);
         foreach($studentenids as $studentid) {
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
             $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
@@ -86,6 +85,9 @@ class PrintController extends Controller
 
             foreach ($werkproces as $wp) {
                 $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->one();
+                if ( ! $uitslag ) { // if no uitslag (case Delano in examenid=2)
+                    continue;
+                }
                 $criterium=Criterium::find()->where(['werkprocesid'=>$wp['id']])->orderBy(['id'=>'ASC'])->asArray()->all();
                 $resultaat=json_decode($uitslag->resultaat, true);
                 
