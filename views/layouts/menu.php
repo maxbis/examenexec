@@ -63,12 +63,24 @@ echo Nav::widget([
             'items' => [
                  ['label' => 'Student Log in', 'url' => ['/student/login']],
                  ['label' => 'Rolspeler Log in', 'url' => ['/rolspeler/login']],
-                 ['label' => 'Clear', 'url' => ['/site/clear']],
+                 ['label' => 'Logout', 'url' => ['/site/clear']],
             ],
         ],
 
     ],
 
+]);
+
+
+echo Nav::widget([
+    'options' => ['class' => 'navbar-nav ml-auto'],
+    'items' => [
+        Yii::$app->user->isGuest ? (
+            ['label' => 'Login', 'url' => ['/site/login'], 'options' => ['class' => 'nav-item']]
+        ) : (
+            ['label' => 'Logout', 'url' => ['/site/logout'], 'options' => ['class' => 'nav-item'],]
+        )
+    ],
 ]);
 
 NavBar::end();

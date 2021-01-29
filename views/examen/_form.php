@@ -57,13 +57,14 @@ use nex\datepicker\DatePicker;
 
       <div class="row">
         <div class="col-sm-4">
-          <?= $form->field($model, 'otherid')->textInput(['maxlength' => true])->label('Examenid for export to KTB') ?>
+          <?php $model->otherid=0 ?>
+          <?= $form->field($model, 'otherid')->textInput(['maxlength' => true])->label('Examenid for export to KTB (obsolete)') ?>
           </div>
       </div>
       
       <div class="row">
         <div class="col-sm-4">
-          <?= $form->field($model, 'examen_type')->textInput(['maxlength' => true])->label('Examen Type') ?>
+          <?= $form->field($model, 'examen_type')->textInput(['maxlength' => true])->label('Examen Type (link naar groep werkprocessen)') ?>
           </div>
       </div>
     
@@ -80,5 +81,14 @@ use nex\datepicker\DatePicker;
 
 </div>
 
+<p><hr>
+<h4>Uitleg</h4>
+  <ul>
+    <li>Naam van het examen is korte naam, bijv. 'KT-1 januari 2019'.</li>
+    <li>Kerntaaknaam is de officiële naam, deze wordt afgedrukt op het SPL examen formulier (eerste regel).</li>
+    <li>Datum start en eind geeft aan wanneer het examen plaatsvind.</li>
+    <li>Examenid is oud (was voor koppeling 'Marieke-tool') en meot er uit.</li>
+    <li>Examen Type is een link naar een groep van werkprocessen. Bijv.  KT-1 -> 1, KT-2 ->2. Een groep werprocessen wordt zo gekoppeld aan dit examen.</li>
+  </ul>
 <br>
-Examenesprekken kunnen worden aangemaakt vanuit het <?= Html::a('gesprekkenoverzicht', ['/gespreks-soort/index']) ?>.
+<p>

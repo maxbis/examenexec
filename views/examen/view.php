@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'actief',
             'datum_start',
             'datum_eind',
+            'examen_type',
         ],
     ]) ?>
 
