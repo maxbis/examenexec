@@ -78,7 +78,7 @@ class MyHelpers
                 $count=0;
             }
             $count--;
-            $file = fopen($file, 'a');
+            $file = fopen($file, 'w');
             fwrite($file, $count);
             fclose($file);
 
