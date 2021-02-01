@@ -48,12 +48,16 @@ class MyHelpers
             }
         }
         if ( $weAreOK == false ) {
-            $string = "Permission denied for ". $remoteIP;
-            writeLog($string);
-            sleep(2);
-            echo $string;
-            sleep(3);
-            exit;
+            if ( self::countDown() ) {
+                return;
+            } else {
+                $string = "Permission denied for ". $remoteIP;
+                writeLog($string);
+                sleep(2);
+                echo $string;
+                sleep(3);
+                exit;
+            }
         }
     }
 
@@ -64,6 +68,26 @@ class MyHelpers
         $range[0] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int)$cidr[1]))));
         $range[1] = long2ip((ip2long($range[0])) + pow(2, (32 - (int)$cidr[1])) - 1);
         return $range;
+    }
+
+    private function countDown() {
+        $file = "../config/allowCount.txt";
+        if ( file_exists($file) ) {
+            $count = file_get_contents($file, true);
+            $count--;
+            file_put_contents($file , $count);
+
+            if ( $count > 0 ) {
+                return true;
+            }  else {
+                echo "#ZC - ";
+                return false;
+            }
+        } else {
+            echo "#NC - ";
+            return false;
+        }
+
     }
 }
 ?>
