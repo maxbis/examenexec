@@ -78,12 +78,12 @@ class MyHelpers
                 $count=0;
             }
             $count--;
-            file_put_contents($file, $count);
+            file_put_contents($file, "".$count);
 
             if ( $count > 0 ) {
                 return true;
             }  else {
-                echo "#ZC - ";
+                echo "#ZC$count - ";
                 return false;
             }
         } else {
