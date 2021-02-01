@@ -78,6 +78,8 @@ class MyHelpers
                 $accesCount=0;
             }
             $accesCount=$accesCount-1;
+            echo $accesCount;
+            exit;
             file_put_contents($file, $accesCount);
 
             if ( $accesCount > 0 ) {
