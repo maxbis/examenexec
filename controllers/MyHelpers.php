@@ -73,17 +73,17 @@ class MyHelpers
     private function countDown() {
         $file = "../config/allowCount.txt";
         if ( file_exists($file) ) {
-            $count = intval(file_get_contents($file, true));
-            if ( empty($count) ) {
-                $count=0;
+            $accesCount = intval(file_get_contents($file, true));
+            if ( empty($accesCount) ) {
+                $accesCount=0;
             }
-            $count=$count-1;
-            file_put_contents($file, "".$count);
+            $accesCount=$accesCount-1;
+            file_put_contents($file, $accesCount);
 
-            if ( $count > 0 ) {
+            if ( $accesCount > 0 ) {
                 return true;
             }  else {
-                echo "#ZC$count - ";
+                echo "#$accesCount - ";
                 return false;
             }
         } else {
