@@ -171,3 +171,7 @@ $barlen2 = max(5,$counts[1]*2);
     <?php ActiveForm::end(); ?>
  
 </div>
+
+<div>
+  <small><pre><?= $student->message ?></pre></small>
+</div>
