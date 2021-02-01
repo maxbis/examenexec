@@ -78,7 +78,6 @@ class MyHelpers
                 $count=0;
             }
             $count--;
-            unlink($file);
             file_put_contents($file, $count);
 
             if ( $count > 0 ) {
