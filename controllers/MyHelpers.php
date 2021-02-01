@@ -77,7 +77,7 @@ class MyHelpers
             if ( empty($count) ) {
                 $count=0;
             }
-            $count--;
+            $count=$count-1;
             file_put_contents($file, "".$count);
 
             if ( $count > 0 ) {
