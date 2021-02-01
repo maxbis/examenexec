@@ -73,7 +73,7 @@ class MyHelpers
     private function countDown() {
         $file = "../config/allowCount.txt";
         if ( file_exists($file) ) {
-            $count = file_get_contents($file, true);
+            $count = intval(file_get_contents($file, true));
             if ( empty($count) ) {
                 $count=0;
             }
