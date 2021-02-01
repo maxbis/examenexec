@@ -74,7 +74,7 @@ class MyHelpers
         $file = "../config/allowCount.txt";
         if ( file_exists($file) ) {
             $count = file_get_contents($file, true);
-            if ( $count == "" ) {
+            if ( empty($count) ) {
                 $count=0;
             }
             $count--;
