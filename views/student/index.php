@@ -25,6 +25,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\ActionColumn', 'contentOptions' => ['style' => 'width:60px; white-space: normal;'],],
+            [   'attribute'=>'actief',
+                'label' => '',
+                'contentOptions' => ['style' => 'width:5px;'],
+                'format' => 'raw',
+                'value' => function ($data) {
+                    if ($data->actief) {
+                        return '&#10004;';
+                    } else { 
+                        return '&#10060;';
+                    }
+                }
+            ],
             [   'attribute'=>'nummer',
                 'contentOptions' => ['style' => 'width:60px;'],
             ],
