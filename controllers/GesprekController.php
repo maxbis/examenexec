@@ -153,7 +153,7 @@ class GesprekController extends Controller
                         ->where(['form.actief'=>1])
                         ->andWhere(['examen.actief'=>1])->all();
 
-        $studenten = Student::find()->orderBy(['naam'=>SORT_ASC])->all();
+        $studenten = Student::find()->where(['actief'=>1])->orderBy(['naam'=>SORT_ASC])->all();
 
         $rolspelers = Rolspeler::find()->where(['actief'=>1])->orderBy(['naam'=>SORT_ASC])->all();
 
@@ -251,7 +251,7 @@ class GesprekController extends Controller
                 return $this->render('/student/login');
             }
         } elseif ($nummer) { 
-            $student = Student::find()->where(['nummer' => $nummer])->one();
+            $student = Student::find()->where(['nummer' => $nummer])->andwhere(['actief'=>1])->one();
             if (empty($student)) {
                 writeLog("Login with wrong studentnr: ".$nummer);
                 sleep(2);

@@ -31,6 +31,7 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [['nummer', 'naam', 'klas'], 'required'],
+            [['nummer', 'actief'], 'integer'],
             [['nummer'], 'integer', 'max' => 9999999 ],
             [['naam'], 'string', 'max' => 30],
             [['klas'], 'string', 'max' => 2],
@@ -51,6 +52,7 @@ class Student extends \yii\db\ActiveRecord
             'klas' => 'Klas',
             'locatie' => 'Locatie',
             'message' => 'Message',
+            'actief' => 'Actief',
         ];
     }
 
