@@ -19,10 +19,13 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php $this->registerCsrfMetaTags() ?>
+    <?php $this->registerCsrfMetaTags() ?>  
+    <link rel="icon" type="image/png" href=="<?php echo Yii::$app->request->baseUrl; ?>/favicon.ico" type="image/x-icon" />
+    <link rel="icon" type="image/png" href=="<?php echo Yii::$app->request->baseUrl; ?>/favicon.ico" type="image/x-icon" />
+
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-</head> 
+</head>
 <body>
 
 <?php $this->beginBody() ?>
@@ -53,4 +56,3 @@ AppAsset::register($this);
 </body>
 </html>
 <?php $this->endPage() ?>
-
