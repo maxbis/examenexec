@@ -118,7 +118,6 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
             <tr>
                 <th>punten</th>
                 <th>cijfer</th>
-
             </tr> 
         </thead>
         
