@@ -202,7 +202,6 @@ class UitslagController extends Controller
         $formWpCount = Arrayhelper::map($formWpCount,'werkproces','cnt'); // output [ 'B1-K1-W1' => '3', 'B1-K1-W2' => '2', ... ]
         return($formWpCount);
     }
-
     private function rating($cijfer) {
         if ( $cijfer >= 8 ) return "G"; 
         if ( $cijfer >= 5.5 ) return "V";
@@ -217,18 +216,18 @@ class UitslagController extends Controller
         $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
 
         // This query does not work if not all underlying forms are present, we'll keep this for debugging
-        $sql="
-            SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,
-                    c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
-            FROM results r
-            INNER JOIN form f ON f.id=r.formid
-            INNER JOIN vraag v ON v.id=r.vraagid
-            INNER JOIN criterium c ON c.id=v.mappingid
-            WHERE r.studentid=:studentid
-            AND f.werkproces=:werkproces
-            GROUP BY 1,2,3,4,5,6,7,8,9,10
-            ORDER BY 1,2
-        ";
+        // $sql="
+        //     SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,
+        //             c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
+        //     FROM results r
+        //     INNER JOIN form f ON f.id=r.formid
+        //     INNER JOIN vraag v ON v.id=r.vraagid
+        //     INNER JOIN criterium c ON c.id=v.mappingid
+        //     WHERE r.studentid=:studentid
+        //     AND f.werkproces=:werkproces
+        //     GROUP BY 1,2,3,4,5,6,7,8,9,10
+        //     ORDER BY 1,2
+        // ";
         $sql="
             SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,
                     c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
@@ -253,15 +252,31 @@ class UitslagController extends Controller
 
         if (! $uitslag ) { // if uitslag is not empty, get all remarks
             $uitslag = new Uitslag();
+            // $sql="
+            //     SELECT GROUP_CONCAT(CONCAT('[',f.omschrijving,']: ', opmerking, '\n')) opmerkingen
+            //     FROM beoordeling b
+            //     INNER JOIN form f ON f.id=b.formid
+            //     INNER JOIN examen e ON e.id = f.examenid
+            //     WHERE studentid=:studentid
+            //     AND f.werkproces=:werkproces
+            //     AND opmerking != '';
+            // ";
+
             $sql="
-                SELECT GROUP_CONCAT(CONCAT('[',f.omschrijving,']: ', opmerking, '\n')) opmerkingen
-                FROM beoordeling b
-                INNER JOIN form f ON f.id=b.formid
-                INNER JOIN examen e ON e.id = f.examenid
-                WHERE studentid=:studentid
-                AND f.werkproces=:werkproces
-                AND opmerking != '';
-            ";
+                select GROUP_CONCAT(CONCAT('[',f2.omschrijving,']: ', b2.opmerking, '\n')) opmerkingen
+                from beoordeling b2
+                INNER JOIN form f2 ON f2.id=b2.formid
+                where b2.id = any 
+                (
+                    SELECT max(b.id)
+                    FROM beoordeling b
+                    INNER JOIN form f ON f.id=b.formid
+                    WHERE studentid=:studentid
+                    AND f.werkproces=:werkproces
+                    AND opmerking != ''
+                    group by f.id
+                )";
+
             $params = [':studentid'=> $studentid,':werkproces'=>$wp];
             $commentaar = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll()[0]['opmerkingen'];
             $uitslag->commentaar = str_replace(',[', '[', $commentaar);
