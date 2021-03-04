@@ -32,7 +32,7 @@ class Criterium extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['omschrijving', 'nul', 'een', 'twee', 'drie', 'werkprocesid', 'cruciaal'], 'required'],
+            [['omschrijving', 'nul', 'een', 'werkprocesid', 'cruciaal'], 'required'],
             [['cruciaal'], 'integer'],
             [['omschrijving'], 'string', 'max' => 50],
             [['nul', 'een', 'twee', 'drie'], 'string', 'max' => 400],
