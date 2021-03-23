@@ -70,4 +70,9 @@ class Examen extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Form::className(), ['examenid' => 'id']);
     }
+
+    public function getWerkproces()
+    {
+        return $this->hasMany(Werkproces::className(), ['examen_type' => 'examen_type']);
+    }
 }

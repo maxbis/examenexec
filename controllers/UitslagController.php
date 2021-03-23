@@ -70,14 +70,10 @@ class UitslagController extends Controller
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
 
         $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
-        if ( $examen['id'] == $examenid ) { // if explicitly asked for examenid and it is the active examen, remove explicit tag to inform the view that we are in edit mode.
-            $examenid="";
-        }
 
-        if ( $examenid ) {
-            $criterium='e.id='.$examenid;
-        } else {
-            $criterium='e.actief=1';
+
+        if ( ! $examenid ) {
+            $examenid = $examen['id'];
         }
         
         $sql="
@@ -91,7 +87,8 @@ class UitslagController extends Controller
                 INNER JOIN form f on f.id=v.formid
                 INNER JOIN examen e on e.id=f.examenid
                 WHERE v.volgnr = r.vraagnr
-                AND ".$criterium."
+                AND e.id=:examenid
+                AND f.examenid=:examenid
                 GROUP BY 1,2,3,4,5
                 ORDER BY 1,2
             ) as sub
@@ -99,26 +96,27 @@ class UitslagController extends Controller
         group by naam, studentid, klas, formnaam, maxscore
         order by 1
         ";
-        
-        $result = Yii::$app->db->createCommand($sql)->queryAll();
+        $params = [':examenid'=> $examenid];
+        $result = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
 
         // print status
         //$sql2="select s.naam naam, p.werkprocesId werkproces, p.status status from beoordeling.printwerkproces p
         //        join student s on s.nummer=p.studentnummer";
         // $result2 = Yii::$app->db->createCommand($sql2)->queryAll();
 
-        $formWpCount = $this->formWpCount($criterium);
+        $formWpCount = $this->formWpCount($examenid);
         
         $sql="SELECT  s.naam,  f.werkproces, u.ready ready, COUNT(distinct g.formid) cnt
             FROM gesprek g
             INNER JOIN student s ON s.id=g.studentid
             INNER JOIN form f ON f.id = g.formid
             INNER JOIN examen e ON e.id=f.examenid
-            LEFT JOIN uitslag u ON u.studentid=g.studentid AND u.werkproces=f.werkproces
-            WHERE ".$criterium."
+            LEFT JOIN uitslag u ON u.studentid=g.studentid AND u.werkproces=f.werkproces AND u.examenid=:examenid
+            WHERE e.id=:examenid
+            AND f.examenid=:examenid
             GROUP BY 1,2,3
             ORDER BY 1,2";
-        $progres = Yii::$app->db->createCommand($sql)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
+        $progres = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
 
         // d($progres);
         // d($result);
@@ -169,14 +167,15 @@ class UitslagController extends Controller
             INNER JOIN form f on f.id=v.formid
             INNER JOIN examen e on e.id=f.examenid
             WHERE v.volgnr = r.vraagnr
-            AND ".$criterium."
+            AND e.id=:examenid
+            AND f.examenid=:examenid
             GROUP BY 1,2,3,4
             HAVING MAX(cruciaal)=1 AND SUM(score)<5
         ) AS sub
         ORDER BY 1
         ";
 
-        $cruciaal = Yii::$app->db->createCommand($sql)->queryAll();
+        $cruciaal = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
         $cruciaalList=[];
         foreach($cruciaal as $item) {
             $cruciaalList[$item['studentid'].$item['wp']]=1;
@@ -189,16 +188,18 @@ class UitslagController extends Controller
             'formWpCount' =>$formWpCount, // formcount per wp
             'wp' => $wp,
             'examenid' => $examenid,
+            'activeExamen' => $examen['id'], // active exam
             'cruciaalList' => $cruciaalList,
         ]);
     }
 
-    private function formWpCount($criterium='e.actief=1') {
+    private function formWpCount($examenid) {
         $sql="  SELECT werkproces, COUNT(*) cnt FROM form f
                 INNER JOIN examen e ON f.examenid=e.id 
-                WHERE ".$criterium."
+                WHERE e.id=:examenid
                 GROUP BY 1";
-        $formWpCount = Yii::$app->db->createCommand($sql)->queryAll();
+        $params = [':examenid'=> $examenid];
+        $formWpCount = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
         $formWpCount = Arrayhelper::map($formWpCount,'werkproces','cnt'); // output [ 'B1-K1-W1' => '3', 'B1-K1-W2' => '2', ... ]
         return($formWpCount);
     }
@@ -215,19 +216,6 @@ class UitslagController extends Controller
         $werkproces=Werkproces::find()->where(['id'=>$wp])->asArray()->one();
         $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
 
-        // This query does not work if not all underlying forms are present, we'll keep this for debugging
-        // $sql="
-        //     SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,
-        //             c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
-        //     FROM results r
-        //     INNER JOIN form f ON f.id=r.formid
-        //     INNER JOIN vraag v ON v.id=r.vraagid
-        //     INNER JOIN criterium c ON c.id=v.mappingid
-        //     WHERE r.studentid=:studentid
-        //     AND f.werkproces=:werkproces
-        //     GROUP BY 1,2,3,4,5,6,7,8,9,10
-        //     ORDER BY 1,2
-        // ";
         $sql="
             SELECT  v.mappingid mappingid, r.formid formid, r.studentid studentid, f.omschrijving fnaam,
                     c.omschrijving cnaam, c.nul, c.een, c.twee, c.drie, c.cruciaal, sum(score) score
@@ -252,16 +240,7 @@ class UitslagController extends Controller
 
         if (! $uitslag ) { // if uitslag is not empty, get all remarks
             $uitslag = new Uitslag();
-            // $sql="
-            //     SELECT GROUP_CONCAT(CONCAT('[',f.omschrijving,']: ', opmerking, '\n')) opmerkingen
-            //     FROM beoordeling b
-            //     INNER JOIN form f ON f.id=b.formid
-            //     INNER JOIN examen e ON e.id = f.examenid
-            //     WHERE studentid=:studentid
-            //     AND f.werkproces=:werkproces
-            //     AND opmerking != '';
-            // ";
-
+            
             $sql="
                 select GROUP_CONCAT(CONCAT('[',f2.omschrijving,']: ', b2.opmerking, '\n')) opmerkingen
                 from beoordeling b2
@@ -273,11 +252,12 @@ class UitslagController extends Controller
                     INNER JOIN form f ON f.id=b.formid
                     WHERE studentid=:studentid
                     AND f.werkproces=:werkproces
+                    AND f.examenid=:examenid
                     AND opmerking != ''
                     group by f.id
                 )";
 
-            $params = [':studentid'=> $studentid,':werkproces'=>$wp];
+            $params = [':studentid'=> $studentid,':werkproces'=>$wp, ':examenid' => $examen['id'] ];
             $commentaar = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll()[0]['opmerkingen'];
             $uitslag->commentaar = str_replace(',[', '[', $commentaar);
 

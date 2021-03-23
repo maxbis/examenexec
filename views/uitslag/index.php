@@ -62,10 +62,10 @@ $colspan = count($wp)+1;
                     echo "<th>&nbsp;</th>";
                     echo "<th>";
                     echo Html::a("<span style=\"color:#D0D0F0\" class=\"glyphicon glyphicon-print\"></span>",
-                        ['print/index', 'id'=>-99, 'examenid'=>$examenid ],
-                        [   'title' => 'Print ALL',
+                        ['print/print-all-zip', 'id'=>$examenid ],
+                        [   'title' => 'Download all in zip',
                             'data' => [
-                            'confirm' => 'Let op ALLE examens worden in één PDF gezet. Dit kan even duren. Weet je het zeker?',
+                            'confirm' => 'Let op ALLE examens worden in één ZIP gezet. Dit kan even duren. Weet je het zeker?',
                             'method' => 'post',
                             ],
                         ] );
@@ -103,11 +103,13 @@ $colspan = count($wp)+1;
                     $dezeGemaakt=false;
                     foreach($wp as $thisWp) { // cijfers afdrukken
                         echo "<td class=\"even\">"; 
-                        if ( $examenid) {
-                            echo $value[$thisWp]['result'][0];
-                        } else {
+
+                        if ( $examenid == $activeExamen) {
                             echo Html::a($value[$thisWp]['result'][0], ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
-                        }  
+                        } else {
+                            echo $value[$thisWp]['result'][0];
+                        }
+                        
                         if ( $value[$thisWp]['result'][0] >= 1.05 ) {
                             $dezeGemaakt=true;
                         }
@@ -128,6 +130,7 @@ $colspan = count($wp)+1;
 
                     foreach($wp as $thisWp) { // Print Ready
                         echo "<td class=\"even\">"; 
+                        //echo $value[$thisWp]['status'];
                         //if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>";
                         if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo  Html::a( "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>" , ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
                         elseif ( $value[$thisWp]['status']==99 ) echo "<span class=\"glyphicon glyphicon-check\"></span>";

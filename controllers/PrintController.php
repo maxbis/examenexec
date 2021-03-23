@@ -15,6 +15,8 @@ use app\models\Student;
 use app\models\Uitslag;
 use app\models\Criterium;
 
+use ZipArchive;
+
 class PrintController extends Controller
 {
     /**
@@ -46,7 +48,135 @@ class PrintController extends Controller
         ];
     }
 
-    public function actionIndex($id, $examenid) {
+    //
+    // print/print-all?id=xx
+    //
+    public function actionPrintAll($id) {
+        $sql='
+            SELECT distinct studentid
+            FROM uitslag u
+            inner join werkproces w on u.werkproces=w.id
+            inner join examen e on e.examen_type=w.examen_type
+            WHERE ready=1
+            AND u.resultaat IS NOT null
+            AND u.beoordeelaar1id IS NOT null
+            AND u.beoordeelaar2id IS NOT null
+            AND e.id=:examenid
+        ';
+
+        $params = [':examenid'=> $id];
+        $studentenids=Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+
+        $examenid=Examen::find()->where(['actief'=>1])->asArray()->one();
+
+        $files = glob('output/pdf/*'); // get all file names
+        foreach($files as $file){ // iterate files
+          if(is_file($file)) {
+            unlink($file); // delete file
+          }
+        }
+
+        foreach($studentenids as $studentid) {
+            d($studentid['studentid']);
+            $this->actionIndex($studentid['studentid'], $examenid['id'], true);
+        }    
+        
+    }
+
+    //
+    // print/print-all-zip?id=4
+    //
+    public function actionPrintAllZip($id) {
+        sleep(3);
+        $sql='
+            SELECT distinct u.studentid id, s.naam naam, s.nummer nummer
+            FROM uitslag u
+            inner join werkproces w on u.werkproces=w.id
+            inner join examen e on e.examen_type=w.examen_type
+            inner join student s on s.id=u.studentid
+            WHERE ready=1
+            AND u.resultaat IS NOT null
+            AND u.beoordeelaar1id IS NOT null
+            AND u.beoordeelaar2id IS NOT null
+            AND e.id=:examenid
+        ';
+
+        $params = [':examenid'=> $id];
+
+        $studenten=Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+        $examen=Examen::find()->where(['actief'=>1])->one();
+
+        $fnExamenNaam='kerntaak-'.substr($examen->werkproces[0]->id,0,2).substr($examen->werkproces[0]->id,3,2);
+        $fnDatum=substr($examen['datum_start'],2,2).substr($examen['datum_start'],5,2).substr($examen['datum_start'],8,2);
+
+        $zip = new ZipArchive();
+
+        $zipFileName='output/examens'.$fnExamenNaam.'-'.$fnDatum.'.zip';
+        
+        if (file_exists($zipFileName)) {
+            // someone busy buidling a new zip file?
+            //dd("Concurrency!");
+            $teller=5;
+            while (file_exists($zipFileName) && $teller) {
+                sleep(4);
+                $teller--;
+            }
+            unlink($zipFileName);
+
+            if (! $teller) {
+                dd("Server too busy with zipping files, try again later...");
+            }
+            
+        }
+
+        if ($zip->open($zipFileName, ZIPARCHIVE::CREATE)!==TRUE) {      
+            exit("cannot open <$filename>\n");
+        }
+
+        foreach($studenten as $student) {
+            $content = $this->actionIndex($student['id'], $examen['id'], true);
+            $fnStudentNaam=$this->createValidFileName(trim($student['naam']));
+            $pdfFileName=$fnStudentNaam.'-'.$fnExamenNaam.'-'.$fnDatum.'-'.$student['nummer'].'.pdf';
+            $pdfFileName=$this->createValidFileName($pdfFileName);
+
+            $zip->addFromString($pdfFileName, $content );
+        }
+
+        $zip->close();
+
+        header('Content-Type: application/octet-stream');
+        header("Content-Transfer-Encoding: Binary"); 
+        header("Content-disposition: attachment; filename=\"" . basename($zipFileName) . "\""); 
+        readfile($zipFileName); 
+
+        unlink($zipFileName);
+    }
+
+    public function actionCreateZip() {
+        $zip = new ZipArchive();
+
+        $zipFileName='output/examens.zip';
+        if ($zip->open($zipFileName, ZIPARCHIVE::CREATE)!==TRUE) {      
+            exit("cannot open <$filename>\n");
+        }
+
+        $files = glob('output/pdf/*'); // get all file names
+
+        foreach($files as $file){ // iterate files
+            if(is_file($file)) {
+                // $zip->addFile( dirname($file), basename($file) );
+                $zip->addFromString(pathinfo ( $file, PATHINFO_BASENAME), file_get_contents($file) );
+            }
+        }
+        $zip->close();
+
+        header('Content-Type: application/octet-stream');
+        header("Content-Transfer-Encoding: Binary"); 
+        header("Content-disposition: attachment; filename=\"" . basename($zipFileName) . "\""); 
+        readfile($zipFileName); 
+    }
+
+    public function actionIndex($id, $examenid, $outputToFile=false) {
 
         $pdf = new PDF();
 
@@ -68,12 +198,12 @@ class PrintController extends Controller
             $studentenids[]=$id;
         }
 
-        if ($examenid) {
+        if ($examenid) { // if no examenid take the ative one
             $examen=Examen::find()->where(['id'=>$examenid])->asArray()->one();
         } else {
             $examen=Examen::find()->where(['actief'=>1])->asArray()->one();
         }
-
+        
         foreach($studentenids as $studentid) {
             $werkproces=Werkproces::find()->where([ 'examen_type'=>$examen['examen_type'] ])->orderBy(['id' => 'ASC'])->asArray()->all();
             $student=Student::find()->where(['id'=>$studentid])->asArray()->one();
@@ -84,13 +214,13 @@ class PrintController extends Controller
             if ( ($pdf->PageNo() % 2) == 0 ) {
                 $pdf->addPage();
             } 
-
+            
             foreach ($werkproces as $wp) {
-                $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->one();
+                $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->orderBy(['id'=> SORT_DESC ])->one();
                 if ( ! $uitslag ) { // if no uitslag (case Delano in examenid=2)
                     continue;
                 }
-                $criterium=Criterium::find()->where(['werkprocesid'=>$wp['id']])->orderBy(['id'=>'ASC'])->asArray()->all();
+                $criterium=Criterium::find()->where(['werkprocesid'=>$wp['id']])->orderBy(['id'=> SORT_DESC ])->asArray()->all();
                 $resultaat=json_decode($uitslag->resultaat, true);
 
                 // Header - 2 regels
@@ -126,17 +256,34 @@ class PrintController extends Controller
         } // end all id's
 
         if (count($studentenids)==1) {
-            $filename=$student['naam'];
+            //$filename=$student['naam'].'-'.$examen['datum_start'].'-'.$this->createValidFileName(trim($student['nummer']));
+            $filename=  $this->createValidFileName(trim($student['naam'])).             // Filtered name
+                        '-kerntaak_'.substr($wp['id'],0,2).substr($wp['id'],3,2).'-'.   // -kerntaak_B1K3-
+                        substr($examen['datum_start'],2,2).substr($examen['datum_start'],5,2).substr($examen['datum_start'],8,2). // date yymmdd
+                        '-'.$student['nummer'];                                         // studentnummer
         } else {
             $filename=count($studentenids).'-formulieren';
         }
 
-        $pdf->Output('I',substr($wp['id'],0,5).' '.$filename);
-        exit;
+        if ($outputToFile) {
+            // $pdf->Output('F','output/'.substr($wp['id'],0,5).' '.$this->createValidFileName($filename).'.pdf');
+            // $pdf->Output('F','output/pdf/'.$this->createValidFileName($filename).'.pdf');
+            return $pdf->Output('S','output/pdf/'.$this->createValidFileName($filename).'.pdf');
+        } else {
+            $pdf->Output('I',substr($wp['id'],0,5).' '.$filename);
+            exit;
+        }
+
+    }
+
+    function createValidFileName($inputText) {
+        $search  = array('ç', 'Ü', 'ü', 'Ç', 'ğ', 'Ğ', 'ı', 'İ', 'ö', 'Ö', 'ş', 'Ş', 'š', 'ć', ' ');
+        $replace = array('c', 'U', 'u', 'C', 'g', 'G', 'i', 'I', 'o', 'O', 's', 'S', 's', 'c', '_');
+        $outputText=str_replace($search, $replace, $inputText);
+        return iconv("UTF-8", "ISO-8859-1//IGNORE", $outputText);
     }
 
 }
-
 
 class PDF extends FPDF
 {
