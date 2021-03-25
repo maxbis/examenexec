@@ -113,13 +113,13 @@ class BeoordelingController extends Controller
 
     public function actionFormpost($resultsString, $gesprekid, $formId, $studentid, $studentnr, $rolspelerid, $opmerking)
     {
-        // answerString: 1-51-1-6|2-52-1-6|......
+        // answerString: 1_51_1_6|2_52_1_6|......
 
-        $answerStrings=explode("|",$resultsString); // [ 1-51-1-6, 2-52-1-6, ... ] 
+        $answerStrings=explode("|",$resultsString); // [ 1_51_1_6, 2_52_1_6, ... ] 
         $answer=[];
         $points=[];
         foreach($answerStrings as $answerString) {
-            $answerItem=explode("-",$answerString); // [ 1, 51, 1, 6] - antwoord teller, vraag id, antwoord (1,2, of 3), points
+            $answerItem=explode("_",$answerString); // [ 1, 51, 1, 6] - antwoord teller, vraag id, antwoord (1,2, of 3), points
             $number[$answerItem[0]]=$answerItem[1];
             $answer[$answerItem[1]]=$answerItem[2];
             $points[$answerItem[1]]=$answerItem[3];
@@ -147,7 +147,7 @@ class BeoordelingController extends Controller
         $sql="delete from results where studentid=:studentid and formid=:formid";
         $params = [ ':studentid'=> $studentid,  ':formid'=> $formId, ];
         $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-        
+
         foreach ( $result['number'] as $key => $value ) {
             $sql="insert into results (studentid, formid, vraagid, vraagnr, antwoordnr, score)
                     values(:studentid, :formid, :vraagid, :vraagnr, :antwoordnr, :score)";
@@ -161,24 +161,6 @@ class BeoordelingController extends Controller
             $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
         }
         
-        //dd($result);
-        //for($i=0; $i<count($result['answers']); $i++) {
-
-        //    $sql="insert into results (studentid, formid, vraagid, antwoordnr, score)
-        //            values(:studentid, :formid, :vraagnr, :antwoordnr, :score)";
-        //    $params = [ 'studentid'=> $studentid,
-        //                ':formid'=> $formId,
-        //                ':vraagnr'=> $i+1,  // vraag starts counting at 1
-        //                ':antwoordnr'=> $result['answers'][$i],
-        //                ':score'=> $result['points'][$i] ];
-        //    $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-        //}
-        // END update resutls in table
-
-        // delete old beoordeling
-        // als status van een gesprek is terugegezet wordt een nieuwe beoordeling gesaved en worden
-        // oude met zelfde gesprekid verwijderd. Er bestaat dus maar een beoordeling per gesprek
-        // In de log is de oude beoordleing nog wel te vinden.
         $sql="delete from beoordeling where gesprekid=:gesprekid";
         $params = [ ':gesprekid'=> $gesprekid, ];
         $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();

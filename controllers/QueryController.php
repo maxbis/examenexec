@@ -6,6 +6,8 @@ use Yii;
 use app\models\Beoordeling;
 use app\models\BeoordelingSearch;
 use app\models\Vraag;
+use app\models\Form;
+use app\models\Examen;
 use app\models\Werkproces;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -241,7 +243,8 @@ class QueryController extends Controller
 
     public function actionNoResult() {
         $sql="
-        select distinct s.id, s.nummer, s.naam from gesprek g
+        select distinct g.id, g.formid, s.id, s.nummer, s.naam
+        from gesprek g
         inner join student s on s.id=g.studentid
         where 
         studentid not IN
@@ -378,6 +381,70 @@ class QueryController extends Controller
         $output = $this->exportExcel($data);
         dd($output);
         return $output;
+    }
+
+    public function actionMaxPunten() {
+        $sql="
+            SELECT e.id,w.id, sum( ( greatest(COALESCE(v.ja,0) ,COALESCE(v.soms,0), COALESCE(v.nee,0)) ) ) maxscore, max(w.maxscore*10) maxscore_SPL
+            FROM vraag v
+            inner join form f on f.id=v.formid
+            inner join  werkproces w on w.id=f.werkproces
+            inner join examen e on e.id=f.examenid
+            group by 1,2
+            order by 1,2
+        ";
+
+        return $this->render('output', [
+            'data' => $this->executeQuery($sql, "Overzicht punten beoordeling v SPL (let op query is nog in onderzoek)")
+        ]);
+    }
+
+    public function actionCopyExam($id) {
+
+        $fromExamenId=$id;
+        // get examen
+        $examen=Examen::find()->where(['id'=>$id])->one();
+    
+        if (! $examen) {
+            return;
+        }
+        // copy exam
+        $sql="  insert into examen (naam, actief, datum_start, datum_eind, examen_type, otherid, titel)
+                select concat(naam, ' copy'), actief, datum_start, datum_eind, examen_type, otherid, titel
+                from examen where id=:id";
+        $params = [':id'=> $fromExamenId];
+        $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+        //$sql="  select max(id) id from examen";
+        //$result=Yii::$app->db->createCommand($sql)->queryOne();
+        //$toExamenId=$result['id'];
+
+        //$toExamenId = Yii::$app->db->getLastInsertID();
+        $toExamenId = 9;
+
+        $sql="  select f.id from form f inner join examen e on e.id=f.examenid where e.id=:fromExamenId";
+        $params = [':fromExamenId'=> $fromExamenId];
+        $forms=Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+
+        // itterate through forms
+        foreach($forms as $fromForm) {
+            d($fromForm['id']);
+            $sql="  insert into form (omschrijving, nr, examenid, actief, werkproces, instructie)
+                    select concat(f.omschrijving, ' copy') , nr, :toExamenId, actief, werkproces, instructie
+                    from form
+                    where id=:formId";
+            $params = [':formId'=> $fromForm['id'], ':toExamenId'=> $toExamenId ];
+            $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+            $toFormId = Yii::$app->db->getLastInsertID();
+
+            $sql="  insert INTO vraag (formid, volgnr, vraag, toelichting, ja, soms,nee, mappingid, standaardwaarde)
+                    select :toFormId, volgnr, vraag, toelichting, ja, soms,nee, mappingid, standaardwaarde FROM `vraag` 
+                    where formid = :fromFormId";
+            $params = [':fromFormId'=> $fromFormId, ':toFormId'=> $toFormId ];
+            $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();       
+
+        }
+
     }
 
 }

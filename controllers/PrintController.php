@@ -129,6 +129,7 @@ class PrintController extends Controller
             
         }
 
+        
         if ($zip->open($zipFileName, ZIPARCHIVE::CREATE)!==TRUE) {      
             exit("cannot open <$filename>\n");
         }
@@ -142,7 +143,9 @@ class PrintController extends Controller
             $zip->addFromString($pdfFileName, $content );
         }
 
-        $zip->close();
+        if ($zip->close() === false) {
+            throw new \yii\base\Exception( "Cannot write temp zip file!" );
+        };
 
         header('Content-Type: application/octet-stream');
         header("Content-Transfer-Encoding: Binary"); 

@@ -21,6 +21,7 @@ use yii\widgets\LinkPager;
         resultsString = resultsString.slice(0,-1);
         answerString = answerString.slice(0,-1);
         //alert(statusString);
+
         document.getElementById("resultsString").value = resultsString;
         document.getElementById("answerString").value = answerString;
         return true; // don't submit the form
@@ -105,13 +106,13 @@ use yii\widgets\LinkPager;
                     <td><?= $item->volgnr ?></td>
                     <td colspan=2><?= $item->vraag ?></td>
                     
-                    <td><input type="radio" id="1-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-1-'.$item->ja ?>" required <?= ($thisAnswer==1) ? 'checked' : '' ?>></td>
+                    <td><input type="radio" id="1_<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'_'.$item->id.'_1_'.$item->ja ?>" required <?= ($thisAnswer==1) ? 'checked' : '' ?>></td>
                         <?php if ( isset($item->soms) ) : ?>
-                            <td><input type="radio" id="2-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-2-'.$item->soms ?>" <?= ($thisAnswer==2) ? 'checked' : '' ?> ></label></td>
+                            <td><input type="radio" id="2_<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'_'.$item->id.'_2_'.$item->soms ?>" <?= ($thisAnswer==2) ? 'checked' : '' ?> ></label></td>
                         <?php else: ?>
                             <td>nvt</td>
                         <?php endif; ?>
-                    <td><input type="radio" id="3-<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'-'.$item->id.'-3-'.$item->nee ?>" <?= ($thisAnswer==3) ? 'checked' : '' ?> <?= $item->standaardwaarde && ! $thisAnswer ? 'checked' : '' ?> ></label></td>
+                    <td><input type="radio" id="3_<?=$item->id?>" name="<?= $item->volgnr ?>" value="<?= $item->volgnr.'_'.$item->id.'_3_'.$item->nee ?>" <?= ($thisAnswer==3) ? 'checked' : '' ?> <?= $item->standaardwaarde && ! $thisAnswer ? 'checked' : '' ?> ></label></td>
                 </tr>
                 <?php if ( $item->toelichting != "" ): ?>
                     <tr>
