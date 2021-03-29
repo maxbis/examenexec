@@ -125,34 +125,33 @@ class PrintController extends Controller
 
             if (! $teller) {
                 dd("Server too busy with zipping files, try again later...");
-            }
-            
+            }  
         }
 
-        
+
         if ($zip->open($zipFileName, ZIPARCHIVE::CREATE)!==TRUE) {      
             exit("cannot open <$filename>\n");
         }
-
+    
         foreach($studenten as $student) {
-            $content = $this->actionIndex($student['id'], $examen['id'], true);
-            $fnStudentNaam=$this->createValidFileName(trim($student['naam']));
-            $pdfFileName=$fnStudentNaam.'-'.$fnExamenNaam.'-'.$fnDatum.'-'.$student['nummer'].'.pdf';
-            $pdfFileName=$this->createValidFileName($pdfFileName);
-
-            $zip->addFromString($pdfFileName, $content );
+            $content        = $this->actionIndex($student['id'], $examen['id'], null, true);
+            $fnStudentNaam  = $this->createValidFileName(trim($student['naam']));
+            $pdfFileName    = $fnStudentNaam.'-'.$fnExamenNaam.'-'.$fnDatum.'-'.$student['nummer'].'.pdf';
+            $pdfFileName    = $this->createValidFileName($pdfFileName);
+            
+            $zip->addFromString($pdfFileName, $content);
         }
 
-        if ($zip->close() === false) {
+        if ($zip->close() == false) {
             throw new \yii\base\Exception( "Cannot write temp zip file!" );
-        };
-
+        }
+       
         header('Content-Type: application/octet-stream');
         header("Content-Transfer-Encoding: Binary"); 
         header("Content-disposition: attachment; filename=\"" . basename($zipFileName) . "\""); 
         readfile($zipFileName); 
 
-        unlink($zipFileName);
+        // unlink($zipFileName);
     }
 
     public function actionCreateZip() {
