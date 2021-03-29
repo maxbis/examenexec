@@ -130,10 +130,8 @@ $colspan = count($wp)+1;
 
                     foreach($wp as $thisWp) { // Print Ready
                         echo "<td class=\"even\">"; 
-                        //echo $value[$thisWp]['status'];
-                        //if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>";
                         if ( $value[$thisWp]['status']==$formWpCount[$thisWp] ) echo  Html::a( "<div class=\"text-success\"><b>".$value[$thisWp]['status']."</b></div>" , ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
-                        elseif ( $value[$thisWp]['status']==99 ) echo "<span class=\"glyphicon glyphicon-check\"></span>";
+                        elseif ( $value[$thisWp]['status']==99 )  echo Html::a("<span class=\"glyphicon glyphicon-check\"></span>", ['/print/index', 'id'=>$dataSet[$naam]['studentid'], 'examenid'=>$examenid, 'onlyWerkproces'=>$thisWp ]);
                         else echo "<div class=\"text-info\">".$value[$thisWp]['status']."</div>";
                     }
                     echo "</td>";

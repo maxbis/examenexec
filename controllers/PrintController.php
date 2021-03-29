@@ -179,7 +179,7 @@ class PrintController extends Controller
         readfile($zipFileName); 
     }
 
-    public function actionIndex($id, $examenid, $outputToFile=false) {
+    public function actionIndex($id, $examenid=null, $onlyWerkproces=null, $outputToFile=false) {
 
         $pdf = new PDF();
 
@@ -219,6 +219,8 @@ class PrintController extends Controller
             } 
             
             foreach ($werkproces as $wp) {
+                IF ($onlyWerkproces && $wp['id'] != $onlyWerkproces) continue; // is onlyWerkProces (filter) then skip if this is not the required wp
+
                 $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->orderBy(['id'=> SORT_DESC ])->one();
                 if ( ! $uitslag ) { // if no uitslag (case Delano in examenid=2)
                     continue;
