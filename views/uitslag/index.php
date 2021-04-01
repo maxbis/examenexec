@@ -20,7 +20,7 @@ $colspan = count($wp)+1;
 }
 </style>
 
-<h1>Uitslagen</h1>
+<h1>Uitslagen <?= $examen['naam']; ?></h1>
 <small>Alleen wanneer een examen op actief staat, kan er worden gewijzigd door op de cijfers te klikken</small>
 
 <p></p>
@@ -104,7 +104,7 @@ $colspan = count($wp)+1;
                     foreach($wp as $thisWp) { // cijfers afdrukken
                         echo "<td class=\"even\">"; 
 
-                        if ( $examenid == $activeExamen) {
+                        if ( $examen['actief'] == 1 ) {
                             echo Html::a($value[$thisWp]['result'][0], ['/uitslag/result', 'studentid'=>$value['studentid'], 'wp'=>$thisWp ] );
                         } else {
                             echo $value[$thisWp]['result'][0];

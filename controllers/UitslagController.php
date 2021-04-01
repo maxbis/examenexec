@@ -74,8 +74,10 @@ class UitslagController extends Controller
 
         if ( ! $examenid ) {
             $examenid = $examen['id'];
+        } else {
+            $examen=Examen::find()->where(['id' => $examenid])->asArray()->one();
         }
-        
+
         $sql="
         select naam, studentid, klas, formnaam werkproces, round( ((greatest(0,sum(score))  /maxscore*9+1))+0.049 ,1)  cijfer
             from (
@@ -188,7 +190,7 @@ class UitslagController extends Controller
             'formWpCount' =>$formWpCount, // formcount per wp
             'wp' => $wp,
             'examenid' => $examenid,
-            'activeExamen' => $examen['id'], // active exam
+            'examen' => $examen, // active exam
             'cruciaalList' => $cruciaalList,
         ]);
     }

@@ -158,7 +158,6 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
             </div>
         </div>
 
-        <?= $form->field($model, 'resultaat')->textarea()->label(false) ?>
         <?= $form->field($model, 'studentid')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'werkproces')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'examenid')->hiddenInput()->label(false) ?>
