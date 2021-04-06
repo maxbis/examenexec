@@ -415,12 +415,12 @@ class QueryController extends Controller
         $params = [':id'=> $fromExamenId];
         $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
 
-        //$sql="  select max(id) id from examen";
-        //$result=Yii::$app->db->createCommand($sql)->queryOne();
-        //$toExamenId=$result['id'];
+        $sql="  select max(id) id from examen";
+        $result=Yii::$app->db->createCommand($sql)->queryOne();
+        $toExamenId=$result['id'];
 
         //$toExamenId = Yii::$app->db->getLastInsertID();
-        $toExamenId = 9;
+        //$toExamenId = 9;
 
         $sql="  select f.id from form f inner join examen e on e.id=f.examenid where e.id=:fromExamenId";
         $params = [':fromExamenId'=> $fromExamenId];
@@ -430,8 +430,8 @@ class QueryController extends Controller
         foreach($forms as $fromForm) {
             d($fromForm['id']);
             $sql="  insert into form (omschrijving, nr, examenid, actief, werkproces, instructie)
-                    select concat(f.omschrijving, ' copy') , nr, :toExamenId, actief, werkproces, instructie
-                    from form
+                    select concat(f.omschrijving, ' copy') , f.nr, :toExamenId, f.actief, f.werkproces, f.instructie
+                    from form f
                     where id=:formId";
             $params = [':formId'=> $fromForm['id'], ':toExamenId'=> $toExamenId ];
             $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
@@ -440,7 +440,7 @@ class QueryController extends Controller
             $sql="  insert INTO vraag (formid, volgnr, vraag, toelichting, ja, soms,nee, mappingid, standaardwaarde)
                     select :toFormId, volgnr, vraag, toelichting, ja, soms,nee, mappingid, standaardwaarde FROM `vraag` 
                     where formid = :fromFormId";
-            $params = [':fromFormId'=> $fromFormId, ':toFormId'=> $toFormId ];
+            $params = [':fromFormId'=> $fromForm['id'], ':toFormId'=> $toFormId ];
             $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();       
 
         }

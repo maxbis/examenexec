@@ -65,6 +65,36 @@ class UitslagController extends Controller
         return "O";
     }
 
+    public function actionRemove($studentid, $examenid) {
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+        // remove uitslag
+            $sql="  delete from results
+                    where studentid=:studentid
+                    and formid in (select f.id from form f where f.examenid=:examenid)
+                ";
+            $params = [':studentid'=>$studentid, ':examenid'=>$examenid];
+            $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+            $sql="  delete from uitslag
+                    where studentid=:studentid
+                    and examenid=:examenid
+                ";
+            $params = [':studentid'=>$studentid, ':examenid'=>$examenid];
+            $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+            $transaction->commit();
+            
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+
+        return $this->redirect(['index']);
+    }
+
     public function actionIndex($examenid="") {
         // if no parameter is specified then taken the active exam (examen.actief=1)
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1

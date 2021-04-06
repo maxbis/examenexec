@@ -37,6 +37,7 @@ $colspan = count($wp)+1;
                     <th colspan=<?=$colspan?>>Resultaten</th>
                     <th colspan=<?=$colspan?>>Print Ready</th>
                     <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                 </tr>    
                 <tr>
                 <?php
@@ -70,6 +71,7 @@ $colspan = count($wp)+1;
                             ],
                         ] );
                     echo "</th>";
+                    echo "<th>X</th>";
                 ?>
                 </tr>    
             </thead>
@@ -151,6 +153,11 @@ $colspan = count($wp)+1;
                         echo "<span title=\"Print beschikbaar als alle vier de werkprocessen print-klaar zijn.\" class=\"glyphicon glyphicon-print text-muted\"></span>";
                     }
                     echo "</td>";
+                  
+                    echo "<td>";
+                    echo Html::a("<span class=\"glyphicon glyphicon-trash\"></span>", ['/uitslag/remove', 'studentid'=>$dataSet[$naam]['studentid'], 'examenid'=>$examenid ], ['data-confirm' => 'Delete all results from '.$naam.' from this exam?', 'title'=> 'Verwijder uitslag']);
+                    echo "</td>";
+
                     echo "</tr>";
                 }
             ?>
