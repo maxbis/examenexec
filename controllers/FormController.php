@@ -122,7 +122,20 @@ class FormController extends Controller
 
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $sql="delete from vraag where formid=:formid";
+            $params = [':formid'=> $id];
+            $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
+
+            $this->findModel($id)->delete();
+
+            $transaction->commit();
+            
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
 
         return $this->redirect(['index']);
     }

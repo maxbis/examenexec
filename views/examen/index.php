@@ -13,6 +13,21 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="examen-index">
 
   <h1><?= Html::encode($this->title) ?></h1>
+
+  <?php if (Yii::$app->session->hasFlash('success')): ?>
+    <div class="alert alert-success alert-dismissable">
+         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+         <?= Yii::$app->session->getFlash('success') ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if (Yii::$app->session->hasFlash('error')): ?>
+    <div class="alert alert-danger alert-dismissable">
+      <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+      <?= Yii::$app->session->getFlash('error') ?>
+    </div>
+  <?php endif; ?> 
+  
   <hr>
 
   <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -73,6 +88,16 @@ $this->params['breadcrumbs'][] = $this->title;
           ],
 
           [
+            'attribute'=>'',
+            'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
+            'format' => 'raw',
+            'value' => function ($data) {
+              return Html::a('<span class="glyphicon glyphicon-copy"></span>',
+              ['copy-exam', 'id'=>$data->id], ['data-confirm'=>'Weet je zeker dat je een kopie van het examen met onderliggende forms en vragen wilt maken, dit kan niet ongedaan gemaakt worden?','title'=> 'Copy exam' ]);
+            },
+          ],
+
+          [
             'class' => 'yii\grid\ActionColumn',
             'contentOptions' => ['style' => 'width:80px;'],
             'template' => '{view} {update}', 
@@ -81,20 +106,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->actief!=1;
                },
           ],
-            'buttons' => [
-              'delete' => function($url, $model){
-                  return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->id], [
-                      'class' => '',
-                      'title'=> 'Delete',
-                      'data' => [
-                          'confirm' => 'Weet je het zeker?',
-                          'method' => 'post',
-                      ],
-                  ]);
-              },
-            ],
             
-          ],
+        ],
       ],
   ]); ?>
 
@@ -110,3 +123,6 @@ $this->params['breadcrumbs'][] = $this->title;
   <?= Html::a('<span>Forms</span>', ['/form'], ['class' => 'btn btn-primary', 'title' => 'Naar examenplanner']) ?>
 </p>
 
+<?php if (Yii::$app->session->hasFlash('error')): ?>
+
+<?php endif; ?>

@@ -36,8 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
         Html::a('Delete', ['delete', 'id' => $model->id], [
         'class' => 'btn btn-danger',
         'data' => [
-            'confirm' => 'Examens kunnen niet worden verwijderd, (de knop kan wel worden aangezet door de admin)',
-            'method' => 'dont-post', // 
+            'confirm' => 'Examens kunnen alleen worden verwijderd als er alle gekoppelde forms zijn verwijderd. Doorgaan?',
+            'method' => 'post', // 
             ],
         ])
     ?>

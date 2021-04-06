@@ -399,53 +399,5 @@ class QueryController extends Controller
         ]);
     }
 
-    public function actionCopyExam($id) {
-
-        $fromExamenId=$id;
-        // get examen
-        $examen=Examen::find()->where(['id'=>$id])->one();
-    
-        if (! $examen) {
-            return;
-        }
-        // copy exam
-        $sql="  insert into examen (naam, actief, datum_start, datum_eind, examen_type, otherid, titel)
-                select concat(naam, ' copy'), actief, datum_start, datum_eind, examen_type, otherid, titel
-                from examen where id=:id";
-        $params = [':id'=> $fromExamenId];
-        $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-
-        $sql="  select max(id) id from examen";
-        $result=Yii::$app->db->createCommand($sql)->queryOne();
-        $toExamenId=$result['id'];
-
-        //$toExamenId = Yii::$app->db->getLastInsertID();
-        //$toExamenId = 9;
-
-        $sql="  select f.id from form f inner join examen e on e.id=f.examenid where e.id=:fromExamenId";
-        $params = [':fromExamenId'=> $fromExamenId];
-        $forms=Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
-
-        // itterate through forms
-        foreach($forms as $fromForm) {
-            d($fromForm['id']);
-            $sql="  insert into form (omschrijving, nr, examenid, actief, werkproces, instructie)
-                    select concat(f.omschrijving, ' copy') , f.nr, :toExamenId, f.actief, f.werkproces, f.instructie
-                    from form f
-                    where id=:formId";
-            $params = [':formId'=> $fromForm['id'], ':toExamenId'=> $toExamenId ];
-            $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
-            $toFormId = Yii::$app->db->getLastInsertID();
-
-            $sql="  insert INTO vraag (formid, volgnr, vraag, toelichting, ja, soms,nee, mappingid, standaardwaarde)
-                    select :toFormId, volgnr, vraag, toelichting, ja, soms,nee, mappingid, standaardwaarde FROM `vraag` 
-                    where formid = :fromFormId";
-            $params = [':fromFormId'=> $fromForm['id'], ':toFormId'=> $toFormId ];
-            $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();       
-
-        }
-
-    }
-
 }
 
