@@ -235,6 +235,7 @@ class UitslagController extends Controller
         $formWpCount = Arrayhelper::map($formWpCount,'werkproces','cnt'); // output [ 'B1-K1-W1' => '3', 'B1-K1-W2' => '2', ... ]
         return($formWpCount);
     }
+    
     private function rating($cijfer) {
         if ( $cijfer >= 8 ) return "G"; 
         if ( $cijfer >= 5.5 ) return "V";
@@ -333,14 +334,16 @@ class UitslagController extends Controller
         $postedModel = new Uitslag();
 
         $postedModel->load(Yii::$app->request->post());
+
         if ( $postedModel->id ) {
             $model = Uitslag::findOne($postedModel->id);
             $model->load(Yii::$app->request->post());
         } else {
             $model = $postedModel;
         }
-
+        
         if ($model->save()) {
+            //dd([$model->id, $model->resultaat]);
             return $this->redirect(['index']);
         } else {
             return $this->redirect(Yii::$app->request->referrer);

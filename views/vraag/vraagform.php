@@ -158,7 +158,7 @@ use yii\widgets\LinkPager;
 
     <a href="#" id="div1" title="Copy" onclick="CopyToClipboard('div1')"><small><?=$bestandsNaam?></small></a>
     <small> (bestandsnaam voor audio-opname van externe rolspelers)</small>
-    <small><hr>Bij twee dezelfde beoordelingen telt alleen de laatste mee in het resultaat; het oude formulier hoeft niet te worden verwijderd.
+    <small><hr>Bij twee of meer dezelfde beoordelingen telt alleen de laatste mee in het resultaat; het oude formulier hoeft niet te worden verwijderd.
     </small>
     
 

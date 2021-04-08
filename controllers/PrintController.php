@@ -221,6 +221,7 @@ class PrintController extends Controller
                 IF ($onlyWerkproces && $wp['id'] != $onlyWerkproces) continue; // is onlyWerkProces (filter) then skip if this is not the required wp
 
                 $uitslag=Uitslag::find()->where(['and', ['studentid'=>$studentid], ['werkproces'=>$wp['id']], ['examenid'=>$examen['id']] ])->orderBy(['id'=> SORT_DESC ])->one();
+                
                 if ( ! $uitslag ) { // if no uitslag (case Delano in examenid=2)
                     continue;
                 }

@@ -236,3 +236,10 @@ $colspan = count($wp)+1;
 </div>
 <br><br>
 <small><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>
+
+<!--
+<small><p>
+<p>Uitslagen worden in een paar stappen berekend en vastgelegd; form/beoordeling (gesprek) -> results -> uitslag.
+<p>Wanneer form gesaved wordt, worden results berekend.
+<p>Wanneer SPL form wordt bewaard, wordt de uitslag berekend.
+-->

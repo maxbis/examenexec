@@ -243,9 +243,11 @@ class QueryController extends Controller
 
     public function actionNoResult() {
         $sql="
-        select distinct g.id, g.formid, s.id, s.nummer, s.naam
+        select  g.id Gesprek, e.naam examennaam, g.formid Form, s.id Student, s.nummer StNummer, s.naam Studentennaam
         from gesprek g
         inner join student s on s.id=g.studentid
+        inner join form f on f.id=g.formid
+        inner join examen e on e.id=f.examenid
         where 
         studentid not IN
         (
@@ -256,6 +258,25 @@ class QueryController extends Controller
         return $this->render('output', [
             'data' => $this->executeQuery($sql, "Results Deleted"),
             'descr' => 'Show gesprekken without results, there should be none. Fix by update a gesprek or create new.'
+        ]);
+    }
+
+    public function actionNoResult2() {
+        $sql="
+        select  g.id gesprekid, e.naam examennaam, g.formid formid, s.id studentid, s.nummer studentennummer, s.naam studentennaam
+        from gesprek g
+        inner join student s on s.id=g.studentid
+        inner join form f on f.id=g.formid
+        inner join examen e on e.id=f.examenid
+        where 
+        studentid not IN
+        (
+            select studentid from results r where r.formid = g.formid
+        )
+        ";
+
+        return $this->render('noResults', [
+            'data' => Yii::$app->db->createCommand($sql)->queryAll(),
         ]);
     }
 

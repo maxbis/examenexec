@@ -52,7 +52,7 @@ echo Nav::widget([
                 ['label' => 'Beoordelaars', 'url' => ['/query/beoordelaars']],
                 ['label' => '-----------------------------------'],
                 ['label' => 'Recalc Scores', 'url' => ['/query/recalc']],
-                ['label' => 'Orphan gesprekken', 'url' => ['/query/no-result']],
+                ['label' => 'Orphan gesprekken', 'url' => ['/query/no-result2']],
                 ['label' => 'Double Results', 'url' => ['/query/no-doubles']],
                 //['label' => 'Punten per onderdeel', 'url' => ['/query/punten']],
             ],
