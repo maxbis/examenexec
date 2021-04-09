@@ -65,6 +65,13 @@ use yii\widgets\LinkPager;
             
         <?php foreach ($vragen as $item): ?>
             <tr>
+            <?php
+                if ( $item['mappingid'] == $mappingid ) {
+                    echo "<tr style=\"background-color:#f0f0f0\">";
+                } else {
+                    echo "<tr>";
+                }
+            ?>
                 <td><?= $item->volgnr ?></td>
                 <td colspan=2><?= $item->vraag ?></td>
                 
@@ -104,13 +111,19 @@ use yii\widgets\LinkPager;
                     ?>
                 </td>
             </tr>
-            <?php if ( $item->toelichting != "" ): ?>
-                    <tr>
-                        <td>&nbsp;</td><td>&nbsp;</td> 
-                        <td><?= $item->toelichting ?></td>
-                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-                    </tr>
-                <?php endif; ?>
+            <?php
+                if ( $item->toelichting != "" ) {
+                    if ( $item['mappingid'] == $mappingid ) {
+                        echo "<tr style=\"background-color:#f0f0f0\">";
+                    } else {
+                        echo "<tr>";
+                    }
+                    echo "<td>&nbsp;</td><td>&nbsp;</td>";
+                    echo "<td><?= $item->toelichting ?></td>";
+                    echo "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
+                    echo "</tr>";
+                }
+            ?>
         <?php endforeach; ?>
             
         <tr>

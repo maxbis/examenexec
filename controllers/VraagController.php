@@ -103,7 +103,7 @@ class VraagController extends Controller
         ]);
     }
 
-    public function actionForm($gesprekid, $compleet=0, $oldid='')
+    public function actionForm($gesprekid, $compleet=0, $oldid='', $mappingid=0)
     {
         $gesprek = gesprek::find()->where(['id'=>$gesprekid])->one();
 
@@ -145,6 +145,7 @@ class VraagController extends Controller
             'gesprek' => $gesprek,
             'resultaat' => $resultaat,
             'beoordeling' => $beoordeling,
+            'mappingid'=> $mappingid,
         ]);
     }
 

@@ -169,7 +169,7 @@ $colspan = count($wp)+1;
             
             <div class="card" style="width: 450px;">
                 <div class="card-header">
-                    <h3>Summary</h3>
+                    <h3>Totalen</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -183,7 +183,7 @@ $colspan = count($wp)+1;
                     <br>
                     <div class="row">
                         <div class="col-lg-6">
-                            Thuisblijvers
+                            Niets ingeleverd (alle 1.0)
                         </div>
                         <div class="col-lg-3">
                             <?=$geslaagd+$gezakt-$gemaakt?>

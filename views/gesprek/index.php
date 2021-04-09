@@ -107,11 +107,12 @@ $barlen2 = max(5,$counts[1]*2);
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            [   'attribute'=>'created',
+            [   'attribute'=>'',
+                'contentOptions' => ['style' => 'width:120px;'],
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) use ($statusIcon) {
                     $date = new DateTime($alleGesprekken->created);
-                    $text = $date->format('H:i')."&nbsp;&nbsp;&nbsp;".$statusIcon[$alleGesprekken->status];
+                    $text = $statusIcon[$alleGesprekken->status]."&nbsp;".$date->format('d-m H:i');
                     if ( $alleGesprekken->status == 2 ) {
                         return Html::a($text, ['/vraag/form', 'gesprekid'=>$alleGesprekken->id,'compleet'=>'1']);
                     } else {
@@ -123,6 +124,7 @@ $barlen2 = max(5,$counts[1]*2);
             
             [
                 'attribute' => 'formid',
+                'contentOptions' => ['style' => 'width:240px;'],
                 'label' => 'Gespreksnaam',
                 'filter' => $formlist,
                 'filterInputOptions' => [
@@ -137,6 +139,7 @@ $barlen2 = max(5,$counts[1]*2);
 
             [
                 'attribute' => 'student',
+                'contentOptions' => ['style' => 'width:240px;'],
                 'format' => 'raw',
                 'value' => function ($alleGesprekken) {
                     //return $alleGesprekken->student->naam;

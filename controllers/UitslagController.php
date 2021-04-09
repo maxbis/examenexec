@@ -325,9 +325,9 @@ class UitslagController extends Controller
     }
 
     // with studentid and formid get the most recent gesprek
-    function actionGetForm($studentid, $formid) {
+    function actionGetForm($studentid, $formid, $mappingid=NULL) {
         $gesprek = Gesprek::find()->Where(['formid'=>$formid])->andWhere(['studentid'=>$studentid])->orderBy(['created' => SORT_DESC])->asArray()->one();
-        return $this->redirect(['/vraag/form', 'gesprekid'=>$gesprek['id'] , 'compleet'=>1]);
+        return $this->redirect(['/vraag/form', 'gesprekid'=>$gesprek['id'] , 'compleet'=>1, 'mappingid'=>$mappingid]);
     }
 
     function actionUpdate() {
