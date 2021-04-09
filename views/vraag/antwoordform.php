@@ -119,7 +119,7 @@ use yii\widgets\LinkPager;
                         echo "<tr>";
                     }
                     echo "<td>&nbsp;</td><td>&nbsp;</td>";
-                    echo "<td><?= $item->toelichting ?></td>";
+                    echo "<td>".$item->toelichting."</td>";
                     echo "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
                     echo "</tr>";
                 }
