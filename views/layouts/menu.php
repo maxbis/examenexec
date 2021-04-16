@@ -34,7 +34,7 @@ echo Nav::widget([
         [   'label' => 'Status',
             'visible' => (isset(Yii::$app->user->identity->role) && Yii::$app->user->identity->role == 'admin'),
             'items' => [
-                ['label' => 'Studenten', 'url' => ['/student']],
+                ['label' => 'Studenten', 'url' => ['/student/index?StudentSearch[actief]=1']],
                 ['label' => 'Rolspelers', 'url' => ['/rolspeler']],
                 ['label' => 'Alle Gesprekken/beoordelingen', 'url' => ['/gesprek'],],
                 ['label' => '-----------------------------------'],
