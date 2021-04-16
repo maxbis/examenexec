@@ -25,18 +25,27 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\ActionColumn', 'contentOptions' => ['style' => 'width:60px; white-space: normal;'],],
-            [   'attribute'=>'actief',
-                'label' => '',
-                'contentOptions' => ['style' => 'width:5px;'],
+            // [   'attribute'=>'actief',
+            //     'label' => '',
+            //     'contentOptions' => ['style' => 'width:5px;'],
+            //     'format' => 'raw',
+            //     'value' => function ($data) {
+            //         if ($data->actief) {
+            //             return '&#10004;';
+            //         } else { 
+            //             return '&#10060;';
+            //         }
+            //     }
+            // ],
+            [
+                'attribute'=>'actief',
+                'contentOptions' => ['style' => 'width:10px;'],
                 'format' => 'raw',
                 'value' => function ($data) {
-                    if ($data->actief) {
-                        return '&#10004;';
-                    } else { 
-                        return '&#10060;';
-                    }
+                  $status = $data->actief ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-minus"></span>';
+                  return Html::a($status, ['/student/toggle-actief?id='.$data->id],['title'=> 'Toggle Status',]);
                 }
-            ],
+              ],
             [   'attribute'=>'nummer',
                 'contentOptions' => ['style' => 'width:60px;'],
             ],
