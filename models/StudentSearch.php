@@ -14,6 +14,8 @@ class StudentSearch extends Student
     /**
      * {@inheritdoc}
      */
+
+
     public function rules()
     {
         return [
@@ -47,6 +49,7 @@ class StudentSearch extends Student
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
 
         $this->load($params);
 

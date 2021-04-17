@@ -65,6 +65,30 @@ class StudentController extends Controller
         ]);
     }
 
+    public function actionActiveStudents() {
+        $students= Student::find()->orderby('naam')->all();
+        return $this->render('ActiveStudents', [
+            'students' => $students,
+        ]);
+    }
+
+    public function actionActiveStudentsPost() {
+        // form posted?
+        $request = Yii::$app->request;
+        $get = $request->get();
+        
+        $ids='';
+        foreach($get as $item) {
+            $ids.=$item.',';
+        }
+        $ids = rtrim($ids, ',');
+
+        $sql="update student set actief=0;update student set actief=1 where id in ( ".$ids." )";
+        Yii::$app->db->createCommand($sql)->execute();
+
+        return $this->redirect(['student/index?StudentSearch[actief]=1']);
+    }
+
     /**
      * Displays a single Student model.
      * @param integer $id

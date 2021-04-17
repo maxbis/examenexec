@@ -24,6 +24,10 @@ class Student extends \yii\db\ActiveRecord
         return 'student';
     }
 
+    public function getAchternaam() {
+        return strrchr($this->naam,' ');
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -53,6 +57,7 @@ class Student extends \yii\db\ActiveRecord
             'locatie' => 'Locatie',
             'message' => 'Message',
             'actief' => 'Actief',
+            'achternaam' => 'Achternaam',
         ];
     }
 

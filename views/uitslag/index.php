@@ -3,7 +3,9 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 $nr=0;
+
 $colspan = count($wp)+1;
+$numberOfColumns=$colspan*3+5;
 
 ?>
 
@@ -18,6 +20,10 @@ $colspan = count($wp)+1;
     background-color:#F4F4F4;
     width: 50px;
 }
+.total {
+    text-align:center;
+    background-color:#FAfAfA;
+}
 </style>
 
 <h1>Uitslagen <?= $examen['naam']; ?></h1>
@@ -27,7 +33,7 @@ $colspan = count($wp)+1;
 
 <div class="card" style="width: 1000px">
     <div class="card-body">
-        <table class="table" border=0>
+        <table class="table table-sm" border=0>
             <thead>
                 <tr>
                     <th></th>
@@ -36,14 +42,14 @@ $colspan = count($wp)+1;
                     <th colspan=<?=$colspan?>>Cijfers</th>
                     <th colspan=<?=$colspan?>>Resultaten</th>
                     <th colspan=<?=$colspan?>>Print Ready</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
+                    <th><?= Html::a('', ['/uitslag/index','sortorder'=>$sortorder*-1,'examenid'=>$examenid, 'view'=>'export'],['title'=> 'Export uitslagen','class'=>'glyphicon glyphicon-list-alt']); ?></th>
+                    <th></th>
                 </tr>    
                 <tr>
                 <?php
                     echo "<th></th>";
                     echo "<th></th>";
-                    echo "<th>Kandidaat</th>";
+                    echo "<th>".Html::a('Kandidaat', ['/uitslag/index','sortorder'=>$sortorder*-1,'examenid'=>$examenid],['title'=> 'Sort achternaam/voornaam',])."</th>";
                    
                     $teller=1;
                     foreach($wp as $thisWp) {
@@ -80,6 +86,11 @@ $colspan = count($wp)+1;
                 $gezakt=0;
                 $geslaagd=0;
                 $gemaakt=0;
+
+                foreach($wp as $thisWp) {
+                    $sum[$thisWp]['O']=0;$sum[$thisWp]['V']=0;$sum[$thisWp]['G']=0; // init total array
+                }
+
                 foreach($dataSet as $naam => $value) {
                     if ($value['studentid']=='') continue; // if beoordeling is not yet specified skip this record
                     $nr++;
@@ -104,6 +115,10 @@ $colspan = count($wp)+1;
 
                     $dezeGemaakt=false;
                     foreach($wp as $thisWp) { // cijfers afdrukken
+                        if (isset($sum[$thisWp][ $value[$thisWp]['result'][1] ]) ) {
+                            $sum[$thisWp][ $value[$thisWp]['result'][1] ]++; // total array $sum[werkproces][uitslag]
+                        }
+                       
                         echo "<td class=\"even\">"; 
 
                         if ( $examen['actief'] == 1 ) {
@@ -122,6 +137,7 @@ $colspan = count($wp)+1;
 
                     foreach($wp as $thisWp) { // Resultaten (O, V, G)
                         // $cruciaalList[studentid.werkprocess]=1 if crucial criteria is not met (crucial criteria en 0 punten op dit mappingid)
+                        // put a red O when the O casued by crucial (without crucial the person would have passed)
                         if ( isset($cruciaalList[$value['studentid'].$thisWp]) && $value[$thisWp]['result'][1]!='O' ) {
                             echo "<td class=\"even\" style=\"color:red;\">O</td>";
                         } else {
@@ -160,7 +176,33 @@ $colspan = count($wp)+1;
 
                     echo "</tr>";
                 }
-            ?>
+
+                echo "<tr><td colspan=".$numberOfColumns."></td></tr>";
+
+                foreach(['O','V','G'] as $resultaat) {
+                    echo "<tr>"; 
+                        echo "<td  class=\"total\"></td>";
+                        echo "<td  class=\"total\"></td>";
+                        echo "<td  class=\"total\"></td>";
+                        for($i=1;$i<count($wp);$i++) echo "<td  class=\"total\"></td>"; // 1 less than number of workproces
+                        echo "<td  class=\"total\">".$resultaat."</td>";
+                        echo "<td class=\"total\"></td>";
+
+                        foreach($wp as $thisWp) {
+                            echo "<td class=\"total\">";
+                            echo $sum[$thisWp][$resultaat];
+                            echo "</td>";
+                        }
+                        echo "<td  class=\"total\"></td>";
+
+                        echo "<td  class=\"total\" colspan=".$colspan."></td>";
+
+                        echo "<td  class=\"total\"></td>";
+                        echo "<td  class=\"total\"></td>";
+                    echo "</tr>";
+                }
+            ?> 
+
 
         </table>
 
@@ -234,6 +276,7 @@ $colspan = count($wp)+1;
 
     </div>
 </div>
+
 <br><br>
 <small><i>( berekening SPL score: round(score/maxscore*9+1)+0.049,1) - hiermee wordt altijd omhoog afgerond naar de volgende 0.1 )</i></small>
 

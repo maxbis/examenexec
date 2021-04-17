@@ -95,7 +95,7 @@ class UitslagController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionIndex($examenid="") {
+    public function actionIndex($examenid="", $sortorder=1, $view='index') {
         // if no parameter is specified then taken the active exam (examen.actief=1)
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
 
@@ -147,7 +147,8 @@ class UitslagController extends Controller
             WHERE e.id=:examenid
             AND f.examenid=:examenid
             GROUP BY 1,2,3
-            ORDER BY 1,2";
+            ORDER BY SUBSTRING_INDEX(TRIM(s.naam), ' ', :sortorder) ,f.werkproces";
+        $params = [':examenid'=> $examenid, ':sortorder'=>$sortorder];
         $progres = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();  // [ 0 => [ 'naam' => 'Achraf Rida ', 'werkproces' => 'B1-K1-W1', 'cnt' => '3'], 1 => .... ]
 
         // d($progres);
@@ -214,14 +215,14 @@ class UitslagController extends Controller
         }
 
        //dd($cruciaalList);
-
-        return $this->render('index', [
+        return $this->render($view, [
             'dataSet' => $dataSet,
             'formWpCount' =>$formWpCount, // formcount per wp
             'wp' => $wp,
             'examenid' => $examenid,
             'examen' => $examen, // active exam
             'cruciaalList' => $cruciaalList,
+            'sortorder' => $sortorder,
         ]);
     }
 

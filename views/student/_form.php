@@ -20,6 +20,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'locatie')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Locatie') ?>
 
+    <?= $form->field($model, 'message')->textInput(['maxlength' => true, 'style'=>'width:250px'])->label('Boodschap') ?>
+
     <?= $form->field($model, 'actief')->checkbox() ?>
 
     <?= HTMLInclude('formSave') ?>

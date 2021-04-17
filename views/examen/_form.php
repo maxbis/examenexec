@@ -74,6 +74,13 @@ use nex\datepicker\DatePicker;
       <?= Html::a('Cancel', [Url::toRoute(['examen/index'])], ['class'=>'btn btn-primary']) ?>
       &nbsp;&nbsp;&nbsp;
       <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+
+      <?php if ( isset($model->id) ) { ?>
+        &nbsp;&nbsp;&nbsp;
+        <?= Html::a('Copy',['copy-exam', 'id'=>$model->id], ['class'=>'btn btn-warning',
+          'data-confirm'=>'Weet je zeker dat je een kopie van het examen met onderliggende forms en vragen wilt maken, dit kan niet ongedaan gemaakt worden?','title'=> 'Copy exam' ]); ?>
+      <?php } ?>
+      
     </div>
 
   </div>

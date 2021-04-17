@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'contentOptions' => ['style' => 'width:600px; white-space: normal;'],
             'format' => 'raw',
             'value' => function ($data) {
-              return Html::a($data->naam, ['/examen/update?id='.$data->id],['title'=> 'Edit',]);
+              return Html::a($data->naam, ['/uitslag/index', 'examenid'=>$data->id], ['title'=> 'Naar Examenuitslag' ] );
             },
           ],
 
@@ -72,30 +72,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
             'format' => 'raw',
             'value' => function ($data) {
-              return Html::a('<span class="glyphicon glyphicon-play"></span>',
+              return Html::a('<span class="glyphicon glyphicon-play">wp</span>',
               ['/werkproces/index', 'WerkprocesSearch[examen_type]'=>$data->examen_type], ['title'=> 'Naar Werkprocessen' ]);
             },
           ],
 
-          [
-            'attribute'=>'',
-            'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
-            'format' => 'raw',
-            'value' => function ($data) {
-              return Html::a('<span class="glyphicon glyphicon-check"></span>',
-              ['/uitslag/index', 'examenid'=>$data->id], ['title'=> 'Naar Examenuitslag' ]);
-            },
-          ],
-
-          [
-            'attribute'=>'',
-            'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
-            'format' => 'raw',
-            'value' => function ($data) {
-              return Html::a('<span class="glyphicon glyphicon-copy"></span>',
-              ['copy-exam', 'id'=>$data->id], ['data-confirm'=>'Weet je zeker dat je een kopie van het examen met onderliggende forms en vragen wilt maken, dit kan niet ongedaan gemaakt worden?','title'=> 'Copy exam' ]);
-            },
-          ],
+          // [
+          //   'attribute'=>'',
+          //   'contentOptions' => ['style' => 'width:20px; white-space: normal;'],
+          //   'format' => 'raw',
+          //   'value' => function ($data) {
+          //     return Html::a('<span class="glyphicon glyphicon-copy"></span>',
+          //     ['copy-exam', 'id'=>$data->id], ['data-confirm'=>'Weet je zeker dat je een kopie van het examen met onderliggende forms en vragen wilt maken, dit kan niet ongedaan gemaakt worden?','title'=> 'Copy exam' ]);
+          //   },
+          // ],
 
           [
             'class' => 'yii\grid\ActionColumn',
