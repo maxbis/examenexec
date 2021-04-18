@@ -15,6 +15,8 @@
 </script>
 
 <?php
+// this is a page that shows data to be copied paste to Excel. Sinde there's an export (file) this is obsolte and not used anymore
+
 use yii\helpers\Url;
 use yii\helpers\Html;
 
@@ -46,6 +48,7 @@ foreach($dataSet as $naam => $value) {
 ?>
 
 <a href="#" title="Copy" onclick="CopyToClipboard('div1')" class="btn btn-success">&nbsp;Copy&nbsp;</a> &nbsp; <?= Html::a( 'Cancel', Yii::$app->request->referrer , ['class'=>'btn btn-primary']); ?>
+
 <br><br>
 <pre id="div1">
 <?= $output ?>
