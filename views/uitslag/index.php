@@ -42,7 +42,7 @@ $numberOfColumns=$colspan*3+5;
                     <th colspan=<?=$colspan?>>Cijfers</th>
                     <th colspan=<?=$colspan?>>Resultaten</th>
                     <th colspan=<?=$colspan?>>Print Ready</th>
-                    <th><?= Html::a('', ['/uitslag/index','sortorder'=>$sortorder*-1,'examenid'=>$examenid, 'view'=>'export'],['title'=> 'Export uitslagen','class'=>'glyphicon glyphicon-list-alt']); ?></th>
+                    <th><?= Html::a('', ['/uitslag/index','sortorder'=>$sortorder*-1,'examenid'=>$examenid, 'export'=>'1'],['title'=> 'Export uitslagen','class'=>'glyphicon glyphicon-list-alt']); ?></th>
                     <th></th>
                 </tr>    
                 <tr>

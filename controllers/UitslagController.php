@@ -95,7 +95,7 @@ class UitslagController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionIndex($examenid="", $sortorder=1, $view='index') {
+    public function actionIndex($examenid="", $sortorder=1, $export=0) {
         // if no parameter is specified then taken the active exam (examen.actief=1)
         // SPL uses wierd round up; it will always round up to the next 0.1 so 3.01 -> 3.1
 
@@ -214,8 +214,10 @@ class UitslagController extends Controller
             $cruciaalList[$item['studentid'].$item['wp']]=1;
         }
 
+        if ($export) $this->dataToExcel($dataSet, $wp, $examen);
+
        //dd($cruciaalList);
-        return $this->render($view, [
+        return $this->render('index', [
             'dataSet' => $dataSet,
             'formWpCount' =>$formWpCount, // formcount per wp
             'wp' => $wp,
@@ -224,6 +226,40 @@ class UitslagController extends Controller
             'cruciaalList' => $cruciaalList,
             'sortorder' => $sortorder,
         ]);
+    }
+
+    private function dataToExcel($dataSet, $wp, $examen){
+
+        $nr=0;
+        $fp = fopen('php://output', 'wb');
+
+        $filenaam="Uitslag ".$examen['naam']."csv";
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename='.$filenaam);
+
+        foreach($dataSet as $naam => $value) {
+            $line=[];
+
+            if ($value['studentid']=='') continue; // if beoordeling is not yet specified skip this record
+            $nr++;
+
+            array_push($line,$nr, $value['groep'],$naam);
+
+            foreach($wp as $thisWp) {
+                array_push($line, number_format($value[$thisWp]['result'][0], 1, ',', '' ) ); // avoid decimal places (independent from localization)
+            }
+            foreach($wp as $thisWp) {
+                array_push($line,$value[$thisWp]['result'][1]);
+            }
+
+            fputcsv($fp, $line, ',', '"', "\\");
+
+        }
+
+        fclose($fp);
+
+        exit;
     }
 
     private function formWpCount($examenid) {
