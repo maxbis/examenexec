@@ -67,7 +67,7 @@ class StudentController extends Controller
 
     public function actionActiveStudents() {
         $students= Student::find()->orderby('naam')->all();
-        return $this->render('ActiveStudents', [
+        return $this->render('activeStudents', [
             'students' => $students,
         ]);
     }
