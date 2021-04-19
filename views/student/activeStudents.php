@@ -1,7 +1,6 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\LinkPager;
 
 $action = Url::toRoute(['student/active-students-post']);
 ?>
@@ -18,8 +17,8 @@ function toggle(source) {
 
 <h1>Studenten actief/inactief</h1>
 
-<form action=<?= $action ?> onsubmit="return result()" method="get" id="form1">
-
+<form action=<?= $action ?> onsubmit="return result()" method="post" id="form1">
+<input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
 <input type="checkbox" onClick="toggle(this)">&nbsp select all/none
 
 <br>

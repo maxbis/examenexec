@@ -72,20 +72,49 @@ class StudentController extends Controller
         ]);
     }
 
+    public function actionBulkEdit() {
+        $students= Student::find()->orderby('naam')->all();
+        return $this->render('BulkEdit', [
+            'students' => $students,
+        ]);
+    }
+
     public function actionActiveStudentsPost() {
-        // form posted?
         $request = Yii::$app->request;
-        $get = $request->get();
-        
+        $post = $request->post();
+
         $ids='';
-        foreach($get as $item) {
-            $ids.=$item.',';
+        foreach($post as $key => $value) {
+            if ($key == '_csrf' ) continue; // skip _csrf token
+            $ids.=$value.',';
         }
         $ids = rtrim($ids, ',');
 
         $sql="update student set actief=0;update student set actief=1 where id in ( ".$ids." )";
         Yii::$app->db->createCommand($sql)->execute();
 
+        return $this->redirect(['student/index?StudentSearch[actief]=1']);
+    }
+
+    public function actionBulkEditPost() {
+        $request = Yii::$app->request;
+        $post = $request->post();
+
+        d($post);
+
+        $ids='';
+        $dataSet=[];
+        foreach($post as $key => $value) {
+            if ($key == '_csrf' ) continue; // skip _csrf token
+            list($k, $field)=explode("-", $key); //Split key
+            $dataSet[$k][$field]=$value;
+            $ids.=$value.',';
+        }
+        $ids = rtrim($ids, ',');
+
+        $sql="update student set actief=0;update student set actief=1 where id in ( ".$ids." )";
+        // Yii::$app->db->createCommand($sql)->execute();
+        dd('klaar');
         return $this->redirect(['student/index?StudentSearch[actief]=1']);
     }
 
