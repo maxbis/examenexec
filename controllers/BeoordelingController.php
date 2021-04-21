@@ -173,6 +173,7 @@ class BeoordelingController extends Controller
             $error = Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
 
             $token = Rolspeler::find()->where(['id' => $rolspelerid])->one();
+            // if we are not an actual rolspeler we want to redirect to the uitslag page (uitslag/index)
             return $this->redirect(['/gesprek/rolspeler', 'token' => $token->token]);
         } else {
             // somehow the results are not stored in the db

@@ -60,7 +60,7 @@ for($row=0; $row<$rows; $row++) {
 </table>
 
 <div class="form-group">
-      <?= Html::a('Cancel', [Url::toRoute(['/student'])], ['class'=>'btn btn-primary']) ?>
+      <?= Html::a('Cancel', [Url::toRoute(['student'])], ['class'=>'btn btn-primary']) ?>
       &nbsp;&nbsp;&nbsp;
       <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
 </div>

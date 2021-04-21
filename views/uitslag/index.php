@@ -138,7 +138,7 @@ $numberOfColumns=$colspan*3+5;
                     foreach($wp as $thisWp) { // Resultaten (O, V, G)
                         // $cruciaalList[studentid.werkprocess]=1 if crucial criteria is not met (crucial criteria en 0 punten op dit mappingid)
                         // put a red O when the O casued by crucial (without crucial the person would have passed)
-                        if ( isset($cruciaalList[$value['studentid'].$thisWp]) && $value[$thisWp]['result'][1]!='O' ) {
+                        if ( isset($cruciaalList[$value['studentid'].$thisWp]) ) {
                             echo "<td class=\"even\" style=\"color:red;\">O</td>";
                         } else {
                             echo "<td class=\"even\">".$value[$thisWp]['result'][1]."</td>";
