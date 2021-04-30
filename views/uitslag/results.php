@@ -98,7 +98,7 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
                 echo "<tr>";
                 echo "<td width=30px class=\"text-muted\"><small>".$item['score']."</small></td>";
                 // echo "<td width=80px bgcolor=".$bgcolor[4].">".$item['cnaam']."<hr>".$item['fnaam'].$item['formid'].'-'.$item['studentid']."</td>";
-                if ($item['score']) {
+                if (isset($item['score'])) {
                     echo "<td width=80px bgcolor=".$bgcolor[4].">".Html::a( $item['cnaam'], ['uitslag/get-form', 'studentid'=>$item['studentid'], 'formid'=>$item['formid'], 'mappingid'=>$item['mappingid'] ])."</td>";
                 } else {
                     echo "<td width=80px bgcolor=".$bgcolor[4].">".$item['cnaam']."</td>";
