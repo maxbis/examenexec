@@ -37,7 +37,7 @@ class Student extends \yii\db\ActiveRecord
             [['nummer', 'naam', 'klas'], 'required'],
             [['nummer', 'actief'], 'integer'],
             [['nummer'], 'integer', 'max' => 9999999 ],
-            [['naam'], 'string', 'max' => 30],  ['naam', 'match', 'pattern' => '/^[a-z]\w*$/i'],
+            [['naam'], 'string', 'max' => 30],  // ['naam', 'match', 'pattern' => '/^([a-z]\w){1,4}$/i'],
             [['klas'], 'string', 'max' => 2],
             [['locatie'], 'string', 'max' => 6],
             [['message'], 'string', 'max' => 100],
