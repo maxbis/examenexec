@@ -88,22 +88,34 @@ class PrintController extends Controller
     //
     public function actionPrintAllZip($id) {
         sleep(3);
+        // $sql='
+        //     SELECT distinct u.studentid id, s.naam naam, s.nummer nummer
+        //     FROM uitslag u
+        //     inner join werkproces w on u.werkproces=w.id
+        //     inner join examen e on e.examen_type=w.examen_type
+        //     inner join student s on s.id=u.studentid
+        //     WHERE ready=1
+        //     AND u.resultaat IS NOT null
+        //     AND u.beoordeelaar1id IS NOT null
+        //     AND u.beoordeelaar2id IS NOT null
+        //     AND e.id=:examenid
+        // ';
+
         $sql='
             SELECT distinct u.studentid id, s.naam naam, s.nummer nummer
             FROM uitslag u
-            inner join werkproces w on u.werkproces=w.id
-            inner join examen e on e.examen_type=w.examen_type
             inner join student s on s.id=u.studentid
-            WHERE ready=1
+            WHERE u.ready=1
             AND u.resultaat IS NOT null
             AND u.beoordeelaar1id IS NOT null
             AND u.beoordeelaar2id IS NOT null
-            AND e.id=:examenid
+            AND u.examenid=:examenid
         ';
 
         $params = [':examenid'=> $id];
 
         $studenten=Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+        //dd($studenten);
         $examen=Examen::find()->where(['actief'=>1])->one();
 
         $fnExamenNaam='kerntaak-'.substr($examen->werkproces[0]->id,0,2).substr($examen->werkproces[0]->id,3,2);

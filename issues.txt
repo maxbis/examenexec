@@ -8,4 +8,12 @@ Je kunt geen studenten weghalen, er zou een 'deleted' flag moeten komen.
 
 Crucial criteria zie je niet in resultatenscherm
 
-Correctei maken en openlaten staan, dan openieuw beoordeling openen vanuit resulstatescherm -> fout!
+Correctie  maken en openlaten staan, dan openieuw beoordeling openen vanuit resulstatescherm -> fout!
+
+04/06/2021, als examen is afgetekend door 2de examinator dan mogen geen wijzingen meer worden gedaan want die worden dan 
+niet meer doorgerekend. Oplossing is om beoordeling weg te gooien en fomrs opnieuw te editen en dan opnieuw te saven.
+Aanpassings na dichte beoordeling -> waarschuwing laten zien of afschermen?
+
+PrintAll examens wordt gekoppeld via werkproces aan examen, maar daarmee heb je alle examens (her en origineel).
+In uitslag staat ook een examenid maar die lijkt onjuist te zijn gevuld (altijd 1)??
+
