@@ -163,7 +163,7 @@ class ExamenController extends Controller
         }
         // copy exam
         $sql="  insert into examen (naam, actief, datum_start, datum_eind, examen_type, otherid, titel)
-                select concat(naam, ' copy'), actief, datum_start, datum_eind, examen_type, otherid, titel
+                select concat(naam, ' copy'), 0, datum_start, datum_eind, examen_type, otherid, titel
                 from examen where id=:id";
         $params = [':id'=> $fromExamenId];
         $result=Yii::$app->db->createCommand($sql)->bindValues($params)->execute();
