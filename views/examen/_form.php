@@ -71,7 +71,7 @@ use nex\datepicker\DatePicker;
     <?= $form->field($model, 'actief')->hiddenInput()->label(false); ?>
 
     <div class="form-group">
-      <?= Html::a('Cancel', [Url::toRoute(['examen/index'])], ['class'=>'btn btn-primary']) ?>
+      <?= Html::a('Cancel', [Url::toRoute(['index'])], ['class'=>'btn btn-primary']) ?>
       &nbsp;&nbsp;&nbsp;
       <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
 
