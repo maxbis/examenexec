@@ -68,7 +68,7 @@ use nex\datepicker\DatePicker;
           </div>
       </div>
     
-    <?= $form->field($model, 'actief')->hiddenInput()->label(false); ?>
+    <?= $form->field($model, 'actief')->hiddenInput()->label(false); ?> // ToDo does not work in prod???
 
     <div class="form-group">
       <?= Html::a('Cancel', [Url::toRoute(['index'])], ['class'=>'btn btn-primary']) ?>

@@ -146,8 +146,7 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
     </table>
     </div></div>
 
-    <br>
-    <br>
+    <br><br>
 
     <div class="uitslag-form">
 
@@ -167,7 +166,7 @@ $rolspelerList=ArrayHelper::map($rolspelers,'id','naam');
         <?= $form->field($model, 'werkproces')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'examenid')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
-        <?= $form->field($model, 'resultaat')->hiddenInput()->label(false) ?>
+        <?= $form->field($model, 'resultaat')->label(false) ?>
 
         <div class="form-group">
             <?= Html::submitButton('&nbsp;&nbsp;Save&nbsp;&nbsp;', ['class' => 'btn btn-success']) ?>

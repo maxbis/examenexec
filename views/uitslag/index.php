@@ -98,6 +98,7 @@ $numberOfColumns=$colspan*3+5;
                     echo "<td class=\"text-muted\">".$nr."</td>";
                     echo "<td>".$value['groep']."</td>";
                     $onvoldoende=false;
+                    
                     foreach($wp as $thisWp) {
                         if ( $value[$thisWp]['result'][1] == 'O' || isset($cruciaalList[$value['studentid'].$thisWp]) ) {
                             $onvoldoende=true;
