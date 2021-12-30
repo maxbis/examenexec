@@ -40,11 +40,10 @@ class FormSearch extends Form
      */
     public function search($params)
     {
-        // $query = Form::find()
-        // ->innerJoinWith('examen', true)
-        // ->where(['examen.actief'=>1]);
+        $query = Form::find()
+        ->innerJoinWith('examen', true)
+        ->where(['examen.actief'=>1]);
 
-        $query = Form::find();
 
         // add conditions that should always apply here
 
