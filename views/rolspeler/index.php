@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width:200px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
-                  return Html::a($data->naam, ['/gesprek/rolspeler?token='.$data->token],['title' => 'Edit',]);
+                    return Html::a($data->naam, ['/gesprek/rolspeler?token='.$data->token],['title' => 'Edit',]);
                 },  
             ],
             [
@@ -43,16 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'filter' => [''=> 'alles', '0'=>'Inactief','1'=>'Actief'],
                 'value' => function ($data) {
-                  $status = $data->actief ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-minus"></span>';
-                  return Html::a($status, ['/rolspeler/toggle-actief?id='.$data->id], ['title' => 'Actief <-> Inactief',]);
+                    $status = $data->actief ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-minus"></span>';
+                    return Html::a($status, ['/rolspeler/toggle-actief?id='.$data->id], ['title' => 'Actief <-> Inactief',]);
                 }
             ],
 
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'contentOptions' => ['style' => 'width:20px;'],
-                'template' => '{delete} {update}',
-            ],
+
         ],
     ]); ?>
 

@@ -327,9 +327,17 @@ class UitslagController extends Controller
                     group by f.id
                 )";
 
+            // get comments from underlying forms/documents
             $params = [':studentid'=> $studentid,':werkproces'=>$wp, ':examenid' => $examen['id'] ];
             $commentaar = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll()[0]['opmerkingen'];
             $uitslag->commentaar = str_replace(',[', '[', $commentaar);
+
+            // if comments are empty fill default
+            dd([$werkproces['maxscore'], $uitslag->commentaar]);
+            if ( $uitslag->commentaar == "" ) {
+                dd([$werkproces['maxscore'], $uitslag->commentaar]);
+            }
+            
 
             $sql="
                 SELECT rolspelerid
