@@ -332,13 +332,6 @@ class UitslagController extends Controller
             $commentaar = Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll()[0]['opmerkingen'];
             $uitslag->commentaar = str_replace(',[', '[', $commentaar);
 
-            // if comments are empty fill default
-            dd([$werkproces['maxscore'], $uitslag->commentaar]);
-            if ( $uitslag->commentaar == "" ) {
-                dd([$werkproces['maxscore'], $uitslag->commentaar]);
-            }
-            
-
             $sql="
                 SELECT rolspelerid
                 FROM gesprek g
