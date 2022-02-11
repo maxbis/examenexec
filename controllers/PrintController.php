@@ -119,12 +119,15 @@ class PrintController extends Controller
         $examen=Examen::find()->where(['actief'=>1])->one();
 
         $fnExamenNaam='kerntaak-'.substr($examen->werkproces[0]->id,0,2).substr($examen->werkproces[0]->id,3,2);
-        $fnDatum=substr($examen['datum_start'],2,2).substr($examen['datum_start'],5,2).substr($examen['datum_start'],8,2);
+        $fnDatum=substr($examen['datum_start'],0,4).substr($examen['datum_start'],5,2).substr($examen['datum_start'],8,2);
 
         $zip = new ZipArchive();
 
         $zipFileName='output/examens'.$fnExamenNaam.'-'.$fnDatum.'.zip';
-        
+        if (file_exists($zipFileName)) {
+            unlink($zipFileName);
+        }
+
         if (file_exists($zipFileName)) {
             // someone busy buidling a new zip file?
             //dd("Concurrency!");
@@ -149,6 +152,7 @@ class PrintController extends Controller
             $content        = $this->actionIndex($student['id'], $examen['id'], null, true);
             $fnStudentNaam  = $this->createValidFileName(trim($student['naam']));
             $pdfFileName    = $fnStudentNaam.'-'.$fnExamenNaam.'-'.$fnDatum.'-'.$student['nummer'].'.pdf';
+            $pdfFileName    = $student['nummer'].'_25187_'.$fnExamenNaam.'_'.$fnDatum.'_'.$student['naam'].'.pdf';
             $pdfFileName    = $this->createValidFileName($pdfFileName);
             
             $zip->addFromString($pdfFileName, $content);
@@ -163,7 +167,7 @@ class PrintController extends Controller
         header("Content-disposition: attachment; filename=\"" . basename($zipFileName) . "\""); 
         readfile($zipFileName); 
 
-        // unlink($zipFileName);
+        unlink($zipFileName);
     }
 
     public function actionCreateZip() {

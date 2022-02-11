@@ -30,7 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width:200px; white-space: normal;'],
                 'format' => 'raw',
                 'value' => function ($data) {
-                    return Html::a($data->naam, ['/gesprek/rolspeler?token='.$data->token],['title' => 'Edit',]);
+                    //return Html::a($data->naam, ['/gesprek/rolspeler?token='.$data->token],['title' => 'Edit',]);
+                    return Html::a($data->naam, ['/rolspeler/update?id='.$data->id],['title' => 'Edit',]);
                 },  
             ],
             [
