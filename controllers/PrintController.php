@@ -118,7 +118,7 @@ class PrintController extends Controller
         //dd($studenten);
         $examen=Examen::find()->where(['actief'=>1])->one();
 
-        $fnExamenNaam='kerntaak-'.substr($examen->werkproces[0]->id,0,2).substr($examen->werkproces[0]->id,3,2);
+        $fnExamenNaam='kerntaak-'.substr($examen->werkproces[0]->id,0,2).'-'.substr($examen->werkproces[0]->id,3,2);
         $fnDatum=substr($examen['datum_start'],0,4).substr($examen['datum_start'],5,2).substr($examen['datum_start'],8,2);
 
         $zip = new ZipArchive();
