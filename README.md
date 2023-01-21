@@ -6,6 +6,8 @@
     <br>
 </p>
 
+<h1>Don't use this repository anymore, use examenexec2</h1>
+
 The template contains the basic features including user login/logout and a contact page.
 It includes all commonly used configurations that would allow you to focus on adding new
 features to your application.
